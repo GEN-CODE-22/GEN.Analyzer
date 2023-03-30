@@ -1,0 +1,988 @@
+﻿@{
+    ViewBag.Title = "Estaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Dashboard</title>
+    <!-- Custom fonts for this template-->
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+
+
+
+
+<!-- Nueva imagen -->
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+                <center>
+                   
+                    <div>
+                        <br />
+                        <button class="btn btn-outline-light" data-toggle="modal" data-target="#dlgGetPed">Consultar Pedidos</button><br />
+                        <br />
+                       
+                        <div id="divTools" class="card-body" style="display:none;">
+                            <button id="btnNotasAnalizar" class="btn btn-outline-light" onclick="vtaRutas(this)" style="width: 100%;"></button><br />
+                            <button id="btnNotasSinGPS" class="btn btn-outline-light" onclick="vtaRutas(this)" style="width: 100%;"></button><br />
+                            <button id="btnNotasConGPS" class="btn btn-outline-light" onclick="vtaRutas(this)" style="width: 100%;"></button><br />
+                            <br />
+                            <select id="select_rutas_estaciones" class="form-control"> </select><br />
+                            <textarea id="colRutas" class="form-control" rows="10" style="width: 85%; height: 100px;"></textarea><br />
+                            <button class="btn btn-outline-light" onclick="agregaRutasAnalisi()" style="width: 100%"> Agregar</button>
+                            <button class="btn btn-outline-light" onclick="quitarultimaRuta()" style="width: 100%"> Quitar</button>
+                            <button class="btn btn-outline-light" onclick="analizarColRutas()" style="width: 100%"> Analizar</button>
+
+                        </div>
+                       
+                    </div>
+
+
+
+                </center>
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
+                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                @*<a class="dropdown-item" href="#">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profile
+                                    </a>*@
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <div id="map">
+                    </div>
+                   
+                </div>
+                <!-- End of Content Wrapper -->
+            </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro de Salir?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Te saldras de todo modulo</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-danger" type="button" onclick="exitAnalizer()">Salir</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+</body>
+<!-- div para seleccionar el servidor para el usuario admin-->
+<dialog id="buscarColonina">
+    <select id="select_servidores"></select>
+    <br />
+    <button onclick="cerrarDialogo()">Cerrar</button>
+</dialog>
+
+<dialog id="dialogReportes">
+    <div style="height:100px">
+        <div class="fi fi-size-md fi-round-md fi-pdf" onclick="javascript: window.imprimirDIV('divReportes', 'rutas')" style="display:inline-block;">
+            <div class="fi-content">PDF</div>
+        </div>
+        <button class="btn btn-danger" onclick="cierraDialog()" style="display:inline-block;float:right">Cerrar</button>
+    </div>  
+    <div id="divReportes" style="height: 400px;">
+    </div>
+</dialog>
+<dialog id="dialogReporteColRutas">
+    <div style="height:100px">
+        <div class="fi fi-size-md fi-round-md fi-pdf" onclick="javascript: window.imprimirDIV('contenedordivReporteColRutas', 'colrutas')" style="display:inline-block;">
+            <div class="fi-content">PDF</div>
+        </div>
+        <button class="btn btn-danger" onclick="cierraDialog()" style="display:inline-block;float:right">Cerrar</button>
+    </div>
+    <br />
+    <div id="contenedordivReporteColRutas">
+        <label id="descGral">Las notas deberan de contener hora y fecha de surtido para visualizarse en la grafica</label>
+        <div id="divReporteColRutas"></div>
+    </div>
+
+</dialog>
+<div class="modal fade" id="dlgGetPed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Consulta de servicios</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label> INICIAL:</label>
+                <input type="date" class="form-control" style=" width: 95%" id="fecha_ini"><br />
+                FECHA FINAL:
+                <input type="date" class="form-control" style=" width: 95%" id="fecha_fin"><br />
+                <br />
+                <button id="btnInfoServer" class="btn btn-outline-primary" onclick="getNotas()" style="width: 100%">Consultar Notas</button><br /><br />
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                @*<a class="btn btn-primary" href="login.html">Logout</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<dialog id="Cargando">
+    <img src="~/Images/CARGANDO.gif" style="display:inline" />
+</dialog>
+</html>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables de uso General
+    var notas = [];        // almacena las notas de la consulta a la base de datos.
+    var dialogos = [];        // contiene los dialogos en pantalla.
+    var plantas = [];         // contiene las plantas relacionas con la consulta.
+    var rutas = [];          // contiene las rutas que trae la consulta.
+    var arr_marcadores = []; // contiene los marcadores mostrados en el mapa.
+    var notasEvaluar = [];   //  nota que se grafican
+    var notasSinGPS = [];
+    var notasConGPS = [];
+    var strIntervaloFechas;
+
+    // inicializacion de los componentes del modulo 
+    $(document).ready(function () {
+        // colocar fechas actuales en los campos de fecha 
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+   
+      
+      
+        // desabilitar opciones si no es usuario administrador
+        if (document.getElementById("serv").innerHTML.trim() != 'Admin') {
+            //document.getElementById('btnToExcel').style.display = "none";
+        }
+
+
+        // colocar los servidores en el select de los servidores
+        var x = document.getElementById("select_servidores");
+        var option = document.createElement("option");
+        option.text = "...";
+        x.add(option);
+        for (var k = 0; k < servers.length; k++) {
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+
+
+    });
+    // inicializa el mapa en el navegador
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+
+
+        map.addListener('click', function (e) {
+            // 3 seconds after the center of the map has changed, pan back to the
+            // marker.
+            alert(e.latLng);
+        });
+
+        //marker.addListener('click', function () {
+        //    map.setZoom(8);
+        //    map.setCenter(marker.getPosition());
+       // });
+    }
+    // evento que ocurre al finalizar el trazado de un poligono.
+    function finDraw(event)
+    {
+
+    }
+    // obtiene las notas de tipo carburacion.
+    function getNotas()
+    {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+        strIntervaloFechas = fecha_ini + ' - ' + fecha_fin;
+
+        //document.getElementById('imgload').style.display = "inline";
+       
+
+        //var serv = document.getElementById("serv").innerHTML.trim();
+
+        //if (serv == 'Admin' & $("#select_servidores option:selected").text() == "...") {
+        //    servidoresNotas = '';
+        //    // seleccionar los servidores que seran consultados por el usuario admin
+        //    document.getElementById('imgload').style.display = "none";
+           
+        //        cerrarDialogo();
+        //        var msg = document.getElementById('buscarColonina');
+        //        msg.showModal();
+        //        dialogos.push(msg);
+
+        //} else {
+        //    if (serv != 'Admin')
+        //        servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+        //    else
+        //        servidoresNotas = $("#select_servidores option:selected").text();
+        //}
+
+        //if (servidoresNotas != '') {
+       
+            //consultar las notas
+            $.ajax({
+                type: "POST",
+                url: "/Home/getNotasCarb/",
+                data: { paramSrv: $('#hiddenSrv').val(), fechaI: fecha_ini, fechaF: fecha_fin },
+                datatype: "json",
+                beforeSend: function (objeto) {
+                    muestraDialog('Cargando');
+                },
+                complete: function () {
+                    cierraDialog();
+                },
+                success: function (data) {
+
+                    if (data.length > 0)
+                    {
+                        notas = [];
+                        notas = data;
+                        //document.getElementById('imgload').style.display = "none";
+                        //getNotasSinGPS(notas);
+                        //muestraIconos();
+                       // $("#select_servidores").val("...");
+                        colocarPlantas();
+                        dibujanotas();
+                    }
+                    else {
+                           alert("No existen notas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                           cerrarDialogo();
+                         }
+                },
+                error: function (request, status, error) {
+                    cerrarDialogo();
+                    alert(request.responseText);
+                }
+            });
+       // }
+
+
+    }
+    // colocar las notas en el mapa
+    function dibujanotas()
+    {
+        ///var planta = $("#select_plantas option:selected").text();
+        var ptosLatLong = [];
+        limpiarMarcadores();
+        var indice = 0;
+        var iconPath = "";
+        notasEvaluar = [];
+
+
+        for (var i = 0; i < notas.length; i++) {
+
+            if (notas[i].pla_nvta.trim() == $('#hiddenPla').val() ) {
+              
+                notasEvaluar.push(notas[i]);
+
+                for (var j = 0; j < plantas.length; j++) {
+                    if (plantas[j].planta == notas[i].pla_nvta) {
+                        indice = plantas[j].indice;
+                        
+                    }
+                    
+                }
+
+                
+                iconPath = "/Images/EST_PLA_"+indice+".png";
+
+                ptosLatLong = notas[i].gps_nvta.split(' ');
+                var marker = new google.maps.Marker({
+                    position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
+                    map: map,
+                    title: 'PLANTA:' + notas[i].pla_nvta + 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fes_nvta,
+                    icon: iconPath,
+                    html: ''
+                });
+
+                arr_marcadores.push(marker);
+
+            }
+        }
+        notasConSinGPS();
+    }
+    // evento al cambiar de planta 
+    //$(select_plantas).change(function () {
+    //    dibujanotas();
+    //});
+    // obtiene las notas con y sin gps
+    function notasConSinGPS()
+    {
+        notasSinGPS = [];
+        notasConGPS = [];
+
+        for (var i = 0; i < notasEvaluar.length; i++) {
+            if (notasEvaluar[i].gps_nvta != null && notasEvaluar[i].gps_nvta.trim() != '') {
+                notasConGPS.push(notasEvaluar[i]);
+            }
+            else
+            {
+                notasSinGPS.push(notasEvaluar[i]);
+            }
+        }
+
+        
+
+        document.getElementById('btnNotasAnalizar').innerText = "Notas totales para Analizar " + notasEvaluar.length;
+        document.getElementById('btnNotasSinGPS').innerText = "Notas sin GPS " + notasSinGPS.length;   
+        document.getElementById('btnNotasConGPS').innerText = "Notas con GPS " + notasConGPS.length;
+        document.getElementById('divTools').style.display = "inline";
+
+    }
+    // obtiene las el resumen de las ventas de las rutas de carburacion.
+    function vtaRutas(button) {
+        var AnalizarNotas = [];
+        document.getElementById('divReportes').innerHTML = "";
+        switch (button.id) {
+            case "btnNotasAnalizar":
+                AnalizarNotas = notas;
+                break;
+            case "btnNotasSinGPS":
+                AnalizarNotas = notasSinGPS;
+                break;
+            case "btnNotasConGPS":
+                AnalizarNotas = notasConGPS;
+                break;       
+        }
+
+        var noServicios = 0;
+        var importe = 0;
+        var nolts = 0;
+
+        var encabezado = document.createElement("LABEL");
+        encabezado.id = "encabezado";
+        encabezado.innerText = "Intervalo " + strIntervaloFechas
+        //document.getElementById('divReportes').appendChild(encabezado);
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Bomba');
+        tablapromedios.addColumn('string', 'No pedidos');
+        tablapromedios.addColumn('string', 'Importe total');
+        tablapromedios.addColumn('string', 'Total de litros');
+
+        for (var i = 0; i < rutas.length; i++) {
+
+
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divRutas";
+            divContenedor.id = "ruta" + rutas[i].trim();
+            divContenedor.style.paddingTop = "40px";
+            divContenedor.style.paddingRight = "20px";
+            divContenedor.style.display = "inline-block";
+
+
+           
+            //var label = document.createElement("LABEL");
+            //label.innerText = "Ruta" + rutas[i].trim();
+
+            //var salto = document.createElement("BR");
+
+            //var divScroll = document.createElement("DIV");
+            //divScroll.className = "tablas";
+            //divScroll.style.width = "width: 100%";
+            //divScroll.id = "TblRuta" + rutas[i].trim();
+
+            //var salto2 = document.createElement("BR");
+
+            //var btnImprimir = document.createElement("BUTTON")
+            //btnImprimir.innerText = "Imprimir";
+
+            //btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','rutas')");
+
+            //divContenedor.appendChild(label);
+            //divContenedor.appendChild(divScroll);
+            //divContenedor.appendChild(salto2);
+            //divContenedor.appendChild(btnImprimir);
+
+
+            //document.getElementById('divReportes').appendChild(divContenedor);
+
+
+
+             
+            for (var j = 0; j < AnalizarNotas.length; j++) {
+
+                if (AnalizarNotas[j].ruta_nvta.trim()==rutas[i].trim()) {
+                    noServicios++;
+                    importe = importe + parseFloat(AnalizarNotas[j].impt_nvta);
+                    nolts = nolts + parseFloat(AnalizarNotas[j].tlts_nvta);
+                    
+                }
+            }
+
+            // crear tabla api Google 
+            // Tabla promedios
+           
+                           
+            tablapromedios.addRow([rutas[i].trim(),noServicios + '', importe.toFixed(2) + '', nolts.toFixed(2) +''])
+            
+            
+            // fin de crear tabla api google
+
+
+             noServicios = 0;
+             importe = 0;
+             nolts = 0;
+
+
+           
+
+        }
+        var contenedor2 = new google.visualization.Table(document.getElementById("divReportes"));
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+        
+        cierraDialog();
+        muestraDialog('dialogReportes')
+
+
+      
+
+
+
+
+
+    }
+    // analiza un conjunto de rutas
+    function analizarColRutas() {
+        var rutasAnalizar = document.getElementById('colRutas').value.trim().split(',');
+        var NotasAnalizar = [];
+        var notaAnalizar = false;
+
+        for (var i = 0; i < notas.length; i++) {
+
+            for (var j = 0; j < rutasAnalizar.length; j++) {
+                if (rutasAnalizar[j].trim()==notas[i].ruta_nvta.trim()) {
+                    notaAnalizar = true;
+                }
+            }
+            if (notaAnalizar) {
+
+                NotasAnalizar.push(notas[i]);
+            }
+            notaAnalizar = false;
+        }
+        //////////////////////// comenzar a hacer el analisis////////////////////////////
+
+
+        // decalramos la matriz
+        var matrizPedidosxHrxDia = new Array(24);
+        for (i = 0; i < 24; i++) {
+
+            matrizPedidosxHrxDia[i] = Array(7);
+        }
+
+        // rellenamos la matriz con 0´s
+        for (var j = 0; j < 24; j++) {
+
+            for (var k = 0; k < 7; k++) {
+                matrizPedidosxHrxDia[j][k] = 0;
+            }
+        }
+
+        var y = 0, x = 0;
+
+        for (var i = 0; i < NotasAnalizar.length; i++) {
+
+            if (NotasAnalizar[i].fhs_nvta.trim()!='') {
+                var valoresHF = NotasAnalizar[i].fhs_nvta.split(" ");
+                horaPedido = determinaTurno(valoresHF);
+                y = parseInt(horaPedido);
+                x = parseInt(NotasAnalizar[i].dia_semana_sur.trim())
+                matrizPedidosxHrxDia[y][x]++;
+            }
+           
+        }
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'DIA');
+        data.addColumn('number', 'DOM');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'LUN');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'MAR');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'MIE');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'JUE');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'VIE');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'SAB');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+
+        for (var m = 0; m < 24; m++) {
+            data.addRow([m + '\n Hrs',
+
+                              matrizPedidosxHrxDia[m][0],
+                               '' + matrizPedidosxHrxDia[m][0],
+                              '' + matrizPedidosxHrxDia[m][0],
+
+                              matrizPedidosxHrxDia[m][1],
+                              '' + matrizPedidosxHrxDia[m][1],
+                              '' + matrizPedidosxHrxDia[m][1],
+
+                               matrizPedidosxHrxDia[m][2],
+                              '' + matrizPedidosxHrxDia[m][2],
+                              '' + matrizPedidosxHrxDia[m][2],
+
+                               matrizPedidosxHrxDia[m][3],
+                              '' + matrizPedidosxHrxDia[m][3],
+                              '' + matrizPedidosxHrxDia[m][3],
+                              matrizPedidosxHrxDia[m][4],
+                              '' + matrizPedidosxHrxDia[m][4],
+                              '' + matrizPedidosxHrxDia[m][4],
+
+                               matrizPedidosxHrxDia[m][5],
+                              '' + matrizPedidosxHrxDia[m][5],
+                              '' + matrizPedidosxHrxDia[m][5],
+
+                               matrizPedidosxHrxDia[m][6],
+                              '' + matrizPedidosxHrxDia[m][6],
+                              '' + matrizPedidosxHrxDia[m][6],
+
+            ]);
+            //var temp = [];
+            //temp.push(m + '\n Hrs');
+            //temp.push(matrizPedidosxHrxDia[m][0]);
+            //temp.push(matrizPedidosxHrxDia[m][1]);
+            //temp.push(matrizPedidosxHrxDia[m][2]);
+            //temp.push(matrizPedidosxHrxDia[m][3]);
+            //temp.push(matrizPedidosxHrxDia[m][4]);
+            //temp.push(matrizPedidosxHrxDia[m][5]);
+            //temp.push(matrizPedidosxHrxDia[m][6]);
+
+            //valores.push(temp);
+        }
+
+
+        var valores = [];
+        var Header = ['Hora', 'DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+        valores.push(Header);
+        //for (var m = 0; m < 24; m++) {
+        //    var temp = [];
+        //    temp.push(m + '\n Hrs');
+        //    temp.push(matrizPedidosxHrxDia[m][0]);
+        //    temp.push(matrizPedidosxHrxDia[m][1]);
+        //    temp.push(matrizPedidosxHrxDia[m][2]);
+        //    temp.push(matrizPedidosxHrxDia[m][3]);
+        //    temp.push(matrizPedidosxHrxDia[m][4]);
+        //    temp.push(matrizPedidosxHrxDia[m][5]);
+        //    temp.push(matrizPedidosxHrxDia[m][6]);
+
+        //    valores.push(temp);
+        //}
+
+        var options = {
+
+            width: 1200,
+            height: 500,
+            title: 'Pedidos por dia por hora ',
+
+            hAxis: {
+                //slantedTextAngle: -90,
+                title: 'Horas',
+                //direction: 1,
+            },
+            vAxis: {
+
+                title: 'No pedidos',
+                minValue: 0
+
+            }
+        };
+        //var data = google.visualization.arrayToDataTable(valores);
+        var chart = new google.visualization.AreaChart(document.getElementById('divReporteColRutas'));
+        chart.draw(data, options);
+
+        
+        muestraDialog('dialogReporteColRutas')
+       
+
+    }
+
+    /////////////////////// funciones de uso general///////////////////////////
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+        
+    }
+    function colocarPlantas()
+    {
+        plantas =[];
+        rutas = [];
+
+        var plantaEncontrada = false;
+        var rutaEncontrada = false;
+        for (var i = 0; i < notas.length; i++) {
+            // obtener las plantas
+            //for (var j = 0; j < plantas.length; j++) {
+            //    if (notas[i].pla_nvta.trim()==plantas[j].planta.trim()) {
+            //        plantaEncontrada = true;
+            //    }
+
+            //}
+            //if (!plantaEncontrada) {
+            //    plantas.push( { planta: notas[i].pla_nvta, indice: plantas.length });
+            //}
+            //plantaEncontrada = false;
+
+            // obtener las rutas
+            for (var k = 0; k < rutas.length; k++) {
+                if (notas[i].ruta_nvta.trim() == rutas[k]) {
+                    rutaEncontrada = true;
+                }
+
+            }
+            if (!rutaEncontrada && notas[i].pla_nvta.trim() == $('#hiddenPla').val()) {
+                rutas.push(notas[i].ruta_nvta.trim());
+            }
+            rutaEncontrada = false;
+        }
+
+        plantas.sort();
+        rutas.sort();
+        
+        // colcoar las plantas
+        //var x = document.getElementById("select_plantas");
+        //x.innerHTML = "";
+        //var option = document.createElement("option");
+        //option.text = "Todas";
+        //x.add(option);
+        //for (var k = 0; k < plantas.length; k++) {
+        //    var option = document.createElement("option");
+        //    option.text = plantas[k].planta.trim();
+        //    x.add(option);
+        //}
+        // colocar las rutas
+       
+        var y = document.getElementById("select_rutas_estaciones");
+        for (var k = 0; k < rutas.length; k++) {
+            var option = document.createElement("option");
+            option.text = rutas[k].trim();
+            y.add(option);
+        }
+
+
+
+
+
+
+    }
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_marcadores.length; i++) {
+            arr_marcadores[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+    function imprimirDIV(contenido, seccion) {
+        var ficha = document.getElementById(contenido);
+        var script1='</scrip';
+        var script2 = 't>';
+        var jquery1=' <script src="https://ajax.googleapis.com/';
+        var jquery2 = 'ajax/libs/jquery/3.4.1/jquery.min.js"></s';
+        var jquery3 = 'cript>';
+        switch (seccion) {
+
+            case "colrutas":
+               // document.getElementById('descReporte').value = document.getElementById('descReporte').value;
+                break;
+
+        }
+
+        var ventanaImpresion = window.open(' ', 'popUp');
+
+        // ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+
+        ventanaImpresion.document.write('<html>');
+        ventanaImpresion.document.write('<body>');
+        ventanaImpresion.document.write('<img src="/Images/logo.png"');
+        ventanaImpresion.document.write('<center>');
+        ventanaImpresion.document.write('<div id="cuerpo">');
+        ventanaImpresion.document.write(ficha.innerHTML);
+        ventanaImpresion.document.write('</div>');
+        ventanaImpresion.document.write('</center>');       
+        ventanaImpresion.document.write('</body>');
+        ventanaImpresion.document.write('</html>');
+        // se agrega el css
+        ventanaImpresion.document.write('<style type="text/css">');
+        switch (seccion) {
+
+            case "colrutas":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; width: 100px; height: 50px;}   img { position: fixed; top: 0; left: 2px; }  div.contenedores { page-break-inside: avoid; } button { display: none;}  .contenedores { margin: 0mm 0mm 0mm 30mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #encabezado {display: inline; position: fixed; bottom: 0; opacity: 0.5; }   }');
+                break;
+
+        }
+
+        ventanaImpresion.document.write('@@media print{ table tr:nth-child(even) { border:black 1px solid; } table tr:nth-child(odd) { background-color: #fff; border:black 1px solid;} table td {border:black 1px solid; }}');
+
+        ventanaImpresion.document.write('</style>');
+        // se agrega el java script
+      
+        ventanaImpresion.document.write(jquery1 + jquery2 + jquery3);
+
+        ventanaImpresion.document.write('<script type="text/javascript">');
+        ventanaImpresion.document.write(' $(document).ready(function () {');
+       
+        switch (seccion) {
+
+            case "colrutas":
+                
+                ventanaImpresion.document.write(' document.getElementById(\'descGral\').innerText= document.getElementById(\'descReporte\').value;');
+                ventanaImpresion.document.write(' document.getElementById(\'descReporte\').style.display="none";');
+                break;
+
+        }
+
+        ventanaImpresion.document.write('});');
+
+
+
+
+        ventanaImpresion.document.write(script1 + script2);
+        ventanaImpresion.document.close();
+       ventanaImpresion.print();
+        ventanaImpresion.close();
+
+
+
+
+
+    }
+    function agregaRutasAnalisi() {
+        var rutasExistentes = document.getElementById('colRutas').value.split(',');
+        var ruta = $("#select_rutas_estaciones option:selected").text();
+        var rutaConsiderada = false;
+
+        for (var i = 0; i < rutasExistentes.length; i++) {
+            if (rutasExistentes[i] == ruta)
+                rutaConsiderada = true;
+        }
+        if (!rutaConsiderada) {
+            document.getElementById('colRutas').value = document.getElementById('colRutas').value + ruta + ','
+        }
+        
+
+    }
+    function quitarultimaRuta() {
+
+        document.getElementById('colRutas').value = document.getElementById('colRutas').value.substring(0, document.getElementById('colRutas').value.length-5);
+    }
+    function determinaTurno(valores) {
+        var valoresHora = valores[1].split(":");
+        if (valores[2].includes("p")) {
+            switch (valoresHora[0].trim()) {
+                case "01":
+                    return "13";
+                    break;
+                case "02":
+                    return "14";
+                    break;
+                case "03":
+                    return "15";
+                    break;
+                case "04":
+                    return "16";
+                    break;
+                case "05":
+                    return "17";
+                    break;
+                case "06":
+                    return "18";
+                    break;
+                case "07":
+                    return "19";
+                    break;
+                case "08":
+                    return "20";
+                    break;
+                case "09":
+                    return "21";
+                    break;
+                case "10":
+                    return "22";
+                    break;
+                case "11":
+                    return "23";
+                    break;
+                default:
+                    return valoresHora[0].trim();
+
+
+            }
+            return valoresHora[0].trim();
+        }
+        else {
+            return valoresHora[0].trim();
+        }
+    }
+
+
+</script>
+<style>
+
+    #divReportes{
+        overflow: scroll;
+    }
+     #map {
+        height: 100%;
+        width: 100%;
+        border-radius: 2%;
+    }
+      #form_map {           
+        position: relative;
+        top: -95%;
+        float: left;      
+        margin: 10px;
+        width: 320px;
+        height: 800px;
+        background: #d7d8e6;
+        color: #000;
+        opacity: 0.2;
+        border-radius: 5%;
+        }
+        #form_map:hover {
+     opacity: 0.9;
+    }
+
+         #imgload{
+
+
+            background: #d7d8e6;
+            color: #000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50px);
+            box-sizing: border-box;
+            border-radius: 30%;
+            position: absolute;
+            opacity: 0.9;
+
+        }
+</style>
+

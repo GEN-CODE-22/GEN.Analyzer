@@ -1,0 +1,3386 @@
+﻿@{
+    ViewBag.Title = "Tiempos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<head>
+    <title>Tiempos</title>
+</head>
+
+
+<!-- Nueva imagen -->
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img src="~/Images/logo.png" style="width:130px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+            <label style="color:#ffffff">Fecha inicial:</label>
+            <input class="form-control" type="date" id="fecha_ini">
+            <label style="color:#ffffff">Fecha final:</label>
+            <input class="form-control" type="date" id="fecha_fin">
+            <!-- control para usuario admin-->
+
+            <label id="lblservidor" style="color:#ffffff">Servidor:</label>
+            <select class="form-control" id="slcservidor"></select>
+            <br />
+            <button class="btn btn-secondary" id="btnGetPedidos" onclick="getPedidos()">Consultar Pedidos</button>
+
+            
+            <br />
+           
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                   
+                    
+                    <label>RUTA</label>
+                    <select id="Slcrutas" class="form-control"  style="width:10%"></select>
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                FILTROS
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <!--TIPO DE SERVICIO-->
+                                <label>TIPO DE SERVICIO</label>
+                                <table class="sdd">
+                                    <tr>
+                                        <td>
+
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="chbxcil" value="cil" checked="checked" onchange="filTipoServ(this)">
+                                                <label class="custom-control-label" for="chbxcil">Cilindro</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input id="chbxest" type="checkbox" value="est" class="custom-control-input" onchange="filTipoServ(this)">
+                                                <label class="custom-control-label" for="chbxest">Estacionairio</label>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <br />
+                                <!--Estado del servicio-->
+                                <label>ESTADO DEL SERVICIO</label>
+                                <table class="sdd">
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input id="chbxsur" class="custom-control-input" type="checkbox" value="sur" checked="checked" onchange="filEdoServ(this)">
+                                                <label class="custom-control-label" for="chbxsur">SURTIDO</label>
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input id="chbxcan" type="checkbox" class="custom-control-input" value="can" onchange="filEdoServ(this)">
+                                                <label class="custom-control-label" for="chbxcan">CANCELADO</label>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                                <br />
+                                <!--TIPO DE PEDIDO-->
+                                <label>TIPO DE PEDIDO</label>
+                                <table class="sdd">
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_apl" type="checkbox" name="check_apl" value="app" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_apl">Aplicacion</label>
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_cal" type="checkbox" name="check_cal" value="cll" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_cal">Calle</label>
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_ccr" type="checkbox" name="check_ccr" value="ccr" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_ccr">Call</label>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_prc" type="checkbox" name="check_prc" value="pro" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_prc">Proactivo</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_pxs" type="checkbox" name="check_pxs" value="pxs" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_pxs">Prog x sis</label>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_enc" type="checkbox" name="check_enc" value="enc" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_enc">Encuesta</label>
+                                            </div>
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_web" type="checkbox" name="check_web" value="web" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_web">Whats app</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="custom-control custom-switch">
+                                                <input class="custom-control-input" id="check_cf" type="checkbox" name="check_cf" value="cf" checked onchange="cambioValorCheck(this)">
+                                                <label class="custom-control-label" for="check_cf">Call center ext</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                                <!--Ruta-->
+                               
+
+                            </div>
+                        </li>
+                        </ul>
+                  
+                        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    REPORTES
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" onclick="ReporteRutas()">Reporte Promedios de Rutas</a>
+                                    <a class="dropdown-item" onclick="ReportePrimerUltimoSer()">Reporte Primer Ultimo servicio</a>
+                                    <a class="dropdown-item" onclick="muestraPlantas()">Porcentajes y promedios choferes</a>
+                                    <a class="dropdown-item" onclick="reporteGerencial()">Resumen Ejecutivo</a>
+
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <!-- Topbar Search -->
+                        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                        <!-- Topbar Navbar -->
+                        <ul class="navbar-nav ml-auto">
+
+
+                            <li>
+                                <button class="btn btn-outline-primary" id="btnAnalizar" onclick="analizar()">Analizar</button><br />
+                               
+                            </li>
+                            <li>
+                                <button class="btn btn-outline-primary" onclick="javascript: window.imprimirDIV('informacion', 'informacion')">Imprimir</button>
+                                <li/>
+                                <div class="topbar-divider d-none d-sm-block"></div>
+                                <!-- Nav Item - User Information -->
+<li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                    <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                    <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                    <i class="far fa-user" style="margin-left:15px"></i>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
+                                    <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                                </a>
+                                <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profile
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+</nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content  <div class="container-fluid">-->
+                <div class="container-fluid">
+                    
+                        <img id="imgCalculando" src="~/Images/CargandoTiempo.gif" style="width:150px; float: right; display: none" />
+                        <br /><label id="lblFechaini" style="float: left; margin: 30px;"> </label>
+                        <br /><label id="lblFechafin" style="float: right; margin: 30px;"> </label>
+                        <center>
+                            <label id="lblrangoFechaini" style="display:inline-block;"> </label>
+                            <label id="lblrangoFechafin" style="display:inline-block;"> </label>
+                            <input type="range" class="slider" id="sliderGral" style=" width: 90%" onchange="actualizaRango(this)" list="tickmarks">
+                            <datalist id="tickmarks"></datalist>
+                        </center>
+                        <div id="informacion" style="width: 100%; height: 60% ">
+
+
+                            <center> <h3 id="descGral" class="descGral"></h3></center>
+                            <div style="width: 100%;" class="graficas">
+                                <div class="card shadow" style="  width:100%;   ">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">FRECUENCIA DE PEDIDOS</h6>                                      
+                                    </div>
+                                    <div style="width:100%;" class=" shadow card">
+                                        <div class="card-body" style="width:100%">
+                                            <center>
+                                                <div id="grfFrecPed"></div>
+                                           </center>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div style="width: 100%;" class="graficas">
+                                <div class="card shadow" style="  width:100%;   ">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">INTERVALO DE HORAS DE RECEPCION DE PEDIDOS</h6>
+                                    </div>
+                                    <div style="width:100%;" class=" shadow card">
+                                        <div class="card-body" style="width:100%">
+                                            <center>
+                                                <div id="grfHorasResPed"></div>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div style="width:100%;" class="graficas">
+                                <div class="card shadow" style="  width:100%;   ">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">PROMEDIOS Y PORCENTAJES</h6>
+                                    </div>
+                                    <div style="width:100%;" class=" shadow card">
+                                        <div class="card-body" style="width:100%">
+                                            <center>
+                                                <div id="tblInfoGral"></div>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <div style="width: 100%;" class="graficas">
+                                <div class="card shadow" style="  width:100%;   ">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">PRIMER Y ULTIMO SERVICIO</h6>
+                                    </div>
+                                    <div style="width:100%;" class=" shadow card">
+                                        <div class="card-body" style="width:100%">
+                                            <center>
+                                                <div id="tblPriUltSer"></div>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                           
+
+
+                            <center>
+                                <div  class="graficas">
+                                    <div class="card shadow" style="  width:100%;   ">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                            <h6 class=" m-0 font-weight-bold text-primary">PROMEDIOS POR CHOFER</h6>
+                                        </div>
+                                        <div style="width:100%;" class=" shadow card">
+                                            <div class="card-body" style="width:100%">
+                                                <center>
+                                                    <div id="promXchofer"></div>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                            </center>
+
+                        </div>
+                    
+                    </div>
+                    <!-- End of Content Wrapper -->
+                </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- DIALOGOS-->
+            <dialog id="ReporteRutas" style="width: 50%; height: 80%">
+                <button class="btn btn-danger" onclick="cerrarDialogo()">Cerrar</button>
+                <button class="btn btn-primary" onclick="javascript: window.imprimirDIV('contenedorReporteRutas', 'promediosTiepmosServicios')">Imprimir Todo</button>
+                <center>
+                    <div id="contenedorReporteRutas" style="width: 100%; height: 900px"></div>
+                </center>
+
+            </dialog>
+
+            <dialog id="ReportePrimerUltimoServico">
+                <button class="btn btn-danger" onclick="cerrarDialogo()">Cerrar</button>
+                <button class="btn btn-primary" onclick="javascript: window.imprimirDIV('contenedorPrimerUltimoServico', 'PrimerUltimoServicio')">Imprimir Todo</button>
+                <center>
+                    <div id="contenedorPrimerUltimoServico" style="width: 100%; height: 900px"></div>
+                </center>
+
+
+            </dialog>
+            <dialog id="CargandoTiempo">
+                <img src="~/Images/CargandoTiempo.gif" style="width:150px" />
+                </center>
+            </dialog>
+
+            <dialog id="ReportePorcentajesPromediosChoferes">
+                <button class="btn btn-danger" onclick="cerrarDialogo()">Cerrar</button>
+                <button class="btn btn-primary" onclick="javascript: window.imprimirDIV('contenedorPorcPromChof', 'porcPromChof')">Imprimir Todo</button>
+                <center>
+                    <div id="contenedorPorcPromChof" style="width: 100%; height: 900px"></div>
+                </center>
+            </dialog>
+            <dialog id="DlgPlantas">
+                <h3> Selecciona Planta </h3>
+                <select id="SlcPlantas" class="field-style field-split align-left" style="width:100% "></select>
+                <br />
+                <button class="btn btn-primary" onclick="reportimepochoferes()">Calcular</button>
+                <button class="btn btn-danger" onclick="cerrarDialogo()">Cerrar</button>
+            </dialog>
+
+
+            <dialog id="DlgReporteGerencial" style="width:50%; height: 80%; overflow: scroll;">
+                <button class="btn btn-danger" onclick="cerrarDialogo()">Cerrar</button>
+                <button class="btn btn-primary" onclick="javascript: window.imprimirDIV('DivReporteGerencial', 'gerencial')">Imprimir Todo</button>
+                <center>
+                    <div id="DivReporteGerencial" style="width: 100%; height: 900px">
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <label id="EncabezadoReporteGerencial"></label>
+                        <label id="fechaReporte"></label>
+
+                        <div style="width:100%; display:inline-block; border: black 1px solid;">
+                            <center>
+                                <h3>TIEMPO PROMEDIO DE ATENCIÓN</h3>
+                                <div id="TiempoPromAteEst" style="width: 100%; display:inline-block; float: left"></div>
+                                <div id="TiempoPromAteCil" style="width: 100%; display:inline-block; float: left"></div>
+                            </center>
+                        </div>
+
+                        <div style="width:100%; display:inline-block; border: black 1px solid;">
+                            <center>
+                                <h3>PEDIDOS APLICACIÓN</h3>
+                                <div id="vtasApp" style="width: 100%;  display:inline-block; float: left"></div>
+                            </center>
+                        </div>
+
+                        <div style="width:100%; display:inline-block; border: black 1px solid;">
+                            <div style="width:58%; display:inline-block;border: black 1px solid; ">
+                                <center><h3 style="float:left; width:100%;">RECEPCIÓN DE PEDIDOS</h3>  </center>
+                                <div id="ResPedxDia" style="width: 60%; display:inline-block; float:left;"></div>
+                                <div id="ResPedxHr" style="width: 40%; display:inline-block;float:left;"></div>
+
+                            </div>
+                            <div style="width:40%; float:left; display:inline-block; ">
+                                <center><h3 style="float:left; width:100%;">EFECTIVIDAD</h3> </center>
+                                <div id="idefeCil" style="width: 50%; display:inline-block;float:left;"></div>
+                                <div id="idefeEst" style="width: 50%; display:inline-block;float:left;"></div>
+                            </div>
+                        </div>
+                        <div style="width:100%; display:inline-block;  border:black 1px solid;">
+                            <center><h3 style="width:100%;">CANCELACIONES</h3> </center>
+                            <div id="Cancelaciones_cilindros" style="width: 50%; display:inline-block;float: left"></div>
+                            <div id="Cancelaciones_Pipas" style="width: 50%; display:inline-block;float: left"></div>
+
+                        </div>
+
+
+                    </div>
+                </center>
+            </dialog>
+
+</body>
+
+</html>
+<link href="~/Styles/simple-sidebar.css" rel="stylesheet">
+<script src="~/Scripts/jquery.ui.datepicker-es.js"></script>
+<script src="~/Scripts/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">
+<script src="~/Scripts/jquery.ui.datepicker-es.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables Globales
+    var pedidos = [];            //Contiene los pedidos en un rango de fechas.
+    var pedidosAnalisis = []     // contiene los pedidos que forman parte de un analisis.
+    var arrRutasCilindros = [];  // contiene las rutas de cilindro de la busqueda.
+    var arrRutasPipas = [];      // contiene las rutas de pipa de la busqueda.
+    var cil = true, est = false; // variables de control del tipo de servicio.
+    var sur = true, can = false; // variables de control del estado del servicio.
+    var app = true, cll = true, ccr = true, pro = true, pxs = true, enc = true, web = true, cf=true; // variables de control del tipo de pedido.
+    var dialogos = [];           // contiene los dialogos en pantalla.
+    var liquidas = [];           // contiene las liquidas de consiliacion.
+    var servidor = "";
+    var rangMin = 0, rangMax = 0; // almacenan los rangos de slider
+    $(document).ready(function () {
+        document.getElementById('header_layout').style.display = "none";
+        // colocar fechas actuales en los campos de fecha
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+
+        // desabilitar opciones si no es usuario administrador
+        if (document.getElementById("serv").innerHTML.trim() != 'Admin') {
+            document.getElementById('lblservidor').style.display = "none";
+            document.getElementById('slcservidor').style.display = "none";
+        }
+        // agregar los servers a el elemento select
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slcservidor");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+        // colocar por defaul el analisis de servicio estacionario
+        document.getElementById("chbxcil").checked = true;
+        document.getElementById("chbxest").checked = false;
+        document.getElementById("chbxsur").checked = true;
+        document.getElementById("chbxcan").checked = false;
+    });
+    // Inicializa el mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 13,
+        });
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        // google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+    }
+    // Consulta los pedidos
+    function getPedidos() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        var serv;
+        resetSliders();
+
+
+
+        if (document.getElementById("serv").innerHTML.trim() == 'Admin') {
+            serv = "'" + $("#slcservidor option:selected").text().trim() + "'";
+            servidor = serv;
+        }
+        else {
+            serv = "'" + document.getElementById("serv").innerHTML.trim() + "'";
+            servidor = serv;
+        }
+        // colcoar icono de cargando
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+        // llamada ajax para consultar los pedidos
+        $.ajax({
+            type: "POST",
+            url: "/Home/getPedidos/",
+            data: { paramSrv: serv.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    pedidos = data;                   
+                    getArrayRutas();
+                    colcaRutas();
+                    cerrarDialogo();
+                    getLiquidas();
+                    
+                }
+                else {
+                    cerrarDialogo();
+                    alert('¿No se encontro pedidos en ese rango de fechas?');
+                    
+
+                }
+            },
+            error: function (request, status, error) {
+                cerrarDialogo();
+                alert(request.responseText);
+            }
+        });
+    }
+    // obtiene las liquidaciones de la base de datoa
+    function getLiquidas() {
+        var serv;
+        if (document.getElementById("serv").innerHTML.trim() == 'Admin') {
+            serv = "'" + $("#slcservidor option:selected").text().trim() + "'";
+        }
+        else {
+            serv = "'" + document.getElementById("serv").innerHTML.trim() + "'";
+        }
+            
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+
+        // colcoar icono de cargando
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+
+        //consultar las notas
+        $.ajax({
+            type: "POST",
+            url: "/Home/getLiquidas/",
+            data: { paramSrv: serv.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    liquidas = data;
+                    getPlantaFromLiquidas();
+                    cerrarDialogo();
+                    analizar();
+                }
+                else {
+                    cerrarDialogo();
+                    alert("No existen liquidas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+
+                }
+            },
+            error: function (request, status, error) {
+                cerrarDialogo();
+                alert(request.responseText);
+            }
+        });
+    }
+    function getPlantaFromLiquidas() {
+
+        var plantasLiquidas = [];
+        var plantaEncontrada = false;
+        for (var i = 0; i <liquidas.length; i++) {
+
+            for (var j = 0; j < plantasLiquidas.length; j++) {
+                if (plantasLiquidas[j] == liquidas[i].pla_eru.trim())
+                {
+                    plantaEncontrada = true;
+                }
+            }
+
+            if (!plantaEncontrada) {
+                plantasLiquidas.push(liquidas[i].pla_eru.trim());
+            }
+            plantaEncontrada = false;
+        }
+
+        var x = document.getElementById("SlcPlantas");
+        var option = document.createElement("option");
+        option.text = 'Todas';
+        x.add(option);
+        for (var i = 0; i < plantasLiquidas.length; i++) {
+            var x = document.getElementById("SlcPlantas");
+            var option = document.createElement("option");
+            option.text = plantasLiquidas[i].trim();
+            x.add(option);
+        }
+
+
+
+    }
+    // Control de los checkbox de tipo de servicio
+    function filTipoServ(CheckBox) {
+        switch (CheckBox.value) {
+            case "cil":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxcil").checked = true;
+                    document.getElementById("chbxest").checked = false;
+                }
+                else {
+                    document.getElementById("chbxcil").checked = false;
+                    document.getElementById("chbxest").checked = true;
+                }
+
+                break;
+            case "est":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxcil").checked = false;
+                    document.getElementById("chbxest").checked = true;
+                }
+                else {
+                    document.getElementById("chbxcil").checked = true;
+                    document.getElementById("chbxest").checked = false;
+                }
+                break;
+        }
+        cambioValorCheck(CheckBox);
+    }
+    // Control de los chekbox del estado del servicio
+    function filEdoServ(CheckBox) {
+        switch (CheckBox.value) {
+            case "sur":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxsur").checked = true;
+                    document.getElementById("chbxcan").checked = false;
+                }
+                else {
+                    document.getElementById("chbxsur").checked = false;
+                    document.getElementById("chbxcan").checked = true;
+                }
+
+                break;
+            case "can":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxsur").checked = false;
+                    document.getElementById("chbxcan").checked = true;
+                }
+                else {
+                    document.getElementById("chbxsur").checked = true;
+                    document.getElementById("chbxcan").checked = false;
+                }
+
+                break;
+        }
+        cambioValorCheck(CheckBox);
+    }
+    // Obtiene los arreglos de rutas de cilindros y pipas respectivamente.
+    function getArrayRutas() {
+        for (var i = 0; i < pedidos.length; i++) {
+            var ruta = pedidos[i].ruta_ped.trim();
+            var encontrado = false;
+
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("M")) {
+                for (var j = 0; j < arrRutasPipas.length; j++) {
+                    if (ruta.trim() == arrRutasPipas[j].trim()) {
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado) {
+                    arrRutasPipas.push(ruta);
+
+                }
+
+
+            }
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("C")) {
+                for (var k = 0; k < arrRutasCilindros.length; k++) {
+                    if (ruta.trim() == arrRutasCilindros[k].trim()) {
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado) {
+                    arrRutasCilindros.push(ruta);
+
+                }
+            }
+
+            encontrado = false;
+
+        }
+
+        arrRutasCilindros.sort();
+        arrRutasPipas.sort();
+
+  
+
+    }
+    // Cambia el valor de la variables correspondientes a su check.
+    function cambioValorCheck(checbox) {
+        var valor = checbox.value;
+        switch (valor) {
+            // tipo de servicio
+            case "cil":
+                if (checbox.checked) {
+                    cil = true;
+                    est = false;
+                }
+
+                else {
+                    cil = false;
+                    est = true;
+                }
+                analizar();
+                colcaRutas();
+                break;
+            case "est":
+                if (checbox.checked) {
+                    cil = false;
+                    est = true;
+                }
+
+                else {
+                    cil = true;
+                    est = false;
+                }
+                colcaRutas();
+                analizar();
+                break;
+                // estado del servicio
+            case "sur":
+                if (checbox.checked) {
+                    sur = true;
+                    can = false;
+                }
+
+                else {
+                    sur = false;
+                    can = true;
+                }
+                analizar();
+
+                break;
+            case "can":
+                if (checbox.checked) {
+                    sur = false;
+                    can = true;
+                }
+
+                else {
+                    sur = true;
+                    can = false;
+                }
+                analizar();
+
+                break;
+                // tipo de pedido
+            case "app":
+                if (checbox.checked)
+                    app = true;
+                else
+                    app = false;
+                analizar();
+                break;
+            case "cll":
+                if (checbox.checked)
+                    cll = true;
+                else
+                    cll = false;
+                analizar();
+                break;
+            case "ccr":
+                if (checbox.checked)
+                    ccr = true;
+                else
+                    ccr = false;
+                analizar();
+                break;
+            case "pro":
+                if (checbox.checked)
+                    pro = true;
+                else
+                    pro = false;
+                analizar();
+                break;
+            case "pxs":
+                if (checbox.checked)
+                    pxs = true;
+                else
+                    pxs = false;
+                analizar();
+                break;
+            case "enc":
+                if (checbox.checked)
+                    enc = true;
+                else
+                    enc = false;
+                analizar();
+                break;
+            case "web":
+                if (checbox.checked)
+                    web = true;
+                else
+                    web = false;
+                analizar();
+                break;
+            case "cf":
+                if (checbox.checked)
+                    cf = true;
+                else
+                    cf = false;
+                analizar();
+                break;
+
+
+
+        }
+
+
+
+
+
+    }
+    // Coloca el listado de rutas deacuerdo al servicio seleccionado
+    function colcaRutas() {
+        var rutas;
+        if (cil)
+            rutas = arrRutasCilindros;
+        else if (est)
+            rutas = arrRutasPipas;
+
+        document.getElementById("Slcrutas").length = 0;
+
+
+
+        var x = document.getElementById("Slcrutas");
+        var option = document.createElement("option");
+        option.text ='Todas';
+        x.add(option);
+        for (var i = 0; i < rutas.length; i++) {
+            var x = document.getElementById("Slcrutas");
+            var option = document.createElement("option");
+            option.text = rutas[i].trim();
+            x.add(option);
+        }
+
+    }
+    // Determina el conjunto de pedidos que formaran parte de un analisis.
+    function pedidosAnali() {
+        pedidosAnalisis = [];
+        var ruta = $("#Slcrutas option:selected").text().trim();
+        for (var i = 0; i < pedidos.length; i++) {
+            if ((tipoPedido(pedidos[i]) & edoPedido(pedidos[i]) & tpoPedido(pedidos[i])) & (ruta == pedidos[i].ruta_ped.trim() | ruta == 'Todas') & dentroIntervalSlider(pedidos[i]) ) {
+                pedidosAnalisis.push(pedidos[i]);
+            }
+        }
+        function tipoPedido(serPed) {
+
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("M") & est) {
+                return true;
+            }
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("C") & cil) {
+                return true;
+            }
+        }
+        function edoPedido(edoPed) {
+            if (edoPed.edo_ped.trim() == "S" & sur) {
+                return true;
+            }
+            if (edoPed.edo_ped.trim() == "C" & can) {
+                return true;
+            }
+
+        }
+        function tpoPedido(edoPed) {
+
+            switch (edoPed.tpdo_ped.trim()) {
+                case "A":
+                    if (app)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "C":
+                    if (cll)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "L":
+                    if (ccr)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "P":
+                    if (pro)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "S":
+                    if (pxs)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "E":
+                    if (enc)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "W":
+                    if (web)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "F":
+                    if (cf)
+                        return true;
+                    else
+                        return false;
+                    break;
+
+            }
+
+        }
+        function dentroIntervalSlider(fecha_pedido)
+        {
+            if (getmilisegundos(fecha_pedido) >= rangMin & getmilisegundos(fecha_pedido)<= rangMax) {
+                return true;
+            }
+        }
+
+
+    }
+    function analizar() {
+
+
+        document.getElementById('imgCalculando').style.display = 'inline';
+        document.getElementById('descGral').innerText = getDetallesReporte('descGral');
+        pedidosAnali();
+        google.setOnLoadCallback(promedios);
+        promedios();
+        google.setOnLoadCallback(horaResepcionPedidos);
+        horaResepcionPedidos();
+        //google.setOnLoadCallback(freccPed);
+       // freccPed();
+        google.setOnLoadCallback(GrfPedxDiaxHra);
+        GrfPedxDiaxHra();
+        primerUltimoServicio();
+        tiempoChoferes();
+        document.getElementById('imgCalculando').style.display = 'none';
+
+    }
+    $(Slcrutas).change(function () {
+        analizar();
+
+    });
+    //  muestra promedios  y porcentajes de antencion en una tabla con relacion a una ruta .
+    function promedios() {
+       
+        promediosChoferes(pedidosAnalisis, 'tblInfoGral')
+    }
+    // muestra promedios y porcentajes de atencion en una tabla con relacion a un chofer 
+    function promediosChoferes(pedidosChofer, contenedor) {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+
+        var contPedSurEst = 0;
+        var contPedSurCil = 0;
+        var pedSurAnaTiemEst = [];
+        /*0*/pedSurAnaTiemEst.push({ Tipo: 'CALL CENTER', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*1*/pedSurAnaTiemEst.push({ Tipo: 'APLICACION', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*2*/pedSurAnaTiemEst.push({ Tipo: 'PROG X SIS', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*3*/pedSurAnaTiemEst.push({ Tipo: 'PROACTIVO', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*4*/pedSurAnaTiemEst.push({ Tipo: 'ENCUENSTA', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*5*/pedSurAnaTiemEst.push({ Tipo: 'WHATS APP', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*6*/pedSurAnaTiemEst.push({ Tipo: 'CALLE', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*7*/pedSurAnaTiemEst.push({ Tipo: 'CALLCENTER EXT', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*8*/pedSurAnaTiemEst.push({ Tipo: 'TOTAL', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        
+        for (var x = 0; x < pedidosChofer.length; x++) {
+            if (pedidosChofer[x].edo_ped.trim() == edo) {
+                
+                    contPedSurEst++;
+                
+
+
+                    switch (pedidosChofer[x].tpdo_ped.trim()) {
+                    case 'L':                      
+                            pedSurAnaTiemEst[0].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[0], pedSurAnaTiemEst[8])
+
+                        break;
+                    case 'A':                        
+                            pedSurAnaTiemEst[1].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[1], pedSurAnaTiemEst[8])
+                        break;
+                    case 'S':
+                            pedSurAnaTiemEst[2].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[2], pedSurAnaTiemEst[8])
+                        break;
+                    case 'P':
+                            pedSurAnaTiemEst[3].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[3], pedSurAnaTiemEst[8])
+                        break;
+                    case 'E':
+                            pedSurAnaTiemEst[4].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[4], pedSurAnaTiemEst[8])
+                        break;
+                    case 'W':
+                            pedSurAnaTiemEst[5].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[5], pedSurAnaTiemEst[8])
+                            break;
+                        
+                    case 'C':
+                        pedSurAnaTiemEst[6].NumeroPedidos++;
+                        pedSurAnaTiemEst[8].NumeroPedidos++;
+                        pedSurAnaTiemEst[6].mismoDiaPed++;
+                            
+                        break;
+                        case 'F':
+                            pedSurAnaTiemEst[7].NumeroPedidos++;
+                            determinaInterSurt(pedidosChofer[x], pedSurAnaTiemEst[7], pedSurAnaTiemEst[8])
+                            break;
+                }
+
+            }
+        }
+        pedSurAnaTiemEst[8].NumeroPedidos = contPedSurEst;
+
+
+
+        // metodos particulares para este analisi
+        function determinaInterSurt(pedido_, tipoPedidoReg, regTotales) {
+
+            var arrFecRealPed = pedido_.fhrp_ped.split(' ');
+            var arrFecRealSur = pedido_.fecrsur_ped.split(' ');
+            var arrFecPosSur = pedido_.fecsur_ped.split(' ');
+
+
+            var arrFecha_ini_ped = arrFecPosSur[0].trim().split('/');
+            var arrFecha_fin_ped = arrFecRealSur[0].trim().split('/');
+
+            if ((arrFecRealPed[0].trim() == arrFecRealSur[0].trim()) && (arrFecRealPed[0].trim() == arrFecPosSur[0].trim())) //  pedido y surtido el mismo dia.
+            {
+                tipoPedidoReg.mismoDiaPed++;
+                regTotales.mismoDiaPed++
+
+                if (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate))) < 0) {
+                    tipoPedidoReg.mismoDiaTiem = tipoPedidoReg.mismoDiaTiem + (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate))) * -1);
+                    regTotales.mismoDiaTiem = regTotales.mismoDiaTiem + (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate))) * -1);
+                } else {
+                    tipoPedidoReg.mismoDiaTiem = tipoPedidoReg.mismoDiaTiem + ((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate)));
+                    regTotales.mismoDiaTiem = regTotales.mismoDiaTiem + ((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate)));
+                }
+
+
+            }
+            else if ((arrFecPosSur[0].trim() == arrFecRealSur[0].trim()) && (arrFecRealPed[0].trim() != arrFecRealSur[0].trim()))  // pedido y surtido exitoso con una programacion de mas de un dia 
+            {
+                tipoPedidoReg.ProgramacionEfe++;
+                regTotales.ProgramacionEfe++;
+            }
+            else if (((((new Date(parseInt(arrFecha_fin_ped[2]), parseInt(arrFecha_fin_ped[1] - 1), parseInt(arrFecha_fin_ped[0]), 0, 0, 0, 0)) - (new Date(parseInt(arrFecha_ini_ped[2]), parseInt(arrFecha_ini_ped[1] - 1), parseInt(arrFecha_ini_ped[0]), 0, 0, 0, 0)))) < 0) && parseInt(pedido_.nmod_ped) > 1) // surtido antes del dia programado (cuenta como programacion exitosa)
+            {
+                tipoPedidoReg.ProgramacionEfe++;
+                regTotales.ProgramacionEfe++;
+            }
+            else if (((arrFecRealPed[0].trim() == arrFecPosSur[0].trim()) && (arrFecRealPed[0].trim() != arrFecRealSur[0].trim())) || ((arrFecRealPed[0].trim() != arrFecPosSur[0].trim()) && (arrFecPosSur[0].trim() != arrFecRealSur[0].trim()))) // pedidos surtidos con con retraso de mas de un dia
+            {
+                tipoPedidoReg.masDiaPed++;
+                tipoPedidoReg.masDiaTiem = tipoPedidoReg.masDiaTiem + milisegundosDias(arrFecPosSur[0], arrFecRealSur[0]);
+                regTotales.masDiaPed++;
+                regTotales.masDiaTiem = regTotales.masDiaTiem + milisegundosDias(arrFecPosSur[0], arrFecRealSur[0]);
+            }
+        }
+
+        function milisegundosDias(fecha_ini, fecha_fin) {
+            var dias = 0;
+            var arrFecha_ini = fecha_ini.trim().split('/');
+            var arrFecha_fin = fecha_fin.trim().split('/');
+
+
+            var a = new Date(parseInt(arrFecha_ini[2]), parseInt(arrFecha_ini[1] - 1), parseInt(arrFecha_ini[0]), 0, 0, 0, 0)
+
+            var b = new Date(parseInt(arrFecha_fin[2]), parseInt(arrFecha_fin[1] - 1), parseInt(arrFecha_fin[0]), 0, 0, 0, 0)
+            var nDifference = Math.abs(new Date(b) - new Date(a));
+            dias = nDifference / 60000;
+            return dias;
+        }
+
+
+        var tablapromediosTiempoEst = new google.visualization.DataTable();
+        tablapromediosTiempoEst.addColumn('string', 'Tipo');
+        tablapromediosTiempoEst.addColumn('string', 'Pedidos');
+        tablapromediosTiempoEst.addColumn('string', 'Al dia');
+        tablapromediosTiempoEst.addColumn('string', 'Con dias programados');
+        tablapromediosTiempoEst.addColumn('string', 'Mas del dia de retraso');
+        
+
+
+        for (var g = 0; g < pedSurAnaTiemEst.length; g++) {
+
+            if (pedSurAnaTiemEst[g].NumeroPedidos > 0) {
+                if (pedSurAnaTiemEst[g].Tipo != 'CALLE' & pedSurAnaTiemEst[g].Tipo != 'TOTAL') {
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + ((pedSurAnaTiemEst[g].NumeroPedidos * 100) / contPedSurEst).toFixed(2) + '%)',
+                                        pedSurAnaTiemEst[g].NumeroPedidos +'',
+                                       'Ped:' + pedSurAnaTiemEst[g].mismoDiaPed + ' Prom: ' + tiempoProm(pedSurAnaTiemEst[g].mismoDiaPed, pedSurAnaTiemEst[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].mismoDiaPed * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)',
+                                       'Ped:' + pedSurAnaTiemEst[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemEst[g].ProgramacionEfe * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)',
+                                       'Ped:' + pedSurAnaTiemEst[g].masDiaPed + ' Prom:' + tiempoProm(pedSurAnaTiemEst[g].masDiaPed, pedSurAnaTiemEst[g].masDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].masDiaPed * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo != 'TOTAL')
+                {
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + ((pedSurAnaTiemEst[g].NumeroPedidos * 100) / contPedSurEst).toFixed(2) + '%)',
+                    pedSurAnaTiemEst[g].NumeroPedidos+'',
+                  'Ped:' + pedSurAnaTiemEst[g].mismoDiaPed,
+                  '',
+                  '']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo == 'TOTAL') {
+                    //- pedSurAnaTiemEst[6].NumeroPedidos
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + (((pedSurAnaTiemEst[g].NumeroPedidos ) * 100) / contPedSurEst).toFixed(2) + '%)',
+                                        pedSurAnaTiemEst[g].NumeroPedidos + '',
+                                       'Ped:' + pedSurAnaTiemEst[g].mismoDiaPed + ' Prom: ' + tiempoProm(pedSurAnaTiemEst[g].mismoDiaPed, pedSurAnaTiemEst[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].mismoDiaPed * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)',
+                                       'Ped:' + pedSurAnaTiemEst[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemEst[g].ProgramacionEfe * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)',
+                                       'Ped:' + pedSurAnaTiemEst[g].masDiaPed + ' Prom:' + tiempoProm(pedSurAnaTiemEst[g].masDiaPed, pedSurAnaTiemEst[g].masDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].masDiaPed * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)']);
+                }
+                
+            }
+
+        }
+       
+
+
+
+        var conteEst = new google.visualization.Table(document.getElementById(contenedor));
+        conteEst.draw(tablapromediosTiempoEst, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(conteEst, 'select', function () {
+        });
+
+        function tiempoProm(noPedidos, Minutos) {
+            var minutiosProm = Minutos / noPedidos;
+            var dias = 0, horas = 0, minutos = 0;
+            dias = Math.trunc(minutiosProm / 1440);
+            var diasResiduo = minutiosProm % 1440;
+            horas = Math.trunc(diasResiduo / 60);
+            var horasResiduos = diasResiduo % 60;
+            minutos = horasResiduos.toFixed(0);
+
+            if (dias > 0 || horas > 0 || minutos>0) {
+                return "D:" + dias + " H:" + horas.toFixed(0) + " M:" + minutos;
+            }
+            else
+            {
+                return "D:0 H:0 M:0";
+            }
+            
+           
+
+        }
+
+
+       
+    }
+    // grafica las horas de resepcion de pedidos.
+    function horaResepcionPedidos()
+    {
+        var lunMax = 0, lunMin = 100;
+        var marMax = 0, marMin = 100;
+        var mieMax = 0, mieMin = 100;
+        var jueMax = 0, jueMin = 100;
+        var vieMax = 0, vieMin = 100;
+        var sabMax = 0, sabMin = 100;
+        var domMax = 0, domMin = 100;
+
+        var horaPedido = 0;
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+            if ( pedidosAnalisis[i].tpdo_ped!='C') {
+    
+            
+
+            var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+
+
+            switch (pedidosAnalisis[i].dia_ped.trim())
+            {
+                case "0":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > domMax)
+                        domMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < domMin)
+                        domMin = parseInt(horaPedido);
+                    break;
+                case "1":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > lunMax)
+                        lunMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < lunMin)
+                        lunMin = parseInt(horaPedido);
+                    break;
+                case "2":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > marMax)
+                        marMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < marMin)
+                        marMin = parseInt(horaPedido);
+
+                    break;
+                case "3":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > mieMax)
+                        mieMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < mieMin)
+                        mieMin = parseInt(horaPedido);
+
+                    break;
+                case "4":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > jueMax)
+                        jueMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < jueMin)
+                        jueMin = parseInt(horaPedido);
+
+                    break;
+                case "5":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > vieMax)
+                        vieMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < vieMin)
+                        vieMin = parseInt(horaPedido);
+
+                    break;
+                case "6":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > sabMax)
+                        sabMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < sabMin)
+                        sabMin = parseInt(horaPedido);
+                    break;
+            }
+        }
+        }
+        // graficar tabla
+     var data = google.visualization.arrayToDataTable([
+     ['Domingo'  , 0, domMin, domMax, 24],
+     ['Lunes'    , 0, lunMin, lunMax, 24],
+     ['Martes'   , 0, marMin, marMax, 24],
+     ['Miercoles', 0, mieMin, mieMax, 24],
+     ['Jueves'   , 0, jueMin, jueMax, 24],
+     ['Viernes'  , 0, vieMin, vieMax, 24],
+     ['Sabado'   , 0, sabMin, sabMax, 24]
+     // Treat first row as data as well.
+        ], true);
+
+        var options = {
+            legend: 'none',
+            width: 1000,
+            height: 450,
+        };
+        var chart = new google.visualization.CandlestickChart(document.getElementById('grfHorasResPed'));
+        chart.draw(data, options);
+    }
+    // grafica la frecuencia de pedidos sobre las horas
+    function freccPed() {
+        var valores = [];
+        var temp = [];
+        temp.push("horas");
+        temp.push("Dias");
+        valores.push(temp);
+
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+            var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+            horaPedido = determinaTurno(valoresHF);
+            var temp = [];
+            temp.push(parseInt(horaPedido) + deteminapartedecimalhora(valoresHF));
+            temp.push(parseInt(pedidosAnalisis[i].dia_ped));
+            valores.push(temp);
+
+
+        }
+
+
+        var data = google.visualization.arrayToDataTable(valores);
+
+        var options = {
+          title: 'Frecuencia',
+          hAxis: {title: 'horas', minValue: 5, maxValue: 24},
+          vAxis: {title: 'Dias', minValue: 0, maxValue: 6},
+          legend: 'none',
+
+            height: 450,
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('grfFrecPed'));
+
+        chart.draw(data, options);
+
+
+
+
+    }
+    // grafica la cantidad de pedidos por dia y por hora
+    function GrfPedxDiaxHra()
+    {
+
+        // decalramos la matriz
+        var matrizPedidosxHrxDia = new Array(24);
+        for (i = 0; i < 24; i++) {
+
+            matrizPedidosxHrxDia[i] = Array(7);
+        }
+
+        // rellenamos la matriz con 0´s
+        for (var j = 0; j < 24; j++) {
+
+            for (var k = 0; k < 7; k++) {
+                matrizPedidosxHrxDia[j][k] = 0;
+            }
+        }
+        var y =0, x=0;
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+
+            if (pedidosAnalisis[i].tpdo_ped!='C') {
+                var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+                horaPedido = determinaTurno(valoresHF);
+                y = parseInt(horaPedido);
+                x = parseInt(pedidosAnalisis[i].dia_ped.trim())
+                matrizPedidosxHrxDia[y][x]++;
+            }
+
+           
+        }
+
+        var valores = [];
+        var Header = ['Hora', 'DOM', 'LUN','MAR','MIE','JUE','VIE','SAB'];
+        valores.push(Header);
+        for (var m = 0; m < 24; m++) {
+            var temp = [];
+            temp.push(m + '\n Hrs');
+            temp.push(matrizPedidosxHrxDia[m][0]);
+            temp.push(matrizPedidosxHrxDia[m][1]);
+            temp.push(matrizPedidosxHrxDia[m][2]);
+            temp.push(matrizPedidosxHrxDia[m][3]);
+            temp.push(matrizPedidosxHrxDia[m][4]);
+            temp.push(matrizPedidosxHrxDia[m][5]);
+            temp.push(matrizPedidosxHrxDia[m][6]);
+
+            valores.push(temp);
+        }
+
+        var options = {
+
+            width: 1200,
+            height: 500,
+            title: 'Pedidos por dia por hora',
+
+            hAxis: {
+                //slantedTextAngle: -90,
+                title: 'Horas',
+                //direction: 1,
+            },
+            vAxis: {
+
+                title: 'No pedidos',
+
+            }
+        };
+        var data = google.visualization.arrayToDataTable(valores);
+        var chart = new google.visualization.AreaChart(document.getElementById('grfFrecPed'));
+        chart.draw(data, options);
+
+
+
+
+
+
+
+
+
+    }
+    // funciones de uso general
+    function determinaTurno(valores) {
+        var valoresHora = valores[1].split(":");
+        if (valores[2].includes("p")) {
+            switch (valoresHora[0].trim()) {
+                case "01":
+                    return "13";
+                    break;
+                case "02":
+                    return "14";
+                    break;
+                case "03":
+                    return "15";
+                    break;
+                case "04":
+                    return "16";
+                    break;
+                case "05":
+                    return "17";
+                    break;
+                case "06":
+                    return "18";
+                    break;
+                case "07":
+                    return "19";
+                    break;
+                case "08":
+                    return "20";
+                    break;
+                case "09":
+                    return "21";
+                    break;
+                case "10":
+                    return "22";
+                    break;
+                case "11":
+                    return "23";
+                    break;
+                default:
+                    return valoresHora[0].trim();
+
+
+            }
+            return valoresHora[0].trim();
+        }
+        else {
+            return valoresHora[0].trim();
+        }
+    }
+    // optiene la parte decimal de una fraccion de hora
+    function deteminapartedecimalhora(valores) {
+        var valoresHora = valores[1].split(":");
+        var min = parseInt(valoresHora[1]);
+
+        var fracHora = min / 60;
+        return fracHora;
+    }
+    // crea un reporte de todas las rutas seleccionadas
+    function ReporteRutas() {
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+        var rutasAnalisis=[];
+
+        if (cil) {
+            rutasAnalisis=arrRutasCilindros;
+        }
+        else if (est) {
+            rutasAnalisis=arrRutasPipas;
+        }
+        document.getElementById("contenedorReporteRutas").innerHTML = "";
+
+        var cuerpo = document.createElement("DIV");
+        cuerpo.id = "cuerpoReporte";
+       
+       
+
+        
+
+        document.getElementById("contenedorReporteRutas").appendChild(cuerpo)
+        //$("p").append("<b>Appended text</b>");
+        for (var i = 0; i < rutasAnalisis.length; i++) {
+            var fecha_ini = document.getElementById("fecha_ini").value;
+            var fecha_fin = document.getElementById("fecha_fin").value;
+            var idDiv = 'ReporteRuta' + rutasAnalisis[i].trim();
+            var html = ' <br/><div id="' + idDiv + '"></div>'
+
+            // se crea el elemento img del logo
+            var img = document.createElement("IMG");
+            img.src = "/Images/logo.png";
+            img.id = "logo";
+            img.style.display = "none";
+            //etiqueta de informacion general
+          
+
+            // se crea el div contenedor
+            var divContenedor = document.createElement("DIV");
+            divContenedor.id = "divcontenedor" + rutasAnalisis[i].trim();
+            divContenedor.className = "contenedores";
+            // se crea el div que contendra a la tabla 
+            var node = document.createElement("DIV");
+            var salto = document.createElement("BR");
+            node.id = idDiv;
+            var etqruta = document.createElement("LABEL");
+            etqruta.id = "infoLabelRuta" + rutasAnalisis[i].trim() ;
+            var textnode = document.createTextNode("RUTA: " + rutasAnalisis[i].trim()  + ' \n' + getDetallesReporte("promedios"));         // Create a text node
+            etqruta.appendChild(textnode);
+
+            // se crea boton de impresion de las tablas individuales 
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','promediosTiepmosServicios')");
+
+            divContenedor.appendChild(img);
+            divContenedor.appendChild(salto);
+         
+            divContenedor.appendChild(etqruta);
+            divContenedor.appendChild(node);
+            divContenedor.appendChild(btnImprimir);
+
+            
+            document.getElementById("cuerpoReporte").appendChild(divContenedor)
+          
+           // document.getElementById("contenedorReporteRutas").appendChild(divContenedor);
+
+
+
+            promediostoReport(rutasAnalisis[i].trim(), idDiv);
+        }
+       
+
+        cerrarDialogo();
+        var msg = document.getElementById('ReporteRutas');
+        msg.showModal();
+        dialogos.push(msg);
+        
+    }
+    // Analiza los tiempos y promedios de las rutas para el reporte
+    function promediostoReport(ruta, contenedor) {
+
+        var pedidosRutas = [];
+
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+
+
+        for (var i = 0; i < pedidos.length; i++) {
+            if (pedidos[i].ruta_ped.trim() == ruta.trim() & pedidos[i].edo_ped.trim() == edo) {
+                pedidosRutas.push(pedidos[i]);
+            }
+        }
+        promediosChoferes(pedidosRutas, contenedor);
+      
+    }
+    // Cierra los dialogos que estan en pantalla
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+
+    }
+    function imprimirDIV(contenido, seccion) {
+        var ficha = document.getElementById(contenido);
+        
+        var ventanaImpresion = window.open(' ', 'popUp');
+       
+        // ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+       
+        ventanaImpresion.document.write('<html>');
+        ventanaImpresion.document.write('<body>');
+         ventanaImpresion.document.write('<img src="/Images/logo.png"');
+        ventanaImpresion.document.write('<center>');
+        ventanaImpresion.document.write('<div id="cuerpo">');
+        ventanaImpresion.document.write(ficha.innerHTML);
+        ventanaImpresion.document.write('</div>');
+        ventanaImpresion.document.write('</center>');
+       
+        ventanaImpresion.document.write('<style type="text/css">');
+        switch (seccion)
+        {
+            case "PrimerUltimoServicio":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  div.divContenedor { page-break-before: always;   page-break-inside: avoid; } button { display: none;}  .divContenedor { margin: 0mm 0mm 0mm 40mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   }');
+                break;
+            case "promediosTiepmosServicios":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; width: 100px; height: 50px;}   img { position: fixed; top: 0; left: 2px; }  div.contenedores { page-break-inside: avoid; } button { display: none;}  .contenedores { margin: 0mm 0mm 0mm 30mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #infogral {display: inline; position: fixed; bottom: 0; opacity: 0.5; }   }');
+                break;
+            case "informacion":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  .descGral {position: fixed; bottom: 0;  font-size: 15px;   } .divTblChoferes {page-break-inside: avoid;  } .graficas { page-break-after: always;   page-break-inside: avoid; } button { display: none;}  .graficas { margin: 25mm 0mm 0mm 0mm; }  .descGral {color: #2C5690; font-weight: bold;display: block; font-size: 20px;  opacity: 0.5; } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   #promXchofer { overflow: visible; width: 100%}  }');
+                break;
+            case "porcPromChof":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; margin-bottom: 5cm;} #encabezado{ position: fixed; bottom: 0; left: 1px;  opacity: 0.5; }  img { position: fixed; botton: 0; left: 1px;  width: 100px; height: 70px;}   .divTblChoferes {  page-break-inside: avoid; margin: 0mm 0mm 0mm 30mm; width: 100% } button { display: none;}   label {color: #2C5690; font-weight: bold;display: block; font-size: 15px;  } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }  #logo{ }}');
+                break;
+            case "gerencial":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; margin-bottom: 5cm;} #fechaReporte {position: fixed; bottom: 0; rigth: 20px;  opacity: 0.5;} #EncabezadoReporteGerencial{ position: fixed; top: 0; left: 200px;  opacity: 0.5; }  img { position: fixed; botton: 0; left: 1px;  width: 150px; height: 70px;}  button { display: none;}   label {color: #2C5690; font-weight: bold;display: block; font-size: 20px;  } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }  #lblCancelaciones{  }');
+                break;
+        }
+
+        ventanaImpresion.document.write('@@media print{     table tr:nth-child(even) { border:black 1px solid; } table tr:nth-child(odd) { background-color: #fff; border:black 1px solid;} table td {border:black 1px solid; }}');
+       
+        ventanaImpresion.document.write('</style>');
+        ventanaImpresion.document.write('</body>');      
+        ventanaImpresion.document.write('</html>');
+        
+
+       ventanaImpresion.document.close();
+       ventanaImpresion.print();
+       ventanaImpresion.close();
+
+
+
+
+
+    }
+    // crea una ventana con el reporte del primer y ultimo servicio surtido o cancelado
+    function impRepPrimUltServ(){
+
+            //var cuerpo = document.getElementById(contenido);
+            var ventanaImpresion =  window.open(' ','popUp');
+
+
+            ventanaImpresion.document.write('<html>');
+            ventanaImpresion.document.write('<body>');
+            ventanaImpresion.document.write(document.getElementById('contenedorPrimerUltimoServico').innerHTML)
+            ventanaImpresion.document.write('</body>');
+            ventanaImpresion.document.write('</html>');
+            ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+            ventanaImpresion.showModalDialog();
+
+
+            ventanaImpresion.document.close();
+            ventanaImpresion.print();
+            ventanaImpresion.close();
+
+
+    }
+    // coloca a los sliders los valores maximos y minimos
+    function resetSliders() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+        document.getElementById('sliderGral').min = new Date(fecha_ini).getTime() / 1000;//Date.parse(fecha_ini);
+        document.getElementById('sliderGral').max = new Date(fecha_fin).getTime() / 1000; //Date.parse(fecha_fin);
+
+        ///alert(document.getElementById('slrgrfFrecPed').min.toString()+ '    ' + document.getElementById('slrgrfFrecPed').max.toString());
+        rangMin = document.getElementById('sliderGral').min = new Date(fecha_ini).getTime() / 1000;
+        rangMax = document.getElementById('sliderGral').max = new Date(fecha_fin).getTime() / 1000;
+
+        var x = document.getElementById("tickmarks");
+        for (var i = (new Date(fecha_ini).getTime()) ; i <= (new Date(fecha_fin).getTime()) ; i = i + 86400000) {            
+            var option = document.createElement("option");
+
+            option.value = i / 1000;
+            //option.label= new Date(i).toISOString().substring(0, 10)
+            x.appendChild(option);
+
+        }
+        // colocar los valores en las etiquetas
+        document.getElementById('lblFechaini').innerText = document.getElementById("fecha_ini").value;
+        document.getElementById('lblFechafin').innerText = document.getElementById("fecha_fin").value;
+
+
+        // labels centrales del rango actual mostrado en las graficas
+        document.getElementById('lblrangoFechaini').innerText = new Date(rangMin * 1000).toISOString().substring(0, 10) + '----';
+        document.getElementById('lblrangoFechafin').innerText = new Date(rangMax * 1000).toISOString().substring(0, 10);
+
+        // colocar el slider con el maximo valor
+        document.getElementById('sliderGral').value = rangMax;
+
+    }
+    // obtiene los milisegundos de la fecha del pedidido
+    function getmilisegundos (fecha_pedido)
+    {
+        var fecha_hora = fecha_pedido.fecrsur_ped.split(" ");
+        var partesHora = fecha_hora[0].split('/');
+
+        var milisegundos = new Date(partesHora[2].trim() + "-" + partesHora[1].trim() + "-" + partesHora[0].trim()).getTime() / 1000;
+        return milisegundos;
+    }
+    // actualiza el rango del slider
+    function actualizaRango(slider) {
+        rangMax = parseInt(slider.value);
+
+        document.getElementById('lblrangoFechaini').innerText = new Date(rangMin * 1000).toISOString().substring(0, 10) + '----';
+        document.getElementById('lblrangoFechafin').innerText = new Date(rangMax * 1000).toISOString().substring(0, 10);
+
+        //alert(new Date(rangMax*1000).toISOString().substring(0, 10));
+        analizar();
+
+    }
+    //muestra el primer y ultimo servicio sutiro de una ruta en particular
+    function primerUltimoServicio() {
+        var fechas = [];
+        var encontrado = false;
+        var dia = "0";
+        // obtener el arreglo de fechas laboradas
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+
+            if (pedidosAnalisis[i].tpdo_ped!='C') {
+    
+            
+            for (var j = 0; j< fechas.length; j++) {
+                if (fechas[j].fecha.trim() == pedidosAnalisis[i].fecrsur_ped.trim()) {
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                fechas.push({ fecha: pedidosAnalisis[i].fecrsur_ped.trim(), primerSer: '', ultimoSer: '', dia: getStringdia(pedidosAnalisis[i].dia_sur_can.trim()) });
+            }
+            encontrado = false;
+        }
+        }
+        // obtener el primer y ultimo pedido surtido de cada dia  campo horrsur_ped
+
+        var hrPrimerServicio = "25:61";
+        var hrUltimoServicio = "00:00";
+
+        var varHrPriSer = [];
+        var varHrUltSer = [];
+        var HrServicio  = [];
+
+        var minPrimerSer = 0;
+        var minUltimoSer = 0;
+
+        var minServ = 0;
+
+        for (var k = 0; k < fechas.length; k++) {
+
+            for (var m = 0; m < pedidosAnalisis.length; m++) {
+                if (fechas[k].fecha.trim() == pedidosAnalisis[m].fecrsur_ped.trim()) {
+                    // partes de las horas
+                    varHrPriSer = hrPrimerServicio.split(':');
+                    varHrUltSer = hrUltimoServicio.split(':');
+                    HrServicio = pedidosAnalisis[m].horrsur_ped.trim().split(':');
+                    // valor en minutos de la hora
+                    minPrimerSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+                    minUltimoSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+
+                    minServ = (parseInt(HrServicio[0]) * 60) + parseInt(HrServicio[1]);
+
+                    // deteminar primer y ultimo servicio
+                    if (minServ>0) {
+
+
+                    if (minServ < minPrimerSer) {
+                        hrPrimerServicio = pedidosAnalisis[m].horrsur_ped;
+                    }
+                    if (minServ > minUltimoSer) {
+                        hrUltimoServicio = pedidosAnalisis[m].horrsur_ped;
+                    }
+                }
+
+                }
+
+            }
+
+            // asignar  los servicios almacenados en las variables
+            fechas[k].primerSer = hrPrimerServicio;
+            fechas[k].ultimoSer = hrUltimoServicio;
+            // reseteamos las variables
+             hrPrimerServicio = "25:61";
+             hrUltimoServicio = "00:00";
+        }
+        // se muestra en una tabla
+        //tblPriUltSer
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Fecha');
+        tablapromedios.addColumn('string', 'Dia semana');
+        tablapromedios.addColumn('string', 'Primer servicio');
+        tablapromedios.addColumn('string', 'Ultimo servicio');
+
+
+        for (var n = 0; n < fechas.length; n++) {
+
+                tablapromedios.addRow([
+                                       fechas[n].fecha,
+                                       fechas[n].dia,
+                                       fechas[n].primerSer,
+                                       fechas[n].ultimoSer])
+
+
+
+        }
+
+
+
+
+
+
+        var contenedor2 = new google.visualization.Table(tblPriUltSer);
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+    }
+    // obtiene el dia de la semana segun el dia proporcionado por informix
+    function getStringdia(dia) {
+        switch (dia) {
+            case "1":
+                return "Lunes";
+                break;
+            case "2":
+                return "Martes";
+                break;
+            case "3":
+                return "Miercoles";
+                break;
+            case "4":
+                return "Jueves";
+                break;
+            case "5":
+                return "Viernes";
+                break;
+            case "6":
+                return "Sabado";
+                break;
+            case "0":
+                return "Domingo";
+                break;
+        }
+    }
+    // genera un reporte del primero y ultimo servicio surtido
+    function ReportePrimerUltimoSer() {
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+        var rutasAnalisis = [];
+        var edo = "";
+
+        if (cil) {
+            rutasAnalisis = arrRutasCilindros;
+        }
+        else if (est) {
+            rutasAnalisis = arrRutasPipas;
+        }
+        document.getElementById("contenedorPrimerUltimoServico").innerHTML = "";
+        //$("p").append("<b>Appended text</b>");
+             
+     
+        for (var i = 0; i < rutasAnalisis.length; i++) {
+            var fecha_ini = document.getElementById("fecha_ini").value;
+            var fecha_fin = document.getElementById("fecha_fin").value;
+            var idDiv = 'ReporteRutaPrimUltServ' + rutasAnalisis[i].trim();
+
+            var salto = document.createElement("BR");
+            var saltoPaguina = document.createElement("H3");
+            var img = document.createElement("IMG");
+            img.src = "/Images/logo.png";
+            img.id = "logo";
+            img.style.display = "none";
+            
+            
+            // se crea el div scroll
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "divContenedor";
+            //divScroll.style.overflow = "scroll";
+            //divScroll.style.padding = "20px";
+            divScroll.style.display = "inline-block";
+            divScroll.style.cssFloat  = "left";
+            divScroll.id = "scroll" + rutasAnalisis[i].trim();
+            
+            //divScroll.style.overflowY = "scroll";
+
+            divScroll.style.width = "100%"; ;
+            // se crea la etiqueda de informacion
+            var etqruta = document.createElement("LABEL");
+            etqruta.id = "infoLabelRutaPrimUltServ" + rutasAnalisis[i].trim();
+            etqruta.innerText = "Primer Ultimo pedido de la ruta:" + rutasAnalisis[i].trim() +  " De " + fecha_ini+" a "+fecha_fin;
+            // se crea el div de la tabla
+            var divTabla = document.createElement("DIV");
+            divTabla.id = idDiv;
+            //divTabla.style.cssFloat = "left";
+            // se crea el boton de imprimir
+
+
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            //
+            var titulosalto = document.createElement("H3")
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + "scroll" + rutasAnalisis[i].trim() + "','PrimerUltimoServicio')");
+
+            // se agregan los elementos a sus contenedores
+           /// divScroll.appendChild(img);
+            divScroll.appendChild(salto);
+            divScroll.appendChild(img);
+            divScroll.appendChild(etqruta);
+            divScroll.appendChild(divTabla);
+            divScroll.appendChild(btnImprimir);
+           
+            document.getElementById("contenedorPrimerUltimoServico").appendChild(divScroll);
+            document.getElementById("contenedorPrimerUltimoServico").appendChild(titulosalto);
+
+           // if ((i % 4) == 0) {
+           //     document.getElementById("contenedorPrimerUltimoServico").appendChild(titulosalto);
+           // }
+
+
+
+
+
+            calculaPrimerUltimoSer(rutasAnalisis[i].trim(),idDiv);
+        }
+        
+        //impRepPrimUltServ();
+        cerrarDialogo();
+        var msg = document.getElementById('ReportePrimerUltimoServico');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+
+    }
+    function calculaPrimerUltimoSer(ruta, contenedor) {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+        var fechas = [];
+        var encontrado = false;
+        var dia = "0";
+        // obtener el arreglo de fechas laboradas
+        for (var i = 0; i < pedidos.length; i++) {
+            if (pedidos[i].ruta_ped.trim()==ruta & pedidos[i].edo_ped.trim()==edo) {
+
+            for (var j = 0; j < fechas.length; j++) {
+                if (fechas[j].fecha.trim() == pedidos[i].fecrsur_ped.trim()) {
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                fechas.push({ fecha: pedidos[i].fecrsur_ped.trim(), primerSer: '', ultimoSer: '', dia: getStringdia(pedidos[i].dia_sur_can.trim()) });
+            }
+            encontrado = false;
+        }
+    }
+        // obtener el primer y ultimo pedido surtido de cada dia campo horrsur_ped
+
+        var hrPrimerServicio = "25:61";
+        var hrUltimoServicio = "00:00";
+
+        var varHrPriSer = [];
+        var varHrUltSer = [];
+        var HrServicio = [];
+
+        var minPrimerSer = 0;
+        var minUltimoSer = 0;
+
+        var minServ = 0;
+
+        for (var k = 0; k < fechas.length; k++) {
+
+            for (var m = 0; m < pedidos.length; m++) {
+                if (pedidos[m].ruta_ped.trim() == ruta) {
+                if (fechas[k].fecha.trim() == pedidos[m].fecrsur_ped.trim()) {
+                    // partes de las horas
+                    varHrPriSer = hrPrimerServicio.split(':');
+                    varHrUltSer = hrUltimoServicio.split(':');
+                    HrServicio = pedidos[m].horrsur_ped.trim().split(':');
+                    // valor en minutos de la hora
+                    minPrimerSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+                    minUltimoSer = (parseInt(varHrUltSer[0]) * 60) + parseInt(varHrUltSer[1]);
+                    minServ = (parseInt(HrServicio[0]) * 60) + parseInt(HrServicio[1]);
+                    // deteminar primer y ultimo servicio
+                    if (minServ>0) {
+
+
+                    if (minServ < minPrimerSer) {
+                        hrPrimerServicio = pedidos[m].horrsur_ped;
+                    }
+                    if (minServ > minUltimoSer) {
+                        hrUltimoServicio = pedidos[m].horrsur_ped;
+                    }
+                    }
+
+                }
+            }
+
+            }
+
+            // asignar  los servicios almacenados en las variables
+            fechas[k].primerSer = hrPrimerServicio;
+            fechas[k].ultimoSer = hrUltimoServicio;
+            // reseteamos las variables
+            hrPrimerServicio = "25:61";
+            hrUltimoServicio = "00:00";
+        }
+        // se muestra en una tabla
+        //tblPriUltSer
+        var tablaPrimUltServ = new google.visualization.DataTable();
+        tablaPrimUltServ.addColumn('string', 'Fecha');
+        tablaPrimUltServ.addColumn('string', 'Dia semana');
+        tablaPrimUltServ.addColumn('string', 'Primer servicio');
+        tablaPrimUltServ.addColumn('string', 'Ultimo servicio');
+
+
+        for (var n = 0; n < fechas.length; n++) {
+
+            tablaPrimUltServ.addRow([
+                                   fechas[n].fecha.substring(0,10),
+                                   fechas[n].dia,
+                                   fechas[n].primerSer,
+                                   fechas[n].ultimoSer])
+
+        }
+        var contenedor2 = new google.visualization.Table(document.getElementById(contenedor));
+        contenedor2.draw(tablaPrimUltServ, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+    }
+    // obtiene una leyenda que espesifica los detalles del reporte
+    function getDetallesReporte(tipo) {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        // obtener los  tipos de pedidos involucrados
+        var tpdoPedidos = "";
+        //  var app = true, cll = true, ccr = true, pro = true, pxs = true, enc = true, web = true;
+        if (app)
+            tpdoPedidos= tpdoPedidos+'Aplicación, ';
+        if (cll) 
+            tpdoPedidos= tpdoPedidos+'Calle, ';
+        if (ccr) 
+            tpdoPedidos= tpdoPedidos+'CallCenter, ';
+        if (pro) 
+            tpdoPedidos= tpdoPedidos+'Proactivo, ';
+        if (pxs)
+            tpdoPedidos= tpdoPedidos+'Prog x Sis, ';
+        if (enc) 
+            tpdoPedidos= tpdoPedidos+'Encuesta, ';
+        if (web) 
+            tpdoPedidos = tpdoPedidos + 'Whats app, ';
+        if (cf)
+            tpdoPedidos = tpdoPedidos + 'CallCenter Ext, ';
+
+        // obtenemos las ruta (s)
+        var ruta = $("#Slcrutas option:selected").text().trim();
+        // obtenemos el tipo de servicio
+        var servicio = "";
+        if (est)
+            servicio = "Estacionario";
+        if (cil)
+            servicio = "Cilindro";
+
+        // se optiene el estado del pedido 
+
+        // se obtiene el intervalo de fechas
+
+        var intervalo = "";
+        intervalo =  document.getElementById('lblrangoFechaini').innerText + ' a ' + document.getElementById('lblrangoFechafin').innerText;
+        var finalStr="";
+        switch (tipo) {
+            case "choferes":
+                finalStr =  ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "descGral":
+                finalStr = 'Tipos de pedidos considerados  (' + tpdoPedidos + ' )  Ruta:' + ruta + ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "primUltServ":
+                finalStr = 'Ruta:' + ruta + ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "promedios":
+                finalStr = ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "promchof":
+                finalStr = ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "gerencial":
+                finalStr = 'GEN Servidor: ' + servidor + '\n Intervalo de informacion: ' + intervalo + '\n ' + ' Usuario: ' + usr.innerText;
+                document.getElementById('fechaReporte').innerText = 'Fecha Reporte: ' + today;
+            default:
+
+        }
+        
+        return finalStr;
+      
+
+    }
+    function getEdoPedido()
+    {
+        if (sur) {
+            return "Surtido";
+        }
+
+        if (can) {
+            return "Cancelado";
+        }
+    }
+
+    function muestraPlantas() {
+        // se muestra el dialogo
+        cerrarDialogo();
+        var msg = document.getElementById('DlgPlantas');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    // crea un reporte con los promedios y porcentajes de tiempo de los servicios surtidos/cancelados 
+    function reportimepochoferes() {
+        cerrarDialogo();
+        var planta = $("#SlcPlantas option:selected").text().trim();
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+        var tipServ = "";
+        if (est) {
+            tipServ = "M";
+        } else if (cil) {
+            tipServ = "C";
+        }
+
+        document.getElementById('contenedorPorcPromChof').innerHTML = "";
+        var liquidasChoferes = [];
+        var liquidasChoferesAux = [];
+        var choferEcontrado = false;
+        var arrChoferes = [];
+
+        var labelTitulo = document.createElement("LABEL");
+        labelTitulo.innerText = getDetallesReporte("choferes");
+        labelTitulo.id = "encabezado";
+        labelTitulo.style.fontSize = "small";
+        var salto = document.createElement("BR");
+        document.getElementById("contenedorPorcPromChof").appendChild(labelTitulo);
+        document.getElementById("contenedorPorcPromChof").appendChild(salto);
+
+        // se obtiene las liquidaciones correspondientes a los pedidos en cuestion.
+        for (var i = 0; i < liquidas.length; i++) {
+            if (planta=='Todas' || liquidas[i].pla_eru.trim()==planta) {
+    
+            
+            for (var j = 0; j < pedidos.length; j++) {
+
+                if (pedidos[j].edo_ped == edo & pedidos[j].ruta_ped.substring(0, 1).includes(tipServ))
+                {               
+                    if (pedidos[j].ruta_ped == liquidas[i].rut_eru & pedidos[j].fecrsur_ped == liquidas[i].fec_eru) {
+                        choferEcontrado = true;
+                    }
+                }
+            }
+            if (choferEcontrado) {
+                liquidasChoferes.push({ chofer: liquidas[i].chf_erup, ruta: liquidas[i].rut_eru, fecha: liquidas[i].fec_eru });
+            }
+            choferEcontrado = false;
+        }
+        }
+        // obtener la relacion de los choferes
+        for (var k = 0; k < liquidasChoferes.length; k++) {
+
+            for (var m = 0; m < arrChoferes.length; m++) {
+                if (liquidasChoferes[k].chofer == arrChoferes[m]) {
+                    choferEcontrado = true;
+                }
+            }
+            if (!choferEcontrado) {
+                arrChoferes.push(liquidasChoferes[k].chofer);
+            }
+            choferEcontrado = false;
+
+        }
+
+        var liquidaEncontrada = false;
+        // obtener fechas unicas de las liquidaciones 
+        for (var w = 0; w < liquidasChoferes.length; w++) {
+
+            for (var z = 0; z < liquidasChoferesAux.length; z++) {
+                if ((liquidasChoferes[w].chofer==liquidasChoferesAux[z].chofer && liquidasChoferes[w].fecha == liquidasChoferesAux[z].fecha  )) {
+                    liquidaEncontrada = true;
+                }
+            }
+            if (!liquidaEncontrada) {
+                liquidasChoferesAux.push(liquidasChoferes[w]);
+            }
+
+            liquidaEncontrada = false;
+        }
+
+        liquidasChoferes = liquidasChoferesAux;
+
+
+        // obtner los pedidos por chofer
+
+        for (var n = 0; n < arrChoferes.length; n++) {
+            var pedidosXchofer = [];
+
+            for (var p = 0; p < liquidasChoferes.length; p++) {
+
+                if (arrChoferes[n] == liquidasChoferes[p].chofer) {
+
+                    for (var q = 0; q < pedidos.length; q++) {
+
+                        if (pedidos[q].ruta_ped == liquidasChoferes[p].ruta & pedidos[q].fecrsur_ped == liquidasChoferes[p].fecha) {
+                            pedidosXchofer.push(pedidos[q]);
+                        }
+
+                    }
+                }
+
+            }// fin de obtener los pedidos del chofer en cuestion
+
+            // crear el elemento html para almacenar los resultados  del analisis 
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divTblChoferes";
+            divContenedor.id = "tablaChofer:" + arrChoferes[n].trim();
+            var label = document.createElement("LABEL");
+            label.innerText = "Chofer:" + arrChoferes[n] + " Rutas asociadas: " + getRutasChofer(liquidasChoferes, arrChoferes[n]) + '\n'+getDetallesReporte('promchof');
+
+            var salto = document.createElement("BR");
+
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "graficas";
+            divScroll.style.width = "width: 100%";
+            divScroll.id = "Chofer:" + arrChoferes[n].trim();
+
+            var salto2 = document.createElement("BR");
+
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','promediosTiepmosServicios')");
+
+            divContenedor.appendChild(label);
+            divContenedor.appendChild(divScroll);
+            divContenedor.appendChild(salto2);
+            divContenedor.appendChild(btnImprimir);
+
+
+
+            document.getElementById("contenedorPorcPromChof").appendChild(divContenedor);
+            promediosChoferes(pedidosXchofer, divScroll.id);
+
+            // promXchofer
+
+
+        }
+        var msg = document.getElementById('ReportePorcentajesPromediosChoferes');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+        function getRutasChofer(liquidas, chofer) {
+
+            var rutasChofer = [];
+            var rutaExiste = false;
+            for (var i = 0; i < liquidas.length; i++) {
+
+                if (chofer == liquidas[i].chofer) {
+
+
+                    for (var j = 0; j < rutasChofer.length; j++) {
+                        if (rutasChofer[j] == liquidas[i].ruta) {
+                            rutaExiste = true;
+                        }
+                    }
+
+                    if (!rutaExiste) {
+
+                        rutasChofer.push(liquidas[i].ruta);
+                    }
+                    rutaExiste = false;
+                }
+            }
+
+            var relacion_rutas = "";
+
+            for (var k = 0; k < rutasChofer.length; k++) {
+                relacion_rutas += rutasChofer[k] + ', ';
+            }
+            return relacion_rutas;
+
+        }
+
+
+    }
+    //////////// tiempos para los choferes //////////////////////
+    function tiempoChoferes() {
+        document.getElementById('promXchofer').innerHTML = "";
+        var liquidasChoferes = [];
+        var liquidasChoferesAux = [];
+        var choferEcontrado = false;
+        var arrChoferes = [];
+
+        var labelTitulo = document.createElement("LABEL");
+        labelTitulo.innerText = getDetallesReporte("choferes")
+        var salto = document.createElement("BR");
+        document.getElementById("promXchofer").appendChild(labelTitulo);
+        document.getElementById("promXchofer").appendChild(salto);
+
+        // se obtiene las liquidaciones correspondientes a los pedidos en cuestion.
+        for (var i = 0; i < liquidas.length; i++) {
+
+            for (var j = 0; j < pedidosAnalisis.length; j++) {
+
+                if (pedidosAnalisis[j].ruta_ped == liquidas[i].rut_eru & pedidosAnalisis[j].fecrsur_ped==liquidas[i].fec_eru) {
+                    choferEcontrado = true;
+                }
+            }
+            if (choferEcontrado) {
+                liquidasChoferes.push({ chofer: liquidas[i].chf_erup, ruta: liquidas[i].rut_eru, fecha:liquidas[i].fec_eru});
+            }
+            choferEcontrado = false;
+        }
+        // obtener la relacion de los choferes
+        for (var k = 0; k < liquidasChoferes.length; k++) {
+
+            for (var m = 0; m < arrChoferes.length; m++) {
+                if (liquidasChoferes[k].chofer == arrChoferes[m]) {
+                    choferEcontrado = true;
+                }
+            }
+            if (!choferEcontrado) {
+                arrChoferes.push(liquidasChoferes[k].chofer);
+            }
+            choferEcontrado = false;
+
+        }
+
+        var liquidaEncontrada = false; 
+        // obtener fechas unicas de las liquidaciones 
+        for (var w = 0; w < liquidasChoferes.length; w++) {
+
+            for (var z = 0; z < liquidasChoferesAux.length; z++) {
+                if (liquidasChoferes[w].fecha == liquidasChoferesAux[z].fecha && liquidasChoferes[w].chofer==liquidasChoferesAux[z].chofer) {
+                    liquidaEncontrada = true;
+                }
+            }
+            if (!liquidaEncontrada) {
+                liquidasChoferesAux.push(liquidasChoferes[w]);
+            }
+            liquidaEncontrada = false;
+        }
+
+        liquidasChoferes = liquidasChoferesAux;
+
+        // obtner los pedidos por chofer
+
+        for (var n = 0; n < arrChoferes.length; n++) {
+            var pedidosXchofer = [];
+
+            for (var p = 0; p < liquidasChoferes.length; p++) {
+
+                if (arrChoferes[n] == liquidasChoferes[p].chofer) {
+
+                    for (var q = 0; q < pedidosAnalisis.length; q++) {
+
+                        if (pedidosAnalisis[q].ruta_ped == liquidasChoferes[p].ruta & pedidosAnalisis[q].fecrsur_ped == liquidasChoferes[p].fecha) {
+                            pedidosXchofer.push(pedidosAnalisis[q]);
+                        }
+
+                    }
+                }
+               
+            }// fin de obtener los pedidos del chofer en cuestion
+
+            // crear el elemento html para almacenar los resultados  del analisis 
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divTblChoferes";
+
+            var label = document.createElement("LABEL");
+            label.innerText = "Chofer:" + arrChoferes[n]; 
+
+            var salto = document.createElement("BR");
+
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "tblChoferes";
+            divScroll.style.width = "width: 100%";
+            divScroll.id = "Chofer: " + arrChoferes[n];
+
+            var salto2 = document.createElement("BR");
+
+            divContenedor.appendChild(label);
+            divContenedor.appendChild(divScroll);
+            //divContenedor.appendChild(salto2);
+            
+
+
+            document.getElementById("promXchofer").appendChild(divContenedor);
+            promediosChoferes(pedidosXchofer, divScroll.id);
+
+           // promXchofer
+
+
+        }
+
+        // obiene una lelacion con datos unicos de las rutas en las que laboro el chofer
+     
+
+    }
+
+    // reporte general para la gerencia 
+    function reporteGerencial() {
+        //pedidosAnali(); // se determian el conjunto de pedidos a analizar
+      
+        var contPedSurEst = 0;
+        var contPedSurCil = 0;
+        var pedSurAnaTiemEst = [];
+        /*0*/pedSurAnaTiemEst.push({ Tipo: 'CALL CENTER', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*1*/pedSurAnaTiemEst.push({ Tipo: 'APLICACION', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*2*/pedSurAnaTiemEst.push({ Tipo: 'PROG X SIS', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*3*/pedSurAnaTiemEst.push({ Tipo: 'PROACTIVO', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*4*/pedSurAnaTiemEst.push({ Tipo: 'ENCUENSTA', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*5*/pedSurAnaTiemEst.push({ Tipo: 'WHATS APP', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*6*/pedSurAnaTiemEst.push({ Tipo: 'CALLE', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*7*/pedSurAnaTiemEst.push({ Tipo: 'CALLCENTER EXT', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*8*/pedSurAnaTiemEst.push({ Tipo: 'TOTAL', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        var pedSurAnaTiemCil = [];
+        /*0*/pedSurAnaTiemCil.push({ Tipo: 'CALL CENTER', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*1*/pedSurAnaTiemCil.push({ Tipo: 'APLICACION', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*2*/pedSurAnaTiemCil.push({ Tipo: 'PROG X SIS', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*3*/pedSurAnaTiemCil.push({ Tipo: 'PROACTIVO', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*4*/pedSurAnaTiemCil.push({ Tipo: 'ENCUENSTA', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*5*/pedSurAnaTiemCil.push({ Tipo: 'WHATS APP', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*6*/pedSurAnaTiemCil.push({ Tipo: 'CALLE', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*7*/pedSurAnaTiemCil.push({ Tipo: 'CALLCENTER EXT', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+        /*8*/pedSurAnaTiemCil.push({ Tipo: 'TOTAL', NumeroPedidos: 0, PorcentajeGral: 0, mismoDiaPed: 0, mismoDiaTiem: 0, ProgramacionEfe: 0, masDiaPed: 0, masDiaTiem: 0 });
+
+        for (var x = 0; x < pedidos.length; x++) {
+            if (pedidos[x].edo_ped.trim() == 'S') {
+                if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M")) {
+                    contPedSurEst++;
+                }
+                if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                    contPedSurCil++;
+                }
+                
+
+                switch (pedidos[x].tpdo_ped.trim()) {
+                    case 'L':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[0].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[0], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[0].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[0], pedSurAnaTiemCil[8])
+                        }
+                        break;
+                    case 'A':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[1].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[1], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[1].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[1], pedSurAnaTiemCil[8])
+                        }
+                        
+                        break;
+                    case 'S':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[2].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[2], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[2].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[2], pedSurAnaTiemCil[8])
+                        }
+
+                       
+                        break;
+                    case 'P':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[3].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[3], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[3].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[3], pedSurAnaTiemCil[8])
+                        }
+
+                        
+                        break;
+                    case 'E':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[4].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[4], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[4].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[4], pedSurAnaTiemCil[8])
+                        }
+                       
+                        break;
+                    case 'W':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M"))
+                        {
+                            pedSurAnaTiemEst[5].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[5], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[5].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[5], pedSurAnaTiemCil[8])
+                        }
+                       
+                        break;
+                    case 'C':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M")) {
+                            pedSurAnaTiemEst[6].NumeroPedidos++;
+                            pedSurAnaTiemEst[6].mismoDiaPed++;
+                            
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[6].NumeroPedidos++;
+                            pedSurAnaTiemCil[6].mismoDiaPed++;
+                           
+                        }
+
+                        break;
+                    case 'F':
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("M")) {
+                            pedSurAnaTiemEst[7].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemEst[7], pedSurAnaTiemEst[8])
+                        }
+                        if ((pedidos[x].ruta_ped.substring(0, 1)).includes("C")) {
+                            pedSurAnaTiemCil[7].NumeroPedidos++;
+                            determinaInterSurt(pedidos[x], pedSurAnaTiemCil[7], pedSurAnaTiemCil[8])
+                        }
+
+
+                        break;
+                }
+
+            }
+        }
+        pedSurAnaTiemEst[8].NumeroPedidos = contPedSurEst;
+        pedSurAnaTiemCil[8].NumeroPedidos = contPedSurCil;
+
+       
+         // metodos particulares para este analisi
+        function determinaInterSurt(pedido_,tipoPedidoReg, regTotales)
+        {
+            
+            var arrFecRealPed = pedido_.fhrp_ped.split(' ');
+            var arrFecRealSur = pedido_.fecrsur_ped.split(' ');
+            var arrFecPosSur = pedido_.fecsur_ped.split(' ');
+
+
+            var arrFecha_ini_ped = arrFecPosSur[0].trim().split('/');
+            var arrFecha_fin_ped = arrFecRealSur[0].trim().split('/');
+
+            if ((arrFecRealPed[0].trim() == arrFecRealSur[0].trim()) && (arrFecRealPed[0].trim() == arrFecPosSur[0].trim())) //  pedido y surtido el mismo dia.
+            {
+                tipoPedidoReg.mismoDiaPed++;
+                regTotales.mismoDiaPed++
+                if (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate)))<0) {
+                tipoPedidoReg.mismoDiaTiem = tipoPedidoReg.mismoDiaTiem + (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate))) * -1);
+                regTotales.mismoDiaTiem = regTotales.mismoDiaTiem + (((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate))) * -1);
+                } else
+                {
+                    tipoPedidoReg.mismoDiaTiem = tipoPedidoReg.mismoDiaTiem + ((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate)));
+                    regTotales.mismoDiaTiem = regTotales.mismoDiaTiem + ((parseInt(pedido_.dias_ate) * 1440) + ((parseInt(pedido_.hrs_ate) * 60)) + (parseInt(pedido_.min_ate)));
+                }
+               
+                
+            }
+                else if ((arrFecPosSur[0].trim() == arrFecRealSur[0].trim()) && (arrFecRealPed[0].trim() != arrFecRealSur[0].trim()))  // pedido y surtido exitoso con una programacion de mas de un dia 
+                    {
+                    tipoPedidoReg.ProgramacionEfe++;
+                    regTotales.ProgramacionEfe++;
+                    }
+                else if (((((new Date(parseInt(arrFecha_fin_ped[2]), parseInt(arrFecha_fin_ped[1] - 1), parseInt(arrFecha_fin_ped[0]), 0, 0, 0, 0)) - (new Date(parseInt(arrFecha_ini_ped[2]), parseInt(arrFecha_ini_ped[1] - 1), parseInt(arrFecha_ini_ped[0]), 0, 0, 0, 0)))) < 0) && parseInt(pedido_.nmod_ped) > 1) // surtido antes del dia programada (cuenta como programacion exitosa)
+                      {
+                        tipoPedidoReg.ProgramacionEfe++;
+                        regTotales.ProgramacionEfe++;
+                      }
+                        else if (((arrFecRealPed[0].trim() == arrFecPosSur[0].trim()) && (arrFecRealPed[0].trim() != arrFecRealSur[0].trim())) || ((arrFecRealPed[0].trim() != arrFecPosSur[0].trim()) && (arrFecPosSur[0].trim() != arrFecRealSur[0].trim()))) // pedidos surtidos con con retraso de mas de un dia
+                                {
+                                    tipoPedidoReg.masDiaPed++;
+                                    tipoPedidoReg.masDiaTiem = tipoPedidoReg.masDiaTiem + milisegundosDias(arrFecPosSur[0], arrFecRealSur[0]);
+                                    regTotales.masDiaPed++;
+                                    regTotales.masDiaTiem = regTotales.masDiaTiem + milisegundosDias(arrFecPosSur[0], arrFecRealSur[0]);
+                                }
+        }
+
+        function milisegundosDias(fecha_ini, fecha_fin)
+        {
+            var dias = 0; 
+            var arrFecha_ini = fecha_ini.trim().split('/');
+            var arrFecha_fin = fecha_fin.trim().split('/');
+
+
+            var a = new Date( parseInt(arrFecha_ini[2]), parseInt(arrFecha_ini[1] - 1), parseInt(arrFecha_ini[0]), 0,0,0,0)
+
+            var b = new Date(parseInt(arrFecha_fin[2]), parseInt(arrFecha_fin[1] - 1), parseInt(arrFecha_fin[0]), 0, 0, 0, 0)
+            var nDifference = Math.abs(new Date(b) - new Date(a));
+            dias = nDifference / 60000;
+            return dias; 
+        }
+
+
+        var tablapromediosTiempoEst = new google.visualization.DataTable();
+        tablapromediosTiempoEst.addColumn('string', 'Estacionario');
+        tablapromediosTiempoEst.addColumn('string', 'Pedidos');
+        tablapromediosTiempoEst.addColumn('string', 'Surtido al dia');
+        tablapromediosTiempoEst.addColumn('string', 'Con dias programados');
+        tablapromediosTiempoEst.addColumn('string', 'Mas del dia de retraso');
+        var tablapromediosTiempoCil = new google.visualization.DataTable();
+        tablapromediosTiempoCil.addColumn('string', 'Cilindro');
+        tablapromediosTiempoCil.addColumn('string', 'Pedidos');
+        tablapromediosTiempoCil.addColumn('string', 'Surtido al dia');
+        tablapromediosTiempoCil.addColumn('string', 'Con dias programados');
+        tablapromediosTiempoCil.addColumn('string', 'Mas del dia de retraso');
+
+        // ESTACIONARIO
+        for (var g = 0; g < pedSurAnaTiemEst.length; g++) {
+            
+
+            if (pedSurAnaTiemEst[g].NumeroPedidos > 0) {
+                if (pedSurAnaTiemEst[g].Tipo != 'CALLE' & pedSurAnaTiemEst[g].Tipo != 'TOTAL') {
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + ((pedSurAnaTiemEst[g].NumeroPedidos * 100) / contPedSurEst).toFixed(2) + '%)',
+                                       pedSurAnaTiemEst[g].NumeroPedidos + '',
+                                      '' + pedSurAnaTiemEst[g].mismoDiaPed + ' Prom: ' + tiempoProm(pedSurAnaTiemEst[g].mismoDiaPed, pedSurAnaTiemEst[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].mismoDiaPed * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)',
+                                      '' + pedSurAnaTiemEst[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemEst[g].ProgramacionEfe * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)',
+                                      '' + pedSurAnaTiemEst[g].masDiaPed + ' Prom:' + tiempoProm(pedSurAnaTiemEst[g].masDiaPed, pedSurAnaTiemEst[g].masDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].masDiaPed * 100) / pedSurAnaTiemEst[g].NumeroPedidos).toFixed(2) + '%)']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo == 'CALLE')
+                {
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + ((pedSurAnaTiemEst[g].NumeroPedidos * 100) / contPedSurEst).toFixed(2) + '%)',
+                                                          pedSurAnaTiemEst[g].NumeroPedidos + '',
+                                                         '',
+                                                         '',
+                                                         '']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo == 'TOTAL')
+                {
+                    tablapromediosTiempoEst.addRow([pedSurAnaTiemEst[g].Tipo + ' (' + ((pedSurAnaTiemEst[g].NumeroPedidos * 100) / contPedSurEst).toFixed(2) + '%)',
+                                      pedSurAnaTiemEst[g].NumeroPedidos + '',
+                                     '' + pedSurAnaTiemEst[g].mismoDiaPed + ' Prom: ' + tiempoProm(pedSurAnaTiemEst[g].mismoDiaPed, pedSurAnaTiemEst[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].mismoDiaPed * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)',
+                                     '' + pedSurAnaTiemEst[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemEst[g].ProgramacionEfe * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)',
+                                     '' + pedSurAnaTiemEst[g].masDiaPed + ' Prom:' + tiempoProm(pedSurAnaTiemEst[g].masDiaPed, pedSurAnaTiemEst[g].masDiaTiem) + ' (' + ((pedSurAnaTiemEst[g].masDiaPed * 100) / (pedSurAnaTiemEst[g].NumeroPedidos - pedSurAnaTiemEst[6].NumeroPedidos)).toFixed(2) + '%)']);
+                }
+               
+            }
+           
+        }
+        //CILINDRO
+        for (var g = 0; g < pedSurAnaTiemCil.length; g++) {
+
+            if (pedSurAnaTiemCil[g].NumeroPedidos > 0) {
+                if (pedSurAnaTiemEst[g].Tipo != 'CALLE' & pedSurAnaTiemEst[g].Tipo != 'TOTAL' )
+                {
+                    tablapromediosTiempoCil.addRow([pedSurAnaTiemCil[g].Tipo + ' (' + ((pedSurAnaTiemCil[g].NumeroPedidos * 100) / contPedSurCil).toFixed(2) + '%)',
+                                                          pedSurAnaTiemCil[g].NumeroPedidos + '',
+                                                         '' + pedSurAnaTiemCil[g].mismoDiaPed + ' PromAte: ' + tiempoProm(pedSurAnaTiemCil[g].mismoDiaPed, pedSurAnaTiemCil[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemCil[g].mismoDiaPed * 100) / pedSurAnaTiemCil[g].NumeroPedidos).toFixed(2) + '%)',
+                                                          '' + pedSurAnaTiemCil[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemCil[g].ProgramacionEfe * 100) / pedSurAnaTiemCil[g].NumeroPedidos).toFixed(2) + '%)',
+                                                          '' + pedSurAnaTiemCil[g].masDiaPed + ' PromAte:' + tiempoProm(pedSurAnaTiemCil[g].masDiaPed, pedSurAnaTiemCil[g].masDiaTiem) + ' (' + ((pedSurAnaTiemCil[g].masDiaPed * 100) / pedSurAnaTiemCil[g].NumeroPedidos).toFixed(2) + '%)']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo == 'CALLE')
+                {
+                    tablapromediosTiempoCil.addRow([pedSurAnaTiemCil[g].Tipo + ' (' + ((pedSurAnaTiemCil[g].NumeroPedidos * 100) / contPedSurCil).toFixed(2) + '%)',
+                                                         pedSurAnaTiemCil[g].NumeroPedidos + '',
+                                                        '',
+                                                        '',
+                                                        '']);
+                }
+                else if (pedSurAnaTiemEst[g].Tipo == 'TOTAL')
+                {
+                    tablapromediosTiempoCil.addRow([pedSurAnaTiemCil[g].Tipo + ' (' + ((pedSurAnaTiemCil[g].NumeroPedidos * 100) / contPedSurCil).toFixed(2) + '%)',
+                                                         pedSurAnaTiemCil[g].NumeroPedidos + '',
+                                                        '' + pedSurAnaTiemCil[g].mismoDiaPed + ' PromAte: ' + tiempoProm(pedSurAnaTiemCil[g].mismoDiaPed, pedSurAnaTiemCil[g].mismoDiaTiem) + ' (' + ((pedSurAnaTiemCil[g].mismoDiaPed * 100) / (pedSurAnaTiemCil[g].NumeroPedidos - pedSurAnaTiemCil[6].NumeroPedidos)).toFixed(2) + '%)',
+                                                         '' + pedSurAnaTiemCil[g].ProgramacionEfe + ' (' + ((pedSurAnaTiemCil[g].ProgramacionEfe * 100) / (pedSurAnaTiemCil[g].NumeroPedidos - pedSurAnaTiemCil[6].NumeroPedidos)).toFixed(2) + '%)',
+                                                         '' + pedSurAnaTiemCil[g].masDiaPed + ' PromAte:' + tiempoProm(pedSurAnaTiemCil[g].masDiaPed, pedSurAnaTiemCil[g].masDiaTiem) + ' (' + ((pedSurAnaTiemCil[g].masDiaPed * 100) / (pedSurAnaTiemCil[g].NumeroPedidos - pedSurAnaTiemCil[6].NumeroPedidos)).toFixed(2) + '%)']);
+                }
+            }
+
+        }
+
+      
+
+        var conteEst = new google.visualization.Table(TiempoPromAteEst);
+        conteEst.draw(tablapromediosTiempoEst, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(conteEst, 'select', function () {
+        });
+
+        var conteCil = new google.visualization.Table(TiempoPromAteCil);
+        conteCil.draw(tablapromediosTiempoCil, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(conteCil, 'select', function () {
+        });
+
+        //-------> fin de promedios de atension de los servicios de cilindro y estacionario 
+
+
+
+        //-------> analisis de los pedidos para los dias y las horas 
+        // decalramos la matriz
+        var matrizPedidosxHrxDia = new Array(24);
+        for (i = 0; i < 24; i++) {
+
+            matrizPedidosxHrxDia[i] = Array(7);
+        }
+
+        // rellenamos la matriz con 0´s
+        for (var j = 0; j < 24; j++) {
+
+            for (var k = 0; k < 7; k++) {
+                matrizPedidosxHrxDia[j][k] = 0;
+            }
+        }
+        var y = 0, x = 0;
+        for (var i = 0; i < pedidos.length; i++) {
+
+            var valoresHF = pedidos[i].fhrp_ped.split(" ");
+            horaPedido = determinaTurno(valoresHF);
+            y = parseInt(horaPedido);
+            x = parseInt(pedidos[i].dia_ped.trim())
+            matrizPedidosxHrxDia[y][x]++;
+        }
+        var ResPedXdia = [];
+        var diasSemana = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO'];
+        var numeroPedidos = 0;
+        var resultadosArray = [];
+        var resultadosArray2 = [];
+        // obtener porcentajes por dias
+        for (var k = 0; k < diasSemana.length; k++)
+        {
+            numeroPedidos = 0;
+            for (var m = 0; m < matrizPedidosxHrxDia.length; m++)
+            {
+                numeroPedidos = numeroPedidos + matrizPedidosxHrxDia[m][k];
+            }
+            resultadosArray.push({ dia: diasSemana[k], pedidos: numeroPedidos, porcentaje: ((numeroPedidos * (100)) / pedidos.length) });
+        }
+        //optener porcentaje por horas 
+        for (var m = 0; m < matrizPedidosxHrxDia.length; m++) {
+            numeroPedidos = 0;
+            for (var k = 0; k < diasSemana.length; k++) {
+                numeroPedidos = numeroPedidos + matrizPedidosxHrxDia[m][k];
+               
+            }
+            resultadosArray2.push({ hora: m , pedidos: numeroPedidos, porcentaje: ((numeroPedidos * (100)) / pedidos.length) });
+        }
+       
+
+
+        // construcion de tabla de promedio por dia
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Dia');
+        tablapromedios.addColumn('string', 'Pedidos');
+        tablapromedios.addColumn('string', 'Porcentaje');
+
+
+        for (var n = 0; n < resultadosArray.length; n++) {
+
+            tablapromedios.addRow([
+                                   resultadosArray[n].dia,
+                                   resultadosArray[n].pedidos+'',
+                                  '%'+resultadosArray[n].porcentaje.toFixed(2)
+            ])
+        }
+
+        var contenedor2 = new google.visualization.Table(ResPedxHr);
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+        // construcion de tabla de promedio por hora
+        var tablapromedios2 = new google.visualization.DataTable();
+        tablapromedios2.addColumn('string', 'Hora');
+        tablapromedios2.addColumn('string', 'Pedidos');
+        tablapromedios2.addColumn('string', 'Porcentaje');
+        tablapromedios2.addColumn('string', 'Hora');
+        tablapromedios2.addColumn('string', 'Pedidos');
+        tablapromedios2.addColumn('string', 'Porcentaje');
+
+
+        for (var n = 0; n < resultadosArray2.length/2; n++) {
+
+            tablapromedios2.addRow([
+                                   resultadosArray2[n].hora+'',
+                                   resultadosArray2[n].pedidos + '',
+                                  '%' + resultadosArray2[n].porcentaje.toFixed(2),
+
+                                   resultadosArray2[n+12].hora+'',
+                                   resultadosArray2[n + 12].pedidos + '',
+                                  '%' + resultadosArray2[n + 12].porcentaje.toFixed(2)
+            ])
+        }
+
+        var contenedor = new google.visualization.Table(ResPedxDia);
+        contenedor.draw(tablapromedios2, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+        //------->  fin analisis de los pedidos para los dias y las horas 
+
+        //-------> analizar los motivos por cancelacion 
+
+        var motivosCancelacionPipas = [];
+        var motivosCancelacionCilindros = [];
+        var cancelaciones = 0;
+        var motivoEncontrado = false;
+        var pedidosCanceladosPipas = 0;
+        var pedidosCanceladosCil = 0;
+        // obtenemos los motivos de cancelacion de forma unica 
+        for (var y = 0; y < pedidos.length; y++) 
+        {
+            if (pedidos[y].edo_ped.trim()=='C')
+            {
+
+                // pipas
+                if ((pedidos[y].ruta_ped.substring(0, 1)).includes("M") && pedidos[y].usrcan_ped.trim()!='fuentea') {
+                    pedidosCanceladosPipas++;
+
+                    for (var q = 0; q < motivosCancelacionPipas.length; q++) {
+                        if (pedidos[y].motcan_ped == motivosCancelacionPipas[q].motivo) {
+                            motivoEncontrado = true;
+                        }
+                    }
+                    if (!motivoEncontrado) {
+                        motivosCancelacionPipas.push({ motivo: pedidos[y].motcan_ped, pedidos: 0, porcentaje: 0, minutos: 0, tiempoPromCan: '' });
+
+                    }
+                    motivoEncontrado = false;
+                }
+                // cilindros
+                if ((pedidos[y].ruta_ped.substring(0, 1)).includes("C") && pedidos[y].usrcan_ped.trim() != 'fuentea') {
+                    pedidosCanceladosCil++;
+
+                    for (var q = 0; q < motivosCancelacionCilindros.length; q++) {
+                        if (pedidos[y].motcan_ped == motivosCancelacionCilindros[q].motivo) {
+                            motivoEncontrado = true;
+                        }
+                    }
+                    if (!motivoEncontrado) {
+                        motivosCancelacionCilindros.push({ motivo: pedidos[y].motcan_ped, pedidos: 0, porcentaje: 0, minutos: 0, tiempoPromCan: '' });
+
+                    }
+                    motivoEncontrado = false;
+                }
+                // fin 
+               
+        }
+
+
+        }
+
+        motivosCancelacionPipas.push({ motivo: 'cancelado x cliente', pedidos: 0, porcentaje: 0, minutos: 0, tiempoPromCan: '' });
+        motivosCancelacionCilindros.push({ motivo: 'cancelado x cliente', pedidos: 0, porcentaje: 0, minutos: 0, tiempoPromCan: '' });
+        // obtner el numero de cancelaciones por su motivo
+
+        for (var k = 0; k < pedidos.length; k++) {
+            if (pedidos[k].edo_ped.trim() == 'C') {
+                //pipas
+                if ((pedidos[k].ruta_ped.substring(0, 1)).includes("M")) {                  
+                    for (var h = 0; h < motivosCancelacionPipas.length; h++) {
+
+                        if (pedidos[k].usrcan_ped.trim() == 'fuentea') {
+                            pedidos[k].motcan_ped = 'cancelado x cliente';
+                        }
+
+                        if (pedidos[k].motcan_ped == motivosCancelacionPipas[h].motivo ) {
+                            motivosCancelacionPipas[h].pedidos = motivosCancelacionPipas[h].pedidos + 1;
+
+                            mins = ((parseInt(pedidos[h].dias_ate) * 1440) + (parseInt(pedidos[h].hrs_ate) * 60) + parseInt(pedidos[h].min_ate));
+                            if (mins < 0) {
+                                mins = mins * -1;
+                            }
+                            motivosCancelacionPipas[h].minutos = mins;
+
+                        }                    
+                    }
+                }
+
+                // cilindros
+                if ((pedidos[k].ruta_ped.substring(0, 1)).includes("C")) {
+                for (var t = 0; t < motivosCancelacionCilindros.length; t++) {
+                    if (pedidos[k].usrcan_ped.trim() == 'fuentea') {
+                        pedidos[k].motcan_ped = 'cancelado x cliente';
+                    }
+
+                    if (pedidos[k].motcan_ped == motivosCancelacionCilindros[t].motivo) {
+                        motivosCancelacionCilindros[t].pedidos = motivosCancelacionCilindros[t].pedidos + 1;
+
+                        mins = ((parseInt(pedidos[t].dias_ate) * 1440) + (parseInt(pedidos[t].hrs_ate) * 60) + parseInt(pedidos[t].min_ate));
+                        if (mins < 0) {
+                            mins = mins * -1;
+                        }
+                        motivosCancelacionCilindros[t].minutos = mins;
+
+                    }
+
+                }
+            }
+            }
+
+        }
+
+        // se calcula promedio y porcentajes pipas
+        for (var w = 0; w < motivosCancelacionPipas.length; w++) {
+            motivosCancelacionPipas[w].porcentaje = (motivosCancelacionPipas[w].pedidos * 100) / pedidosCanceladosPipas;
+            motivosCancelacionPipas[w].tiempoPromCan = tiempoProm(motivosCancelacionPipas[w].pedidos, motivosCancelacionPipas[w].minutos)
+
+
+
+        }
+        // se calcula promedio y porcentajes cilindros
+        for (var w = 0; w < motivosCancelacionCilindros.length; w++) {
+            motivosCancelacionCilindros[w].porcentaje = (motivosCancelacionCilindros[w].pedidos * 100) / pedidosCanceladosCil;
+            motivosCancelacionCilindros[w].tiempoPromCan = tiempoProm(motivosCancelacionCilindros[w].pedidos, motivosCancelacionCilindros[w].minutos)
+        }
+
+
+       
+        // construcion de tabla de promedio por dia
+        var tablapromediosCanceladosPipas = new google.visualization.DataTable();
+        tablapromediosCanceladosPipas.addColumn('string', 'Canelaciones Pipas');
+        tablapromediosCanceladosPipas.addColumn('string', 'Ped');
+        tablapromediosCanceladosPipas.addColumn('string', '%');
+        tablapromediosCanceladosPipas.addColumn('string', 'Prom Can');
+
+        var tablapromediosCanceladosCilindros= new google.visualization.DataTable();
+        tablapromediosCanceladosCilindros.addColumn('string', 'Cancelaciones Cilindros');
+        tablapromediosCanceladosCilindros.addColumn('string', 'Ped');
+        tablapromediosCanceladosCilindros.addColumn('string', '%');
+        tablapromediosCanceladosCilindros.addColumn('string', 'Prom Can');
+
+        //pipas
+        for (var n = 0; n < motivosCancelacionPipas.length; n++) {
+
+            tablapromediosCanceladosPipas.addRow([
+                                   motivosCancelacionPipas[n].motivo.toLowerCase(),
+                                   motivosCancelacionPipas[n].pedidos + '',
+                                  '%' + motivosCancelacionPipas[n].porcentaje.toFixed(2),
+                                  motivosCancelacionPipas[n].tiempoPromCan
+            ])
+        }
+        //cilindros
+        for (var m = 0; m < motivosCancelacionCilindros.length; m++) {
+
+            tablapromediosCanceladosCilindros.addRow([
+                                   motivosCancelacionCilindros[m].motivo.toLowerCase(),
+                                   motivosCancelacionCilindros[m].pedidos + '',
+                                  '%' + motivosCancelacionCilindros[m].porcentaje.toFixed(2),
+                                  motivosCancelacionCilindros[m].tiempoPromCan
+            ])
+        }
+
+        var contenedor2 = new google.visualization.Table(Cancelaciones_Pipas);
+        contenedor2.draw(tablapromediosCanceladosPipas, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {            
+        });
+
+        var contenedor3 = new google.visualization.Table(Cancelaciones_cilindros);
+        contenedor3.draw(tablapromediosCanceladosCilindros, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor3, 'select', function () {
+        });
+
+
+        //-------------------> se muestra la cantidad de ventas de tipo aplicacion.
+
+
+        var vtasAppPipasSur = 0;
+        var vtasAppPipasCan = 0;
+        var vtasAppCilSur = 0;
+        var vtasAppCilCan = 0;
+
+
+        for (var a = 0; a < pedidos.length; a++) {
+
+            if (pedidos[a].tpdo_ped.trim() == 'A') {
+
+                // cilindros 
+                if ((pedidos[a].ruta_ped.substring(0, 1)).includes("C"))
+                {
+                    switch (pedidos[a].edo_ped.trim()) {
+                        case "S":
+                            vtasAppCilSur++;
+                            break;
+                        case "C":
+                            vtasAppCilCan++;
+                            break;
+                    }
+                }
+                // Estacionario 
+                if ((pedidos[a].ruta_ped.substring(0, 1)).includes("M"))
+                {
+                    switch (pedidos[a].edo_ped.trim()) {
+                        case "S":
+                            vtasAppPipasSur++;
+                            break;
+                        case "C":
+                            vtasAppPipasCan++;
+                            break;
+                    }
+                }
+
+            }
+
+        }
+
+        // creacion de la tabla de pedidos de tipo aplicacion 
+         
+        var tablapedidosApp = new google.visualization.DataTable();
+        tablapedidosApp.addColumn('string', 'Servicio');
+        tablapedidosApp.addColumn('string', 'Surtidos');
+        tablapedidosApp.addColumn('string', 'Cancelados');
+
+
+        tablapedidosApp.addRow(["Estacionario", vtasAppPipasSur + '', vtasAppPipasCan + '']);
+        tablapedidosApp.addRow(["Cilindro", vtasAppCilSur + '', vtasAppCilCan + '']);
+
+        var contenedor4 = new google.visualization.Table(vtasApp);
+        contenedor4.draw(tablapedidosApp, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor4, 'select', function () {
+        });
+
+        document.getElementById('EncabezadoReporteGerencial').innerText = getDetallesReporte('gerencial');
+
+        // se muestra el dialogo
+        cerrarDialogo();
+        var msg = document.getElementById('DlgReporteGerencial');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+
+        function tiempoProm(noPedidos, Minutos) {
+            var minutiosProm = Minutos / noPedidos;
+            var dias = 0, horas = 0, minutos = 0;
+            dias = Math.trunc(minutiosProm / 1440);
+            var diasResiduo = minutiosProm % 1440;
+            horas = Math.trunc(diasResiduo / 60);
+            var horasResiduos = diasResiduo % 60;
+            minutos = horasResiduos.toFixed(0);
+
+            if (dias > 0 || horas > 0 || minutos > 0) {
+                return "D:" + dias + " H:" + horas.toFixed(0) + " M:" + minutos;
+            }
+            else {
+                return "D:0 H:0 M:0";
+            }
+
+
+        }
+
+       
+        //--------------------------> efectividad de los servicios surtidos 
+        var PedCil = [];
+        PedCil.push({ Tipo: 'CALL CENTER', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'APLICACION', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'PROG X SIS', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'PROACTIVO', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'ENCUENSTA', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'WHATS APP', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'CALL CENTER EXT', sur: 0, can: 0 });
+        PedCil.push({ Tipo: 'TOTAL', sur: 0, can: 0 });
+        var PedEst = [];
+        PedEst.push({ Tipo: 'CALL CENTER', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'APLICACION', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'PROG X SIS', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'PROACTIVO', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'ENCUENSTA', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'WHATS APP', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'CALL CENTER EXT', sur: 0, can: 0 });
+        PedEst.push({ Tipo: 'TOTAL', sur: 0, can: 0 });
+
+       
+
+        var servicio = '';
+        for (var i = 0; i < pedidos.length; i++) {
+            servicio = pedidos[i].ruta_ped.substring(0, 1);
+            switch (servicio) {
+                case 'C':
+                    switch (pedidos[i].tpdo_ped.trim()) {
+                        case 'L':
+                            if (pedidos[i].edo_ped=='S')
+                            {
+                                PedCil[0].sur++;
+                                PedCil[7].sur++;
+                            }
+                               
+                            else
+                            {
+                                PedCil[0].can++;
+                                PedCil[7].can++;
+                            }
+                                
+                            break;
+                        case 'A':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[1].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[1].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+                        case 'S':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[2].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[2].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+                        case 'P':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[3].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[3].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+                        case 'E':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[4].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[4].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+                        case 'W':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[5].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[5].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+                        case 'F':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedCil[6].sur++;
+                                PedCil[7].sur++;
+                            }
+
+                            else {
+                                PedCil[6].can++;
+                                PedCil[7].can++;
+                            }
+                            break;
+
+                    }
+                    break;
+                case 'M':
+                    switch (pedidos[i].tpdo_ped.trim()) {
+                        case 'L':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[0].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[0].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                        case 'A':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[1].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[1].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                        case 'S':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[2].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[2].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                        case 'P':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[3].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[3].can++;
+                                PedEst[6].can++;
+                            }
+                            break;
+                        case 'E':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[4].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[4].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                        case 'W':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[5].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[5].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                        case 'F':
+                            if (pedidos[i].edo_ped == 'S') {
+                                PedEst[6].sur++;
+                                PedEst[7].sur++;
+                            }
+
+                            else {
+                                PedEst[6].can++;
+                                PedEst[7].can++;
+                            }
+                            break;
+                    }
+                    break;
+            }
+        }
+        // fin del ciclo 
+
+
+        var efeCil = new google.visualization.DataTable();
+        efeCil.addColumn('string', 'Cilindro');
+        efeCil.addColumn('string', 'Efectividad');
+        var efeEst = new google.visualization.DataTable();
+        efeEst.addColumn('string', 'Estacionario');
+        efeEst.addColumn('string', 'Efectividad');
+
+        for (var i = 0; i < PedCil.length; i++) {
+            if ((PedCil[i].can + PedCil[i].sur) > 0) {
+                efeCil.addRow([PedCil[i].Tipo, ((100 * PedCil[i].sur) / (PedCil[i].sur + PedCil[i].can)).toFixed(2)+'%']);
+            }
+
+        }
+        for (var i = 0; i < PedEst.length; i++) {
+            if ((PedEst[i].sur + PedEst[i].can) > 0) {
+                efeEst.addRow([PedCil[i].Tipo, ((100 * PedEst[i].sur) / (PedEst[i].sur + PedEst[i].can)).toFixed(2) + '%']);
+            }
+        }
+        
+
+        var efecCil = new google.visualization.Table(idefeCil);
+        efecCil.draw(efeCil, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(efecCil, 'select', function () {
+        });
+        var efecEst = new google.visualization.Table(idefeEst);
+        efecEst.draw(efeEst, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(efecEst, 'select', function () {
+        });
+
+    }
+    
+</script>
+
+<style>
+    body{
+          margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100%;
+    }
+    #contenedorPrimerUltimoServico {        
+            overflow: scroll;
+        }
+    #promXchofer{
+        overflow: scroll;
+        width: 50%;
+    }
+      #contenedorReporteRutas {        
+            overflow: scroll;
+        }
+       #informacion {        
+            overflow: scroll;
+        }
+    #ReportePorcentajesPromediosChoferes{
+        overflow: scroll;
+    }
+ 
+
+
+     
+  
+</style>
+
+
+
+
+
+

@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title> Login Gas Express Nieto</title>
+
+</head>
+<body>
+
+    <div class="login_box">
+        
+        <img class="imgLogin" src="~/Images/LOGO_ANALIZER.png" />
+        <h1> LOGIN</h1>
+            <!-- usuario-->
+            <label for="username">Usuario</label>
+            <input type="text" placeholder="Ingresa usuario" id="usr"/>
+            <!-- contraseña-->
+            <label for="password">Contraseña</label>
+            <input type="password" placeholder="Ingresa contraseña" id="pwd"/>
+
+            <button id="btnEntrar" onclick="login()">Entrar</button>
+        
+    </div>
+</body>
+</html>
+<style>
+    body{
+        margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100vh;
+    }
+    .login_box{
+        width: 320px;
+        height :430px;
+        background:#d7d8e6;
+        color:#fff;
+        top:50%;
+        left:50%;
+        position:absolute;
+        transform:translate(-50%,-50%);
+        box-sizing:border-box;
+        padding:70px 30px;
+        border-radius: 10%;
+    }
+    .login_box .imgLogin {
+        width: 150px;
+        height: 200px; 
+        border-radius: 10%;
+        position: absolute;
+
+        top:-100px;
+        left: calc(50% - 80px);
+
+    }
+        .login_box h1 {
+            margin:0;
+            padding:80px 0 20px ;
+            text-align:center;
+            font-size: 22px; 
+
+        }
+
+    .login_box label{
+        margin : 0;
+        padding:0 ;
+        top:100px;
+        font-weight: bold;
+        display: block;
+    }
+        .login_box input {
+            width: 100%;
+            margin-bottom: 20px;          
+            border: none;
+            outline: none; 
+            height: 30px; 
+            color:#000000;
+            font-size: 16px; 
+        }
+
+       .login_box button{
+           border: none;
+           outline: none;
+           height: 40px;
+           background: #f25858;
+           color: #000000;
+           border-radius: 20px; 
+           width: 100%;
+           padding:0  20px ;
+       }
+</style>
+<script>
+
+    function login() {
+        var usr = $("#usr").val();
+        var  pwd = $("#pwd").val();
+
+        if (usr.trim() != null | usr.length<1)
+        {
+            if (pwd.trim() != null | pwd.length < 1)
+                {
+               
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/userLogin/",
+                    data: { paramUsr: usr, paramPwd:pwd },
+                    datatype: "json",
+                    success: function (data) {
+
+                        if (data != '0') {
+
+                            window.location = '/Home/Impresion';
+                        }
+                        else {
+                            alert("Error de logeo o no existe el usuario");
+                        }
+                    },
+                    error: function (request, status, error) {
+
+                        alert(request.responseText);
+                    }
+                });
+
+                }
+            else
+                {
+                    alert('Ingresa tu contraseña...');
+                }
+
+
+         }else
+         {
+            alert("Ingresa tu usuario...");
+         }
+
+
+       
+    }
+</script>

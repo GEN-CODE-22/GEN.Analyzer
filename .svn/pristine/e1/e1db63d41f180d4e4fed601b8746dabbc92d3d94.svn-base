@@ -1,0 +1,2591 @@
+﻿@{
+    ViewBag.Title = "Tiempos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+<body>
+    <div id="controles" style="width:100% ; background-color: #a7dcf2">
+        <div style="width: 100%;">
+
+            <div id="ctrlSecundario" style="display:inline-block;  ">
+                <label style="display:inline-block;">FECHA INICIAL:</label>
+                <input type="date" class="field-style field-split align-left" style=" width: 250px; display:inline-block" id="fecha_ini">
+                <label style="display:inline-block;">FECHA FINAL:</label>
+                <input type="date" class="field-style field-split align-left" style=" width: 250px; display:inline-block" id="fecha_fin">
+                <!-- control para usuario admin-->
+                <label id="lblservidor" style="display:inline-block;">SERVIDOR:</label>
+                <select id="slcservidor" style="width: 100px; display:inline-block"></select>
+                <button id="btnGetPedidos" onclick="getPedidos()" style="display:inline-block;">Consultar Pedidos</button><br />
+                
+
+
+            </div>
+        </div>  
+        <div id="ctrlPrimario" style="display:inline-block;   height: 100px; float:left;">
+            <label>SERVIDOR:</label> <label id="serv">@ViewBag.Srv</label><br />
+            <label>USUARIO:</label> <label id="usr">@ViewBag.Usr</label><br />
+        </div>
+     
+        <div id="ctrlTerciario" style="display:inline-block; height: 100px; float:left;margin-left: 20px">
+            <center><label>TIPO SERVICIO</label></center>
+            <br />
+            <input id="chbxcil" type="checkbox" value="cil" checked onchange="filTipoServ(this)"> CILINDRO <br />
+
+            <input id="chbxest" type="checkbox" value="est" checked onchange="filTipoServ(this)"> ESTACIONARIO <br /><br />
+            Ruta:
+            <select id="Slcrutas" class="field-style field-split align-left" style="width:100% "></select><br />
+          
+        </div>
+        <div id="ctrlCuaternario" style="display:inline-block;  height: 100px;float:left;margin-left: 20px">
+            <center><label>ESTADO DEL SERVICIO</label></center>
+            <br />
+            <input id="chbxsur" type="checkbox" value="sur" checked onchange="filEdoServ(this)"> SURTIDO <br />
+
+            <input id="chbxcan" type="checkbox" value="can" checked onchange="filEdoServ(this)"> CANCELADO <br />
+
+        </div>
+        <div id="ctrlQuintuple" style="display:inline-block; height: 100px;margin-left: 20px ">
+            <center><label>TIPO PEDIDO</label></center>
+            <div style="display:inline-block;">
+                <input type="checkbox" name="check_apl" value="app" checked onchange="cambioValorCheck(this)"> APLICACION<br />
+                <input type="checkbox" name="check_cal" value="cll" checked onchange="cambioValorCheck(this)"> CALLE<br />
+                <input type="checkbox" name="check_ccr" value="ccr" checked onchange="cambioValorCheck(this)"> CALLCENTER<br />
+                <input type="checkbox" name="check_prc" value="pro" checked onchange="cambioValorCheck(this)"> PROACTIVO
+            </div>
+            <div style="display:inline-block;">
+                <input type="checkbox" name="check_pxs" value="pxs" checked onchange="cambioValorCheck(this)"> PROG x SIS<br />
+                <input type="checkbox" name="check_enc" value="enc" checked onchange="cambioValorCheck(this)"> ENCUESTA<br />
+                <input type="checkbox" name="check_web" value="web" checked onchange="cambioValorCheck(this)"> WEB
+            </div>
+
+
+
+        </div>
+        <div id="ctrlSexto" style="display:inline-block; height: 100px;margin-left: 20px ">
+            <button id="btnAnalizar" onclick="analizar()">Analizar</button><br />
+            <button id="btnAnalizar" onclick="ReporteRutas()">Reporte Promedios de Rutas</button><br />
+            <button id="btnAnalizar" onclick="ReportePrimerUltimoSer()">Reporte Primer Ultimo servicio</button><br />
+            <button id="btnAnalizar" onclick="reportimepochoferes()">Porcentajes y promedios choferes</button><br />
+        </div>
+        <img id="imgCalculando" src="~/Images/CargandoTiempo.gif" style="width:150px; float: right; display: none"  />
+    </div>
+    <button onclick="javascript: window.imprimirDIV('informacion', 'informacion')">Imprimir</button>
+    <br /><label id="lblFechaini" style="float: left; margin: 30px;"> </label>
+    <br /><label id="lblFechafin" style="float: right; margin: 30px;"> </label>
+    <center>
+        <label id="lblrangoFechaini" style="display:inline-block;"> </label>
+        <label id="lblrangoFechafin" style="display:inline-block;"> </label>
+        <input type="range" class="slider" id="sliderGral" style=" width: 90%" onchange="actualizaRango(this)" list="tickmarks" >
+        <datalist id="tickmarks">
+            
+        </datalist>           
+    </center>
+        <div  id="informacion" style="width: 100%; height: 60% ">
+            
+            
+                 <center> <h3 id="descGral" class="descGral"></h3></center>
+                <div style="width: 100%;" class="graficas">
+                    <center>
+                        <h3>Frecuencia de pedidos</h3>
+                        <div id="grfFrecPed"></div>
+
+                    </center>
+                </div>
+                <div style="width: 100%;" class="graficas">
+                    <center>
+                        <h3>Intervalo de horas de recepción de pedidos</h3>
+                        <div id="grfHorasResPed"></div>
+                    </center>
+                </div><br />
+                <div style="width:100%;" class="graficas">
+                    <center>
+                        <h3>Promedios y porcentajes</h3><br />
+                        <div id="tblInfoGral"></div>
+                    </center>
+                </div>
+                <div style="width: 100%;" class="graficas">
+                    <center>
+                        <h3>Primer y ultimo servicio</h3><br />
+                        <div id="tblPriUltSer"></div>
+                    </center>
+                </div>
+            <br />
+            <center>
+                <div id="promXchofer" style=" height: 300px;" class="graficas">
+
+                </div>
+            </center>
+                 
+    </div>
+    <!-- DIALOGOS-->
+    <dialog id="ReporteRutas" style="width: 50%; height: 80%">
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('contenedorReporteRutas', 'promediosTiepmosServicios')">Imprimir Todo</button>
+        <center>
+            <div id="contenedorReporteRutas" style="width: 100%; height: 900px"></div>
+        </center>
+
+    </dialog>
+
+    <dialog id="ReportePrimerUltimoServico">
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('contenedorPrimerUltimoServico', 'PrimerUltimoServicio')">Imprimir Todo</button>
+        <center>
+            <div id="contenedorPrimerUltimoServico" style="width: 100%; height: 900px"></div>
+        </center>
+
+
+    </dialog>
+    <dialog id="CargandoTiempo">
+        <img src="~/Images/CargandoTiempo.gif" style="width:150px" />
+        </center>
+    </dialog>
+
+    <dialog id="ReportePorcentajesPromediosChoferes">
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('contenedorPorcPromChof', 'porcPromChof')">Imprimir Todo</button>
+        <center>
+            <div id="contenedorPorcPromChof" style="width: 100%; height: 900px"></div>
+        </center>
+    </dialog>
+
+
+    <dialog id="DlgReporteGerencial">
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('DivReporteGerencial', 'porcPromChof')">Imprimir Todo</button>
+        <center>
+            <div id="DivReporteGerencial" style="width: 100%; height: 900px">
+                
+                    <label id="EncabezadoReporteGerencial"></label>
+
+                    <div style="width:100%">
+                        <div id="TiempoPromAteRG" style="width: 100%"></div>
+                    </div>
+                    <div style="width:100%"></div>
+                    <div style="width:100%"></div>
+               
+               
+            </div>
+        </center>
+    </dialog>
+    
+</body>
+
+</html>
+<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables Globales
+    var pedidos = [];            //Contiene los pedidos en un rango de fechas.
+    var pedidosAnalisis = []     // contiene los pedidos que forman parte de un analisis.
+    var arrRutasCilindros = [];  // contiene las rutas de cilindro de la busqueda.
+    var arrRutasPipas = [];      // contiene las rutas de pipa de la busqueda.
+    var cil = true, est = false; // variables de control del tipo de servicio.
+    var sur = true, can = false; // variables de control del estado del servicio.
+    var app = true, cll = true, ccr = true, pro = true, pxs = true, enc = true, web = true; // variables de control del tipo de pedido.
+    var dialogos = [];           // contiene los dialogos en pantalla.
+    var liquidas = [];           // contiene las liquidas de consiliacion.
+    var servidor = "";
+    var rangMin = 0, rangMax = 0; // almacenan los rangos de slider
+    $(document).ready(function () {
+        // colocar fechas actuales en los campos de fecha
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+
+        // desabilitar opciones si no es usuario administrador
+        if (document.getElementById("serv").innerHTML.trim() != 'Admin') {
+            document.getElementById('lblservidor').style.display = "none";
+            document.getElementById('slcservidor').style.display = "none";
+        }
+        // agregar los servers a el elemento select
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slcservidor");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+        // colocar por defaul el analisis de servicio estacionario
+        document.getElementById("chbxcil").checked = true;
+        document.getElementById("chbxest").checked = false;
+        document.getElementById("chbxsur").checked = true;
+        document.getElementById("chbxcan").checked = false;
+    });
+    // Inicializa el mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 13,
+        });
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        // google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+    }
+    // Consulta los pedidos
+    function getPedidos() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        var serv;
+        resetSliders();
+
+
+
+        if (document.getElementById("serv").innerHTML.trim() == 'Admin') {
+            serv = "'" + $("#slcservidor option:selected").text().trim() + "'";
+            servidor = serv;
+        }
+        else {
+            serv = "'" + document.getElementById("serv").innerHTML.trim() + "'";
+            servidor = serv;
+        }
+        // colcoar icono de cargando
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+        // llamada ajax para consultar los pedidos
+        $.ajax({
+            type: "POST",
+            url: "/Home/getPedidos/",
+            data: { paramSrv: serv.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    pedidos = data;                   
+                    getArrayRutas();
+                    colcaRutas();
+                    cerrarDialogo();
+                    getLiquidas();
+                    
+                }
+                else {
+                    cerrarDialogo();
+                    alert('¿No se encontro pedidos en ese rango de fechas?');
+                    
+
+                }
+            },
+            error: function (request, status, error) {
+                cerrarDialogo();
+                alert(request.responseText);
+            }
+        });
+    }
+    // obtiene las liquidaciones de la base de datoa
+    function getLiquidas() {
+        var serv;
+        if (document.getElementById("serv").innerHTML.trim() == 'Admin') {
+            serv = "'" + $("#slcservidor option:selected").text().trim() + "'";
+        }
+        else {
+            serv = "'" + document.getElementById("serv").innerHTML.trim() + "'";
+        }
+            
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+
+        // colcoar icono de cargando
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+
+        //consultar las notas
+        $.ajax({
+            type: "POST",
+            url: "/Home/getLiquidas/",
+            data: { paramSrv: serv.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    liquidas = data;
+                    cerrarDialogo();
+                    analizar();
+                }
+                else {
+                    cerrarDialogo();
+                    alert("No existen liquidas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+
+                }
+            },
+            error: function (request, status, error) {
+                cerrarDialogo();
+                alert(request.responseText);
+            }
+        });
+    }
+    // Control de los checkbox de tipo de servicio
+    function filTipoServ(CheckBox) {
+        switch (CheckBox.value) {
+            case "cil":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxcil").checked = true;
+                    document.getElementById("chbxest").checked = false;
+                }
+                else {
+                    document.getElementById("chbxcil").checked = false;
+                    document.getElementById("chbxest").checked = true;
+                }
+
+                break;
+            case "est":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxcil").checked = false;
+                    document.getElementById("chbxest").checked = true;
+                }
+                else {
+                    document.getElementById("chbxcil").checked = true;
+                    document.getElementById("chbxest").checked = false;
+                }
+                break;
+        }
+        cambioValorCheck(CheckBox);
+    }
+    // Control de los chekbox del estado del servicio
+    function filEdoServ(CheckBox) {
+        switch (CheckBox.value) {
+            case "sur":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxsur").checked = true;
+                    document.getElementById("chbxcan").checked = false;
+                }
+                else {
+                    document.getElementById("chbxsur").checked = false;
+                    document.getElementById("chbxcan").checked = true;
+                }
+
+                break;
+            case "can":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxsur").checked = false;
+                    document.getElementById("chbxcan").checked = true;
+                }
+                else {
+                    document.getElementById("chbxsur").checked = true;
+                    document.getElementById("chbxcan").checked = false;
+                }
+
+                break;
+        }
+        cambioValorCheck(CheckBox);
+    }
+    // Obtiene los arreglos de rutas de cilindros y pipas respectivamente.
+    function getArrayRutas() {
+        for (var i = 0; i < pedidos.length; i++) {
+            var ruta = pedidos[i].ruta_ped.trim();
+            var encontrado = false;
+
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("M")) {
+                for (var j = 0; j < arrRutasPipas.length; j++) {
+                    if (ruta.trim() == arrRutasPipas[j].trim()) {
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado) {
+                    arrRutasPipas.push(ruta);
+
+                }
+
+
+            }
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("C")) {
+                for (var k = 0; k < arrRutasCilindros.length; k++) {
+                    if (ruta.trim() == arrRutasCilindros[k].trim()) {
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado) {
+                    arrRutasCilindros.push(ruta);
+
+                }
+            }
+
+            encontrado = false;
+
+        }
+
+        arrRutasCilindros.sort();
+        arrRutasPipas.sort();
+
+  
+
+    }
+    // Cambia el valor de la variables correspondientes a su check.
+    function cambioValorCheck(checbox) {
+        var valor = checbox.value;
+        switch (valor) {
+            // tipo de servicio
+            case "cil":
+                if (checbox.checked) {
+                    cil = true;
+                    est = false;
+                }
+
+                else {
+                    cil = false;
+                    est = true;
+                }
+                analizar();
+                colcaRutas();
+                break;
+            case "est":
+                if (checbox.checked) {
+                    cil = false;
+                    est = true;
+                }
+
+                else {
+                    cil = true;
+                    est = false;
+                }
+                colcaRutas();
+                analizar();
+                break;
+                // estado del servicio
+            case "sur":
+                if (checbox.checked) {
+                    sur = true;
+                    can = false;
+                }
+
+                else {
+                    sur = false;
+                    can = true;
+                }
+                analizar();
+
+                break;
+            case "can":
+                if (checbox.checked) {
+                    sur = false;
+                    can = true;
+                }
+
+                else {
+                    sur = true;
+                    can = false;
+                }
+                analizar();
+
+                break;
+                // tipo de pedido
+            case "app":
+                if (checbox.checked)
+                    app = true;
+                else
+                    app = false;
+                analizar();
+                break;
+            case "cll":
+                if (checbox.checked)
+                    cll = true;
+                else
+                    cll = false;
+                analizar();
+                break;
+            case "ccr":
+                if (checbox.checked)
+                    ccr = true;
+                else
+                    ccr = false;
+                analizar();
+                break;
+            case "pro":
+                if (checbox.checked)
+                    pro = true;
+                else
+                    pro = false;
+                analizar();
+                break;
+            case "pxs":
+                if (checbox.checked)
+                    pxs = true;
+                else
+                    pxs = false;
+                analizar();
+                break;
+            case "enc":
+                if (checbox.checked)
+                    enc = true;
+                else
+                    enc = false;
+                analizar();
+                break;
+            case "web":
+                if (checbox.checked)
+                    web = true;
+                else
+                    web = false;
+                analizar();
+                break;
+
+
+
+        }
+
+
+
+
+
+    }
+    // Coloca el listado de rutas deacuerdo al servicio seleccionado
+    function colcaRutas() {
+        var rutas;
+        if (cil)
+            rutas = arrRutasCilindros;
+        else if (est)
+            rutas = arrRutasPipas;
+
+        document.getElementById("Slcrutas").length = 0;
+
+
+
+        var x = document.getElementById("Slcrutas");
+        var option = document.createElement("option");
+        option.text ='Todas';
+        x.add(option);
+        for (var i = 0; i < rutas.length; i++) {
+            var x = document.getElementById("Slcrutas");
+            var option = document.createElement("option");
+            option.text = rutas[i].trim();
+            x.add(option);
+        }
+
+    }
+    // Determina el conjunto de pedidos que formaran parte de un analisis.
+    function pedidosAnali() {
+        pedidosAnalisis = [];
+        var ruta = $("#Slcrutas option:selected").text().trim();
+        for (var i = 0; i < pedidos.length; i++) {
+            if ((tipoPedido(pedidos[i]) & edoPedido(pedidos[i]) & tpoPedido(pedidos[i])) & (ruta == pedidos[i].ruta_ped.trim() | ruta == 'Todas') & dentroIntervalSlider(pedidos[i])) {
+                pedidosAnalisis.push(pedidos[i]);
+            }
+        }
+        function tipoPedido(serPed) {
+
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("M") & est) {
+                return true;
+            }
+            if ((pedidos[i].ruta_ped.substring(0, 1)).includes("C") & cil) {
+                return true;
+            }
+        }
+        function edoPedido(edoPed) {
+            if (edoPed.edo_ped.trim() == "S" & sur) {
+                return true;
+            }
+            if (edoPed.edo_ped.trim() == "C" & can) {
+                return true;
+            }
+
+        }
+        function tpoPedido(edoPed) {
+
+            switch (edoPed.tpdo_ped.trim()) {
+                case "A":
+                    if (app)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "C":
+                    if (cll)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "L":
+                    if (ccr)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "P":
+                    if (pro)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "S":
+                    if (pxs)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "E":
+                    if (enc)
+                        return true;
+                    else
+                        return false;
+                    break;
+                case "W":
+                    if (web)
+                        return true;
+                    else
+                        return false;
+                    break;
+
+            }
+
+        }
+        function dentroIntervalSlider(fecha_pedido)
+        {
+            if (getmilisegundos(fecha_pedido) >= rangMin & getmilisegundos(fecha_pedido)<= rangMax) {
+                return true;
+            }
+        }
+
+
+    }
+    function analizar() {
+
+
+        document.getElementById('imgCalculando').style.display = 'inline';
+        document.getElementById('descGral').innerText = getDetallesReporte('descGral');
+        pedidosAnali();
+        google.setOnLoadCallback(promedios);
+        promedios();
+        google.setOnLoadCallback(horaResepcionPedidos);
+        horaResepcionPedidos();
+        //google.setOnLoadCallback(freccPed);
+       // freccPed();
+        google.setOnLoadCallback(GrfPedxDiaxHra);
+        GrfPedxDiaxHra();
+        primerUltimoServicio();
+        tiempoChoferes();
+        document.getElementById('imgCalculando').style.display = 'none';
+
+    }
+    $(Slcrutas).change(function () {
+        analizar();
+
+    });
+    //  muestra promedios  y porcentajes de antencion en una tabla con relacion a una ruta .
+    function promedios() {
+        // variables para el tipo de aplicacion
+        var appCount = 0, appSumMin = 0, app1hr = 0, app3hr = 0, app3hrmas = 0, appDia = 0, scapp = 0;
+        var cllCount = 0, cllSumMin = 0, cll1hr = 0, cll3hr = 0, cll3hrmas = 0, cllDia = 0, sccll = 0;
+        var ccrCount = 0, ccrSumMin = 0, ccr1hr = 0, ccr3hr = 0, ccr3hrmas = 0, ccrDia = 0, scccr = 0;
+        var proCount = 0, proSumMin = 0, pro1hr = 0, pro3hr = 0, pro3hrmas = 0, proDia = 0, scpro = 0;
+        var pxsCount = 0, pxsSumMin = 0, pxs1hr = 0, pxs3hr = 0, pxs3hrmas = 0, pxsDia = 0, scpxs = 0;
+        var encCount = 0, encSumMin = 0, enc1hr = 0, enc3hr = 0, enc3hrmas = 0, encDia = 0, scenc = 0;
+        var webCount = 0, webSumMin = 0, web1hr = 0, web3hr = 0, web3hrmas = 0, webDia = 0, scweb = 0;
+        var totalCount = 0, totalSumMin = 0, total1hr = 0, total3hr = 0, total3hrmas = 0, totalDia = 0, totalsc = 0;
+
+        var minTotalPedido;
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+        
+
+
+            minTotalPedido = (parseInt(pedidosAnalisis[i].dias_ate.trim()) * 1440) + (parseInt(pedidosAnalisis[i].hrs_ate.trim()) * 60) + parseInt(pedidosAnalisis[i].min_ate.trim());
+                if (minTotalPedido < 0)
+                    minTotalPedido = minTotalPedido * -1;
+
+                switch (pedidosAnalisis[i].tpdo_ped.trim()) {
+                    case "A":
+                        appCount++;
+                        app1hr = app1hr + sinClasificar(minTotalPedido);
+                        appSumMin = appSumMin + (minTotalPedido);
+                        app1hr = app1hr + unaHr(minTotalPedido);
+                        app3hr = app3hr + tresHr(minTotalPedido);
+                        app3hrmas = app3hrmas + unDia(minTotalPedido);
+                        appDia = appDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "C":
+                        cllCount++;
+                        cll1hr = cll1hr + sinClasificar(minTotalPedido);
+                        cllSumMin = cllSumMin + (minTotalPedido);
+                        cll1hr = cll1hr + unaHr(minTotalPedido);
+                        cll3hr = cll3hr + tresHr(minTotalPedido);
+                        cll3hrmas = cll3hrmas + unDia(minTotalPedido);
+                        cllDia = cllDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "L":
+                        ccrCount++;
+                        ccr1hr = ccr1hr + sinClasificar(minTotalPedido);
+                        ccrSumMin = ccrSumMin + (minTotalPedido);
+                        ccr1hr = ccr1hr + unaHr(minTotalPedido);
+                        ccr3hr = ccr3hr + tresHr(minTotalPedido);
+                        ccr3hrmas = ccr3hrmas + unDia(minTotalPedido);
+                        ccrDia = ccrDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "P":
+                        proCount++;
+                        pro1hr = pro1hr + sinClasificar(minTotalPedido);
+                        proSumMin = proSumMin + (minTotalPedido);
+                        pro1hr = pro1hr + unaHr(minTotalPedido);
+                        pro3hr = pro3hr + tresHr(minTotalPedido);
+                        pro3hrmas = pro3hrmas + unDia(minTotalPedido);
+                        proDia = proDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "S":
+                        pxsCount++;
+                        pxs1hr = pxs1hr + sinClasificar(minTotalPedido);
+                        pxsSumMin = pxsSumMin + (minTotalPedido);
+                        pxs1hr = pxs1hr + unaHr(minTotalPedido);
+                        pxs3hr = pxs3hr + tresHr(minTotalPedido);
+                        pxs3hrmas = pxs3hrmas + unDia(minTotalPedido);
+                        pxsDia = pxsDia + masDeUnDia(minTotalPedido);
+                        break;
+                    case "E":
+                        encCount++;
+                        enc1hr = enc1hr + sinClasificar(minTotalPedido);
+                        encSumMin = encSumMin + (minTotalPedido);
+                        enc1hr = enc1hr + unaHr(minTotalPedido);
+                        enc3hr = enc3hr + tresHr(minTotalPedido);
+                        enc3hrmas = enc3hrmas + unDia(minTotalPedido);
+                        encDia = encDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "W":
+                        webCount++;
+                        web1hr = web1hr + sinClasificar(minTotalPedido);
+                        webSumMin = webSumMin + (minTotalPedido);
+                        web1hr = web1hr + unaHr(minTotalPedido);
+                        web3hr = web3hr + tresHr(minTotalPedido);
+                        web3hrmas = web3hrmas + unDia(minTotalPedido);
+                        webDia = webDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                }
+                // suma de totales
+                totalCount++;
+                totalSumMin = totalSumMin + (minTotalPedido);
+                total1hr = total1hr + unaHr(minTotalPedido);
+                total3hr = total3hr + tresHr(minTotalPedido);
+                total3hrmas = total3hrmas + unDia(minTotalPedido);
+                totalDia = totalDia + masDeUnDia(minTotalPedido);
+
+            
+        }
+        var valores = [];
+        valores.push({ tipo_pedido: "Aplicación", no_pedidos: appCount, minutos_totales: appSumMin, hrs1: app1hr, hrs3: app3hr, hrs3mas: app3hrmas, masDia: appDia, sinClasificar: scapp });
+        valores.push({ tipo_pedido: "Calle", no_pedidos: cllCount, minutos_totales: cllSumMin, hrs1: cll1hr, hrs3: cll3hr, hrs3mas: cll3hrmas, masDia: cllDia, sinClasificar: sccll });
+        valores.push({ tipo_pedido: "Call Center", no_pedidos: ccrCount, minutos_totales: ccrSumMin, hrs1: ccr1hr, hrs3: ccr3hr, hrs3mas: ccr3hrmas, masDia: ccrDia, sinClasificar: scccr });
+        valores.push({ tipo_pedido: "Proactivo", no_pedidos: proCount, minutos_totales: proSumMin, hrs1: pro1hr, hrs3: pro3hr, hrs3mas: pro3hrmas, masDia: proDia, sinClasificar: scpro });
+        valores.push({ tipo_pedido: "Prog x Sis", no_pedidos: pxsCount, minutos_totales: pxsSumMin, hrs1: pxs1hr, hrs3: pxs3hr, hrs3mas: pxs3hrmas, masDia: pxsDia, sinClasificar: scpxs });
+        valores.push({ tipo_pedido: "Encuesta", no_pedidos: encCount, minutos_totales: encSumMin, hrs1: enc1hr, hrs3: enc3hr, hrs3mas: enc3hrmas, masDia: encDia, sinClasificar: scenc });
+        valores.push({ tipo_pedido: "Web", no_pedidos: webCount, minutos_totales: webSumMin, hrs1: web1hr, hrs3: web3hr, hrs3mas: web3hrmas, masDia: webDia, sinClasificar: scweb });
+        valores.push({ tipo_pedido: "Total", no_pedidos: totalCount, minutos_totales: totalSumMin, hrs1: total1hr, hrs3: total3hr, hrs3mas: total3hrmas, masDia: totalDia, sinClasificar: totalsc });
+        // fin de analizar
+
+        // Tabla promedios
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Tipo de pedido');
+        tablapromedios.addColumn('string', 'Promedio de atención');
+        tablapromedios.addColumn('string', 'No pedidos');
+        tablapromedios.addColumn('string', 'Min´s Totales');
+        tablapromedios.addColumn('string', 'Max 1 hr');
+        tablapromedios.addColumn('string', 'Max 3 hrs');
+        tablapromedios.addColumn('string', 'Max 1 dia');
+        tablapromedios.addColumn('string', 'Mas de 1 dia');
+
+
+        for (var j = 0; j < valores.length; j++) {
+            if (valores[j].no_pedidos > 0) {
+                tablapromedios.addRow([valores[j].tipo_pedido,
+                                       tiempoProm(valores[j].no_pedidos, valores[j].minutos_totales),
+                                       valores[j].no_pedidos + '',
+                                       valores[j].minutos_totales + '',
+                                       ((valores[j].hrs1 * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs1,
+                                       ((valores[j].hrs3 * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs3,
+                                       ((valores[j].hrs3mas * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs3mas,
+                                       ((valores[j].masDia * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Pedi:' + valores[j].masDia
+                ])
+
+            }
+
+
+        }
+        var contenedor2 = new google.visualization.Table(tblInfoGral);
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+        function tiempoProm(noPedidos, Minutos) {
+            var minutiosProm = Minutos / noPedidos;
+            var dias = 0, horas = 0, minutos = 0;
+            dias = Math.trunc(minutiosProm / 1440);
+            var diasResiduo = minutiosProm % 1440;
+            horas = Math.trunc(diasResiduo / 60);
+            var horasResiduos = diasResiduo % 60;
+            minutos = horasResiduos.toFixed(0);
+
+            return "Dias:" + dias + " Hrs:" + horas.toFixed(0) + " Min:" + minutos;
+
+        }
+        function unaHr(min) {
+            if (min > 0 & min <= 60)
+                return 1;
+            else
+                return 0;
+        }
+        function tresHr(min) {
+            if (min > 60 & min <= 180)
+                return 1;
+            else
+                return 0;
+        }
+        function unDia(min) {
+            if (min > 181 & min <= 1440)
+                return 1;
+            else
+                return 0;
+        }
+        function masDeUnDia(min) {
+            if (min > 1440)
+                return 1;
+            else
+                return 0;
+        }
+
+        function sinClasificar(min) {
+            if (min == 0)
+                return 1;
+            else
+                return 0;
+        }
+
+    }
+    // muestra promedios y porcentajes de atencion en una tabla con relacion a un chofer 
+    function promediosChoferes(pedidosChofer, contenedor) {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+        // variables para el tipo de aplicacion
+        var appCount = 0, appSumMin = 0, app1hr = 0, app3hr = 0, app3hrmas = 0, appDia = 0, scapp = 0;
+        var cllCount = 0, cllSumMin = 0, cll1hr = 0, cll3hr = 0, cll3hrmas = 0, cllDia = 0, sccll = 0;
+        var ccrCount = 0, ccrSumMin = 0, ccr1hr = 0, ccr3hr = 0, ccr3hrmas = 0, ccrDia = 0, scccr = 0;
+        var proCount = 0, proSumMin = 0, pro1hr = 0, pro3hr = 0, pro3hrmas = 0, proDia = 0, scpro = 0;
+        var pxsCount = 0, pxsSumMin = 0, pxs1hr = 0, pxs3hr = 0, pxs3hrmas = 0, pxsDia = 0, scpxs = 0;
+        var encCount = 0, encSumMin = 0, enc1hr = 0, enc3hr = 0, enc3hrmas = 0, encDia = 0, scenc = 0;
+        var webCount = 0, webSumMin = 0, web1hr = 0, web3hr = 0, web3hrmas = 0, webDia = 0, scweb = 0;
+        var totalCount = 0, totalSumMin = 0, total1hr = 0, total3hr = 0, total3hrmas = 0, totalDia = 0, totalsc = 0;
+
+        var minTotalPedido;
+        for (var i = 0; i < pedidosChofer.length; i++) {
+            if (  pedidosChofer[i].edo_ped.trim() == edo) {
+
+
+                minTotalPedido = (parseInt(pedidosChofer[i].dias_ate.trim()) * 1440) + (parseInt(pedidosChofer[i].hrs_ate.trim()) * 60) + parseInt(pedidosChofer[i].min_ate.trim());
+                if (minTotalPedido < 0)
+                    minTotalPedido = minTotalPedido * -1;
+
+                switch (pedidosChofer[i].tpdo_ped.trim()) {
+                    case "A":
+                        appCount++;
+                        app1hr = app1hr + sinClasificar(minTotalPedido);
+                        appSumMin = appSumMin + (minTotalPedido);
+                        app1hr = app1hr + unaHr(minTotalPedido);
+                        app3hr = app3hr + tresHr(minTotalPedido);
+                        app3hrmas = app3hrmas + unDia(minTotalPedido);
+                        appDia = appDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "C":
+                        cllCount++;
+                        cll1hr = cll1hr + sinClasificar(minTotalPedido);
+                        cllSumMin = cllSumMin + (minTotalPedido);
+                        cll1hr = cll1hr + unaHr(minTotalPedido);
+                        cll3hr = cll3hr + tresHr(minTotalPedido);
+                        cll3hrmas = cll3hrmas + unDia(minTotalPedido);
+                        cllDia = cllDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "L":
+                        ccrCount++;
+                        ccr1hr = ccr1hr + sinClasificar(minTotalPedido);
+                        ccrSumMin = ccrSumMin + (minTotalPedido);
+                        ccr1hr = ccr1hr + unaHr(minTotalPedido);
+                        ccr3hr = ccr3hr + tresHr(minTotalPedido);
+                        ccr3hrmas = ccr3hrmas + unDia(minTotalPedido);
+                        ccrDia = ccrDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "P":
+                        proCount++;
+                        pro1hr = pro1hr + sinClasificar(minTotalPedido);
+                        proSumMin = proSumMin + (minTotalPedido);
+                        pro1hr = pro1hr + unaHr(minTotalPedido);
+                        pro3hr = pro3hr + tresHr(minTotalPedido);
+                        pro3hrmas = pro3hrmas + unDia(minTotalPedido);
+                        proDia = proDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "S":
+                        pxsCount++;
+                        pxs1hr = pxs1hr + sinClasificar(minTotalPedido);
+                        pxsSumMin = pxsSumMin + (minTotalPedido);
+                        pxs1hr = pxs1hr + unaHr(minTotalPedido);
+                        pxs3hr = pxs3hr + tresHr(minTotalPedido);
+                        pxs3hrmas = pxs3hrmas + unDia(minTotalPedido);
+                        pxsDia = pxsDia + masDeUnDia(minTotalPedido);
+                        break;
+                    case "E":
+                        encCount++;
+                        enc1hr = enc1hr + sinClasificar(minTotalPedido);
+                        encSumMin = encSumMin + (minTotalPedido);
+                        enc1hr = enc1hr + unaHr(minTotalPedido);
+                        enc3hr = enc3hr + tresHr(minTotalPedido);
+                        enc3hrmas = enc3hrmas + unDia(minTotalPedido);
+                        encDia = encDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                    case "W":
+                        webCount++;
+                        web1hr = web1hr + sinClasificar(minTotalPedido);
+                        webSumMin = webSumMin + (minTotalPedido);
+                        web1hr = web1hr + unaHr(minTotalPedido);
+                        web3hr = web3hr + tresHr(minTotalPedido);
+                        web3hrmas = web3hrmas + unDia(minTotalPedido);
+                        webDia = webDia + masDeUnDia(minTotalPedido);
+
+                        break;
+                }
+                // suma de totales
+                totalCount++;
+                totalSumMin = totalSumMin + (minTotalPedido);
+                total1hr = total1hr + unaHr(minTotalPedido);
+                total3hr = total3hr + tresHr(minTotalPedido);
+                total3hrmas = total3hrmas + unDia(minTotalPedido);
+                totalDia = totalDia + masDeUnDia(minTotalPedido);
+
+            }
+        }
+        var valores = [];
+        valores.push({ tipo_pedido: "Aplicación", no_pedidos: appCount, minutos_totales: appSumMin, hrs1: app1hr, hrs3: app3hr, hrs3mas: app3hrmas, masDia: appDia, sinClasificar: scapp });
+        valores.push({ tipo_pedido: "Calle", no_pedidos: cllCount, minutos_totales: cllSumMin, hrs1: cll1hr, hrs3: cll3hr, hrs3mas: cll3hrmas, masDia: cllDia, sinClasificar: sccll });
+        valores.push({ tipo_pedido: "Call Center", no_pedidos: ccrCount, minutos_totales: ccrSumMin, hrs1: ccr1hr, hrs3: ccr3hr, hrs3mas: ccr3hrmas, masDia: ccrDia, sinClasificar: scccr });
+        valores.push({ tipo_pedido: "Proactivo", no_pedidos: proCount, minutos_totales: proSumMin, hrs1: pro1hr, hrs3: pro3hr, hrs3mas: pro3hrmas, masDia: proDia, sinClasificar: scpro });
+        valores.push({ tipo_pedido: "Prog x Sis", no_pedidos: pxsCount, minutos_totales: pxsSumMin, hrs1: pxs1hr, hrs3: pxs3hr, hrs3mas: pxs3hrmas, masDia: pxsDia, sinClasificar: scpxs });
+        valores.push({ tipo_pedido: "Encuesta", no_pedidos: encCount, minutos_totales: encSumMin, hrs1: enc1hr, hrs3: enc3hr, hrs3mas: enc3hrmas, masDia: encDia, sinClasificar: scenc });
+        valores.push({ tipo_pedido: "Web", no_pedidos: webCount, minutos_totales: webSumMin, hrs1: web1hr, hrs3: web3hr, hrs3mas: web3hrmas, masDia: webDia, sinClasificar: scweb });
+        valores.push({ tipo_pedido: "Total", no_pedidos: totalCount, minutos_totales: totalSumMin, hrs1: total1hr, hrs3: total3hr, hrs3mas: total3hrmas, masDia: totalDia, sinClasificar: totalsc });
+        // fin de analizar
+
+        // Tabla promedios
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Tipo de pedido');
+        tablapromedios.addColumn('string', 'Promedio de atención');
+        tablapromedios.addColumn('string', 'No pedidos');
+        tablapromedios.addColumn('string', 'Min´s Totales');
+        tablapromedios.addColumn('string', 'Max 1 hr');
+        tablapromedios.addColumn('string', 'Max 3 hrs');
+        tablapromedios.addColumn('string', 'Max 1 dia');
+        tablapromedios.addColumn('string', 'Mas de 1 dia');
+
+
+        for (var j = 0; j < valores.length; j++) {
+            if (valores[j].no_pedidos > 0) {
+                tablapromedios.addRow([valores[j].tipo_pedido,
+                                       tiempoProm(valores[j].no_pedidos, valores[j].minutos_totales),
+                                       valores[j].no_pedidos + '',
+                                       valores[j].minutos_totales + '',
+                                       ((valores[j].hrs1 * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs1,
+                                       ((valores[j].hrs3 * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs3,
+                                       ((valores[j].hrs3mas * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs3mas,
+                                       ((valores[j].masDia * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].masDia
+                ])
+
+            }
+
+
+        }
+
+
+
+
+
+
+        var contenedor2 = new google.visualization.Table(document.getElementById(contenedor));
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+        function tiempoProm(noPedidos, Minutos) {
+            var minutiosProm = Minutos / noPedidos;
+            var dias = 0, horas = 0, minutos = 0;
+            dias = Math.trunc(minutiosProm / 1440);
+            var diasResiduo = minutiosProm % 1440;
+            horas = Math.trunc(diasResiduo / 60);
+            var horasResiduos = diasResiduo % 60;
+            minutos = horasResiduos.toFixed(0);
+
+            return "Dias:" + dias + " Hrs:" + horas.toFixed(0) + " Min:" + minutos;
+
+        }
+        function unaHr(min) {
+            if (min > 0 & min <= 60)
+                return 1;
+            else
+                return 0;
+        }
+        function tresHr(min) {
+            if (min > 60 & min <= 180)
+                return 1;
+            else
+                return 0;
+        }
+        function unDia(min) {
+            if (min > 181 & min <= 1440)
+                return 1;
+            else
+                return 0;
+        }
+        function masDeUnDia(min) {
+            if (min > 1440)
+                return 1;
+            else
+                return 0;
+        }
+        function sinClasificar(min) {
+            if (min == 0)
+                return 1;
+            else
+                return 0;
+        }
+    }
+    // grafica las horas de resepcion de pedidos.
+    function horaResepcionPedidos()
+    {
+        var lunMax = 0, lunMin = 100;
+        var marMax = 0, marMin = 100;
+        var mieMax = 0, mieMin = 100;
+        var jueMax = 0, jueMin = 100;
+        var vieMax = 0, vieMin = 100;
+        var sabMax = 0, sabMin = 100;
+        var domMax = 0, domMin = 100;
+
+        var horaPedido = 0;
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+            var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+
+
+            switch (pedidosAnalisis[i].dia_ped.trim())
+            {
+                case "0":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > domMax)
+                        domMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < domMin)
+                        domMin = parseInt(horaPedido);
+                    break;
+                case "1":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > lunMax)
+                        lunMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < lunMin)
+                        lunMin = parseInt(horaPedido);
+                    break;
+                case "2":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > marMax)
+                        marMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < marMin)
+                        marMin = parseInt(horaPedido);
+
+                    break;
+                case "3":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > mieMax)
+                        mieMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < mieMin)
+                        mieMin = parseInt(horaPedido);
+
+                    break;
+                case "4":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > jueMax)
+                        jueMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < jueMin)
+                        jueMin = parseInt(horaPedido);
+
+                    break;
+                case "5":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > vieMax)
+                        vieMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < vieMin)
+                        vieMin = parseInt(horaPedido);
+
+                    break;
+                case "6":
+                    horaPedido = determinaTurno(valoresHF);
+                    if (parseInt(horaPedido) > sabMax)
+                        sabMax = parseInt(horaPedido);
+                    if (parseInt(horaPedido) < sabMin)
+                        sabMin = parseInt(horaPedido);
+                    break;
+            }
+        }
+        // graficar tabla
+     var data = google.visualization.arrayToDataTable([
+     ['Domingo'  , 0, domMin, domMax, 24],
+     ['Lunes'    , 0, lunMin, lunMax, 24],
+     ['Martes'   , 0, marMin, marMax, 24],
+     ['Miercoles', 0, mieMin, mieMax, 24],
+     ['Jueves'   , 0, jueMin, jueMax, 24],
+     ['Viernes'  , 0, vieMin, vieMax, 24],
+     ['Sabado'   , 0, sabMin, sabMax, 24]
+     // Treat first row as data as well.
+        ], true);
+
+        var options = {
+            legend: 'none',
+            width: 1000,
+            height: 450,
+        };
+        var chart = new google.visualization.CandlestickChart(document.getElementById('grfHorasResPed'));
+        chart.draw(data, options);
+    }
+    // grafica la frecuencia de pedidos sobre las horas
+    function freccPed() {
+        var valores = [];
+        var temp = [];
+        temp.push("horas");
+        temp.push("Dias");
+        valores.push(temp);
+
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+            var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+            horaPedido = determinaTurno(valoresHF);
+            var temp = [];
+            temp.push(parseInt(horaPedido) + deteminapartedecimalhora(valoresHF));
+            temp.push(parseInt(pedidosAnalisis[i].dia_ped));
+            valores.push(temp);
+
+
+        }
+
+
+
+
+        /*
+          var temp = [];
+                                temp.push( result[i].dia + "\nS:" + result[i].ped_sur + "\nC:" + result[i].ped_can);
+                                temp.push(result[i].ped_sur);
+                                temp.push(result[i].ped_can);
+                                valores.push(temp);
+
+        */
+
+
+        var data = google.visualization.arrayToDataTable(valores);
+
+        var options = {
+          title: 'Frecuencia',
+          hAxis: {title: 'horas', minValue: 5, maxValue: 24},
+          vAxis: {title: 'Dias', minValue: 0, maxValue: 6},
+          legend: 'none',
+
+            height: 450,
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('grfFrecPed'));
+
+        chart.draw(data, options);
+
+
+
+
+    }
+    // grafica la cantidad de pedidos por dia y por hora
+    function GrfPedxDiaxHra()
+    {
+
+        // decalramos la matriz
+        var matrizPedidosxHrxDia = new Array(24);
+        for (i = 0; i < 24; i++) {
+
+            matrizPedidosxHrxDia[i] = Array(7);
+        }
+
+        // rellenamos la matriz con 0´s
+        for (var j = 0; j < 24; j++) {
+
+            for (var k = 0; k < 7; k++) {
+                matrizPedidosxHrxDia[j][k] = 0;
+            }
+        }
+        var y =0, x=0;
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+
+            var valoresHF = pedidosAnalisis[i].fhrp_ped.split(" ");
+            horaPedido = determinaTurno(valoresHF);
+            y = parseInt(horaPedido);
+            x= parseInt(pedidosAnalisis[i].dia_ped.trim())
+            matrizPedidosxHrxDia[y][x]++;
+        }
+
+        var valores = [];
+        var Header = ['Hora', 'DOM', 'LUN','MAR','MIE','JUE','VIE','SAB'];
+        valores.push(Header);
+        for (var m = 0; m < 24; m++) {
+            var temp = [];
+            temp.push(m + '\n Hrs');
+            temp.push(matrizPedidosxHrxDia[m][0]);
+            temp.push(matrizPedidosxHrxDia[m][1]);
+            temp.push(matrizPedidosxHrxDia[m][2]);
+            temp.push(matrizPedidosxHrxDia[m][3]);
+            temp.push(matrizPedidosxHrxDia[m][4]);
+            temp.push(matrizPedidosxHrxDia[m][5]);
+            temp.push(matrizPedidosxHrxDia[m][6]);
+
+            valores.push(temp);
+        }
+
+        var options = {
+
+            width: 1200,
+            height: 500,
+            title: 'Pedidos por dia por hora',
+
+            hAxis: {
+                //slantedTextAngle: -90,
+                title: 'Horas',
+                //direction: 1,
+            },
+            vAxis: {
+
+                title: 'No pedidos',
+
+            }
+        };
+        var data = google.visualization.arrayToDataTable(valores);
+        var chart = new google.visualization.AreaChart(document.getElementById('grfFrecPed'));
+        chart.draw(data, options);
+
+
+
+
+
+
+
+
+
+    }
+    // funciones de uso general
+    function determinaTurno(valores) {
+        var valoresHora = valores[1].split(":");
+        if (valores[2].includes("p")) {
+            switch (valoresHora[0].trim()) {
+                case "01":
+                    return "13";
+                    break;
+                case "02":
+                    return "14";
+                    break;
+                case "03":
+                    return "15";
+                    break;
+                case "04":
+                    return "16";
+                    break;
+                case "05":
+                    return "17";
+                    break;
+                case "06":
+                    return "18";
+                    break;
+                case "07":
+                    return "19";
+                    break;
+                case "08":
+                    return "20";
+                    break;
+                case "09":
+                    return "21";
+                    break;
+                case "10":
+                    return "22";
+                    break;
+                case "11":
+                    return "23";
+                    break;
+                default:
+                    return valoresHora[0].trim();
+
+
+            }
+            return valoresHora[0].trim();
+        }
+        else {
+            return valoresHora[0].trim();
+        }
+    }
+    // optiene la parte decimal de una fraccion de hora
+    function deteminapartedecimalhora(valores) {
+        var valoresHora = valores[1].split(":");
+        var min = parseInt(valoresHora[1]);
+
+        var fracHora = min / 60;
+        return fracHora;
+    }
+    // crea un reporte de todas las rutas seleccionadas
+    function ReporteRutas() {
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+        var rutasAnalisis=[];
+
+        if (cil) {
+            rutasAnalisis=arrRutasCilindros;
+        }
+        else if (est) {
+            rutasAnalisis=arrRutasPipas;
+        }
+        document.getElementById("contenedorReporteRutas").innerHTML = "";
+
+        var cuerpo = document.createElement("DIV");
+        cuerpo.id = "cuerpoReporte";
+       
+       
+
+        
+
+        document.getElementById("contenedorReporteRutas").appendChild(cuerpo)
+        //$("p").append("<b>Appended text</b>");
+        for (var i = 0; i < rutasAnalisis.length; i++) {
+            var fecha_ini = document.getElementById("fecha_ini").value;
+            var fecha_fin = document.getElementById("fecha_fin").value;
+            var idDiv = 'ReporteRuta' + rutasAnalisis[i].trim();
+            var html = ' <br/><div id="' + idDiv + '"></div>'
+
+            // se crea el elemento img del logo
+            var img = document.createElement("IMG");
+            img.src = "/Images/logo.png";
+            img.id = "logo";
+            img.style.display = "none";
+            //etiqueta de informacion general
+          
+
+            // se crea el div contenedor
+            var divContenedor = document.createElement("DIV");
+            divContenedor.id = "divcontenedor" + rutasAnalisis[i].trim();
+            divContenedor.className = "contenedores";
+            // se crea el div que contendra a la tabla 
+            var node = document.createElement("DIV");
+            var salto = document.createElement("BR");
+            node.id = idDiv;
+            var etqruta = document.createElement("LABEL");
+            etqruta.id = "infoLabelRuta" + rutasAnalisis[i].trim() ;
+            var textnode = document.createTextNode("RUTA: " + rutasAnalisis[i].trim()  + ' \n' + getDetallesReporte("promedios"));         // Create a text node
+            etqruta.appendChild(textnode);
+
+            // se crea boton de impresion de las tablas individuales 
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','promediosTiepmosServicios')");
+
+            divContenedor.appendChild(img);
+            divContenedor.appendChild(salto);
+         
+            divContenedor.appendChild(etqruta);
+            divContenedor.appendChild(node);
+            divContenedor.appendChild(btnImprimir);
+
+            
+            document.getElementById("cuerpoReporte").appendChild(divContenedor)
+          
+           // document.getElementById("contenedorReporteRutas").appendChild(divContenedor);
+
+
+
+            promediostoReport(rutasAnalisis[i].trim(), idDiv);
+        }
+       
+
+        cerrarDialogo();
+        var msg = document.getElementById('ReporteRutas');
+        msg.showModal();
+        dialogos.push(msg);
+        
+    }
+    // Analiza los tiempos y promedios de las rutas para el reporte
+    function promediostoReport(ruta, contenedor) {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+        // variables para el tipo de aplicacion
+        var appCount = 0, appSumMin = 0, app1hr = 0, app3hr = 0, app3hrmas = 0, appDia = 0, scapp = 0;
+        var cllCount = 0, cllSumMin = 0, cll1hr = 0, cll3hr = 0, cll3hrmas = 0, cllDia = 0, sccll = 0;
+        var ccrCount = 0, ccrSumMin = 0, ccr1hr = 0, ccr3hr = 0, ccr3hrmas = 0, ccrDia = 0, scccr = 0;
+        var proCount = 0, proSumMin = 0, pro1hr = 0, pro3hr = 0, pro3hrmas = 0, proDia = 0, scpro = 0;
+        var pxsCount = 0, pxsSumMin = 0, pxs1hr = 0, pxs3hr = 0, pxs3hrmas = 0, pxsDia = 0, scpxs = 0;
+        var encCount = 0, encSumMin = 0, enc1hr = 0, enc3hr = 0, enc3hrmas = 0, encDia = 0, scenc = 0;
+        var webCount = 0, webSumMin = 0, web1hr = 0, web3hr = 0, web3hrmas = 0, webDia = 0, scweb = 0;
+        var totalCount = 0, totalSumMin = 0, total1hr = 0, total3hr = 0, total3hrmas = 0, totalDia = 0, totalsc = 0;
+
+        var minTotalPedido;
+        for (var i = 0; i < pedidos.length; i++) {
+            if (pedidos[i].ruta_ped.trim()==ruta.trim() & pedidos[i].edo_ped.trim()==edo) {
+
+
+                minTotalPedido = (parseInt(pedidos[i].dias_ate.trim()) * 1440) + (parseInt(pedidos[i].hrs_ate.trim()) * 60) + parseInt(pedidos[i].min_ate.trim());
+                if (minTotalPedido < 0)
+                    minTotalPedido = minTotalPedido * -1;
+
+            switch (pedidos[i].tpdo_ped.trim()) {
+                case "A":
+                    appCount++;
+                    app1hr = app1hr + sinClasificar(minTotalPedido);
+                        appSumMin = appSumMin + (minTotalPedido);                     
+                        app1hr = app1hr + unaHr(minTotalPedido);
+                        app3hr = app3hr + tresHr(minTotalPedido);
+                        app3hrmas = app3hrmas + unDia(minTotalPedido);
+                        appDia = appDia + masDeUnDia(minTotalPedido);
+                  
+                    break;
+                case "C":
+                    cllCount++;
+                    cll1hr = cll1hr + sinClasificar(minTotalPedido);                    
+                        cllSumMin = cllSumMin + (minTotalPedido);                                                        
+                        cll1hr = cll1hr + unaHr(minTotalPedido);
+                        cll3hr = cll3hr + tresHr(minTotalPedido);
+                        cll3hrmas = cll3hrmas + unDia(minTotalPedido);
+                        cllDia = cllDia + masDeUnDia(minTotalPedido);
+                    
+                    break;
+                case "L":
+                    ccrCount++;
+                    ccr1hr = ccr1hr + sinClasificar(minTotalPedido);
+                    ccrSumMin = ccrSumMin + (minTotalPedido);                                   
+                    ccr1hr = ccr1hr + unaHr(minTotalPedido);
+                    ccr3hr = ccr3hr + tresHr(minTotalPedido);
+                    ccr3hrmas = ccr3hrmas + unDia(minTotalPedido);
+                    ccrDia = ccrDia + masDeUnDia(minTotalPedido);
+                    
+                    break;
+                case "P":
+                    proCount++;
+                    pro1hr = pro1hr + sinClasificar(minTotalPedido);
+                    proSumMin = proSumMin + (minTotalPedido);                  
+                    pro1hr    = pro1hr + unaHr(minTotalPedido);
+                    pro3hr    = pro3hr + tresHr(minTotalPedido);
+                    pro3hrmas = pro3hrmas + unDia(minTotalPedido);
+                    proDia = proDia + masDeUnDia(minTotalPedido);
+                    
+                    break;
+                case "S":
+                    pxsCount++;
+                    pxs1hr = pxs1hr + sinClasificar(minTotalPedido);
+                    pxsSumMin = pxsSumMin + (minTotalPedido);                   
+                    pxs1hr = pxs1hr + unaHr(minTotalPedido);
+                    pxs3hr = pxs3hr + tresHr(minTotalPedido);
+                    pxs3hrmas = pxs3hrmas + unDia(minTotalPedido);
+                    pxsDia = pxsDia + masDeUnDia(minTotalPedido);                   
+                    break;
+                case "E":
+                    encCount++;
+                    enc1hr = enc1hr + sinClasificar(minTotalPedido);
+                    encSumMin = encSumMin + (minTotalPedido);                  
+                    enc1hr = enc1hr + unaHr(minTotalPedido);
+                    enc3hr = enc3hr + tresHr(minTotalPedido);
+                    enc3hrmas = enc3hrmas + unDia(minTotalPedido);
+                    encDia = encDia + masDeUnDia(minTotalPedido);
+                    
+                    break;
+                case "W":
+                    webCount++;
+                    web1hr = web1hr + sinClasificar(minTotalPedido);
+                    webSumMin = webSumMin + (minTotalPedido);                 
+                    web1hr = web1hr + unaHr(minTotalPedido);
+                    web3hr = web3hr + tresHr(minTotalPedido);
+                    web3hrmas = web3hrmas + unDia(minTotalPedido);
+                    webDia = webDia + masDeUnDia(minTotalPedido);
+                   
+                    break;
+            }
+            // suma de totales
+            totalCount++;
+            totalSumMin = totalSumMin + (minTotalPedido);
+            total1hr = total1hr + unaHr(minTotalPedido);
+            total3hr = total3hr + tresHr(minTotalPedido);
+            total3hrmas = total3hrmas + unDia(minTotalPedido);
+            totalDia = totalDia + masDeUnDia(minTotalPedido);
+
+        }
+        }
+        var valores = [];
+        valores.push({ tipo_pedido: "Aplicación",  no_pedidos: appCount, minutos_totales: appSumMin, hrs1: app1hr, hrs3: app3hr, hrs3mas: app3hrmas, masDia: appDia, sinClasificar: scapp});
+        valores.push({ tipo_pedido: "Calle",       no_pedidos: cllCount, minutos_totales: cllSumMin, hrs1: cll1hr, hrs3: cll3hr, hrs3mas: cll3hrmas, masDia: cllDia, sinClasificar: sccll});
+        valores.push({ tipo_pedido: "Call Center", no_pedidos: ccrCount, minutos_totales: ccrSumMin, hrs1: ccr1hr, hrs3: ccr3hr, hrs3mas: ccr3hrmas, masDia: ccrDia, sinClasificar: scccr});
+        valores.push({ tipo_pedido: "Proactivo",   no_pedidos: proCount, minutos_totales: proSumMin, hrs1: pro1hr, hrs3: pro3hr, hrs3mas: pro3hrmas, masDia: proDia, sinClasificar: scpro});
+        valores.push({ tipo_pedido: "Prog x Sis",  no_pedidos: pxsCount, minutos_totales: pxsSumMin, hrs1: pxs1hr, hrs3: pxs3hr, hrs3mas: pxs3hrmas, masDia: pxsDia, sinClasificar: scpxs});
+        valores.push({ tipo_pedido: "Encuesta",    no_pedidos: encCount, minutos_totales: encSumMin, hrs1: enc1hr, hrs3: enc3hr, hrs3mas: enc3hrmas, masDia: encDia, sinClasificar: scenc});
+        valores.push({ tipo_pedido: "Web",         no_pedidos: webCount, minutos_totales: webSumMin, hrs1: web1hr, hrs3: web3hr, hrs3mas: web3hrmas, masDia: webDia, sinClasificar: scweb});
+        valores.push({ tipo_pedido: "Total", no_pedidos: totalCount, minutos_totales: totalSumMin, hrs1: total1hr, hrs3: total3hr, hrs3mas: total3hrmas, masDia: totalDia, sinClasificar: totalsc });
+        // fin de analizar
+
+        // Tabla promedios
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Tipo de pedido');
+        tablapromedios.addColumn('string', 'Promedio de atención');
+        tablapromedios.addColumn('string', 'No pedidos');
+        tablapromedios.addColumn('string', 'Min´s Totales');
+        tablapromedios.addColumn('string', 'Max 1 hr');
+        tablapromedios.addColumn('string', 'Max 3 hrs');
+        tablapromedios.addColumn('string', 'Max 1 dia');
+        tablapromedios.addColumn('string', 'Mas de 1 dia');
+       
+
+        for (var j = 0; j < valores.length; j++) {
+            if (valores[j].no_pedidos > 0) {
+                tablapromedios.addRow([valores[j].tipo_pedido,
+                                       tiempoProm(valores[j].no_pedidos, valores[j].minutos_totales),
+                                       valores[j].no_pedidos + '',
+                                       valores[j].minutos_totales+'',
+                                       ((valores[j].hrs1 * 100) / valores[j].no_pedidos).toFixed(2) + '% '    + 'Ped:'    + valores[j].hrs1,
+                                       ((valores[j].hrs3 * 100) / valores[j].no_pedidos).toFixed(2) + '% '    + 'Ped:'    + valores[j].hrs3,
+                                       ((valores[j].hrs3mas * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Ped:' + valores[j].hrs3mas,
+                                       ((valores[j].masDia * 100) / valores[j].no_pedidos).toFixed(2) + '% ' + 'Pedi:' + valores[j].masDia
+                                       ])
+
+            }
+
+
+        }
+        var contenedor2 = new google.visualization.Table(document.getElementById(contenedor));
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+        function tiempoProm(noPedidos, Minutos) {
+            var minutiosProm = Minutos / noPedidos;
+            var dias = 0, horas = 0, minutos = 0;
+            dias = Math.trunc(minutiosProm / 1440);
+            var diasResiduo = minutiosProm % 1440;
+            horas = Math.trunc(diasResiduo / 60);
+            var horasResiduos = diasResiduo % 60;
+            minutos = horasResiduos.toFixed(0);
+
+            return "Dias:" + dias + " Hrs:" + horas.toFixed(0) + " Min:" + minutos;
+
+        }
+        function unaHr(min) {
+            if (min > 0 & min <= 60)
+                return 1;
+            else
+                return 0;
+        }
+        function tresHr(min) {
+            if (min > 60 & min <= 180)
+                return 1;
+            else
+                return 0;
+        }
+        function unDia(min) {
+            if (min > 181 & min <= 1440)
+                return 1;
+            else
+                return 0;
+        }
+        function masDeUnDia(min) {
+            if (min > 1440)
+                return 1;
+            else
+                return 0;
+        }
+
+        function sinClasificar(min) {
+            if (min == 0)
+                return 1;
+            else
+                return 0;
+        }
+
+    }
+    // Cierra los dialogos que estan en pantalla
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+
+    }
+    function imprimirDIV(contenido, seccion) {
+        var ficha = document.getElementById(contenido);
+        
+        var ventanaImpresion = window.open(' ', 'popUp');
+       
+        // ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+       
+        ventanaImpresion.document.write('<html>');
+        ventanaImpresion.document.write('<body>');
+         ventanaImpresion.document.write('<img src="/Images/logo.png"');
+        ventanaImpresion.document.write('<center>');
+        ventanaImpresion.document.write('<div id="cuerpo">');
+        ventanaImpresion.document.write(ficha.innerHTML);
+        ventanaImpresion.document.write('</div>');
+        ventanaImpresion.document.write('</center>');
+       
+        ventanaImpresion.document.write('<style type="text/css">');
+        switch (seccion)
+        {
+            case "PrimerUltimoServicio":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  div.divContenedor { page-break-before: always;   page-break-inside: avoid; } button { display: none;}  .divContenedor { margin: 0mm 0mm 0mm 40mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   }');
+                break;
+            case "promediosTiepmosServicios":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; width: 100px; height: 50px;}   img { position: fixed; top: 0; left: 2px; }  div.contenedores { page-break-inside: avoid; } button { display: none;}  .contenedores { margin: 0mm 0mm 0mm 30mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #infogral {display: inline; position: fixed; bottom: 0; opacity: 0.5; }   }');
+                break;
+            case "informacion":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  .descGral {position: fixed; bottom: 0;  font-size: 15px;   } .divTblChoferes {page-break-inside: avoid;  } .graficas { page-break-after: always;   page-break-inside: avoid; } button { display: none;}  .graficas { margin: 25mm 0mm 0mm 0mm; }  .descGral {color: #2C5690; font-weight: bold;display: block; font-size: 20px;  opacity: 0.5; } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   #promXchofer { overflow: visible; width: 100%}  }');
+                break;
+            case "porcPromChof":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; margin-bottom: 5cm;} #encabezado{ position: fixed; bottom: 0; left: 1px;  opacity: 0.5; }  img { position: fixed; botton: 0; left: 1px;  width: 100px; height: 70px;}   .divTblChoferes {  page-break-inside: avoid; margin: 0mm 0mm 0mm 30mm; width: 100% } button { display: none;}   label {color: #2C5690; font-weight: bold;display: block; font-size: 15px;  } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }  #logo{ }}');
+                break;                
+        }
+
+        ventanaImpresion.document.write('@@media print{     table tr:nth-child(even) { border:black 1px solid; } table tr:nth-child(odd) { background-color: #fff; border:black 1px solid;} table td {border:black 1px solid; }}');
+       
+        ventanaImpresion.document.write('</style>');
+        ventanaImpresion.document.write('</body>');      
+        ventanaImpresion.document.write('</html>');
+        
+
+       ventanaImpresion.document.close();
+       ventanaImpresion.print();
+       ventanaImpresion.close();
+
+
+
+
+
+    }
+    // crea una ventana con el reporte del primer y ultimo servicio surtido o cancelado
+    function impRepPrimUltServ(){
+
+            //var cuerpo = document.getElementById(contenido);
+            var ventanaImpresion =  window.open(' ','popUp');
+
+
+            ventanaImpresion.document.write('<html>');
+            ventanaImpresion.document.write('<body>');
+            ventanaImpresion.document.write(document.getElementById('contenedorPrimerUltimoServico').innerHTML)
+            ventanaImpresion.document.write('</body>');
+            ventanaImpresion.document.write('</html>');
+            ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+            ventanaImpresion.showModalDialog();
+
+
+            ventanaImpresion.document.close();
+            ventanaImpresion.print();
+            ventanaImpresion.close();
+
+
+    }
+    // coloca a los sliders los valores maximos y minimos
+    function resetSliders() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+        document.getElementById('sliderGral').min = new Date(fecha_ini).getTime() / 1000;//Date.parse(fecha_ini);
+        document.getElementById('sliderGral').max = new Date(fecha_fin).getTime() / 1000; //Date.parse(fecha_fin);
+
+        ///alert(document.getElementById('slrgrfFrecPed').min.toString()+ '    ' + document.getElementById('slrgrfFrecPed').max.toString());
+        rangMin = document.getElementById('sliderGral').min = new Date(fecha_ini).getTime() / 1000;
+        rangMax = document.getElementById('sliderGral').max = new Date(fecha_fin).getTime() / 1000;
+
+        var x = document.getElementById("tickmarks");
+        for (var i = (new Date(fecha_ini).getTime()) ; i <= (new Date(fecha_fin).getTime()) ; i = i + 86400000) {            
+            var option = document.createElement("option");
+
+            option.value = i / 1000;
+            //option.label= new Date(i).toISOString().substring(0, 10)
+            x.appendChild(option);
+
+        }
+        // colocar los valores en las etiquetas
+        document.getElementById('lblFechaini').innerText = document.getElementById("fecha_ini").value;
+        document.getElementById('lblFechafin').innerText = document.getElementById("fecha_fin").value;
+
+
+        // labels centrales del rango actual mostrado en las graficas
+        document.getElementById('lblrangoFechaini').innerText = new Date(rangMin * 1000).toISOString().substring(0, 10) + '----';
+        document.getElementById('lblrangoFechafin').innerText = new Date(rangMax * 1000).toISOString().substring(0, 10);
+
+        // colocar el slider con el maximo valor
+        document.getElementById('sliderGral').value = rangMax;
+
+    }
+    // obtiene los milisegundos de la fecha del pedidido
+    function getmilisegundos (fecha_pedido)
+    {
+        var fecha_hora = fecha_pedido.fecrsur_ped.split(" ");
+        var partesHora = fecha_hora[0].split('/');
+
+        var milisegundos = new Date(partesHora[2].trim() + "-" + partesHora[1].trim() + "-" + partesHora[0].trim()).getTime() / 1000;
+        return milisegundos;
+    }
+    // actualiza el rango del slider
+    function actualizaRango(slider) {
+        rangMax = parseInt(slider.value);
+
+        document.getElementById('lblrangoFechaini').innerText = new Date(rangMin * 1000).toISOString().substring(0, 10) + '----';
+        document.getElementById('lblrangoFechafin').innerText = new Date(rangMax * 1000).toISOString().substring(0, 10);
+
+        //alert(new Date(rangMax*1000).toISOString().substring(0, 10));
+        analizar();
+
+    }
+    //muestra el primer y ultimo servicio sutiro de una ruta en particular
+    function primerUltimoServicio() {
+        var fechas = [];
+        var encontrado = false;
+        var dia = "0";
+        // obtener el arreglo de fechas laboradas
+        for (var i = 0; i < pedidosAnalisis.length; i++) {
+
+            for (var j = 0; j< fechas.length; j++) {
+                if (fechas[j].fecha.trim() == pedidosAnalisis[i].fecrsur_ped.trim()) {
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                fechas.push({ fecha: pedidosAnalisis[i].fecrsur_ped.trim(), primerSer: '', ultimoSer: '', dia: getStringdia(pedidosAnalisis[i].dia_sur_can.trim()) });
+            }
+            encontrado = false;
+        }
+        // obtener el primer y ultimo pedido surtido de cada dia  campo horrsur_ped
+
+        var hrPrimerServicio = "25:61";
+        var hrUltimoServicio = "00:00";
+
+        var varHrPriSer = [];
+        var varHrUltSer = [];
+        var HrServicio  = [];
+
+        var minPrimerSer = 0;
+        var minUltimoSer = 0;
+
+        var minServ = 0;
+
+        for (var k = 0; k < fechas.length; k++) {
+
+            for (var m = 0; m < pedidosAnalisis.length; m++) {
+                if (fechas[k].fecha.trim() == pedidosAnalisis[m].fecrsur_ped.trim()) {
+                    // partes de las horas
+                    varHrPriSer = hrPrimerServicio.split(':');
+                    varHrUltSer = hrUltimoServicio.split(':');
+                    HrServicio = pedidosAnalisis[m].horrsur_ped.trim().split(':');
+                    // valor en minutos de la hora
+                    minPrimerSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+                    minUltimoSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+
+                    minServ = (parseInt(HrServicio[0]) * 60) + parseInt(HrServicio[1]);
+
+                    // deteminar primer y ultimo servicio
+                    if (minServ>0) {
+
+
+                    if (minServ < minPrimerSer) {
+                        hrPrimerServicio = pedidosAnalisis[m].horrsur_ped;
+                    }
+                    if (minServ > minUltimoSer) {
+                        hrUltimoServicio = pedidosAnalisis[m].horrsur_ped;
+                    }
+                }
+
+                }
+
+            }
+
+            // asignar  los servicios almacenados en las variables
+            fechas[k].primerSer = hrPrimerServicio;
+            fechas[k].ultimoSer = hrUltimoServicio;
+            // reseteamos las variables
+             hrPrimerServicio = "25:61";
+             hrUltimoServicio = "00:00";
+        }
+        // se muestra en una tabla
+        //tblPriUltSer
+        var tablapromedios = new google.visualization.DataTable();
+        tablapromedios.addColumn('string', 'Fecha');
+        tablapromedios.addColumn('string', 'Dia semana');
+        tablapromedios.addColumn('string', 'Primer servicio');
+        tablapromedios.addColumn('string', 'Ultimo servicio');
+
+
+        for (var n = 0; n < fechas.length; n++) {
+
+                tablapromedios.addRow([
+                                       fechas[n].fecha,
+                                       fechas[n].dia,
+                                       fechas[n].primerSer,
+                                       fechas[n].ultimoSer])
+
+
+
+        }
+
+
+
+
+
+
+        var contenedor2 = new google.visualization.Table(tblPriUltSer);
+        contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+    }
+    // obtiene el dia de la semana segun el dia proporcionado por informix
+    function getStringdia(dia) {
+        switch (dia) {
+            case "1":
+                return "Lunes";
+                break;
+            case "2":
+                return "Martes";
+                break;
+            case "3":
+                return "Miercoles";
+                break;
+            case "4":
+                return "Jueves";
+                break;
+            case "5":
+                return "Viernes";
+                break;
+            case "6":
+                return "Sabado";
+                break;
+            case "0":
+                return "Domingo";
+                break;
+        }
+    }
+    // genera un reporte del primero y ultimo servicio surtido
+    function ReportePrimerUltimoSer() {
+        var msg = document.getElementById('CargandoTiempo');
+        msg.showModal();
+        dialogos.push(msg);
+        var rutasAnalisis = [];
+        var edo = "";
+
+        if (cil) {
+            rutasAnalisis = arrRutasCilindros;
+        }
+        else if (est) {
+            rutasAnalisis = arrRutasPipas;
+        }
+
+
+
+
+        document.getElementById("contenedorPrimerUltimoServico").innerHTML = "";
+        //$("p").append("<b>Appended text</b>");
+             
+     
+        for (var i = 0; i < rutasAnalisis.length; i++) {
+            var fecha_ini = document.getElementById("fecha_ini").value;
+            var fecha_fin = document.getElementById("fecha_fin").value;
+            var idDiv = 'ReporteRutaPrimUltServ' + rutasAnalisis[i].trim();
+
+            var salto = document.createElement("BR");
+            var saltoPaguina = document.createElement("H3");
+            var img = document.createElement("IMG");
+            img.src = "/Images/logo.png";
+            img.id = "logo";
+            img.style.display = "none";
+            
+            
+            // se crea el div scroll
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "divContenedor";
+            //divScroll.style.overflow = "scroll";
+            //divScroll.style.padding = "20px";
+            divScroll.style.display = "inline-block";
+            divScroll.style.cssFloat  = "left";
+            divScroll.id = "scroll" + rutasAnalisis[i].trim();
+            
+            //divScroll.style.overflowY = "scroll";
+
+            divScroll.style.width = "100%"; ;
+            // se crea la etiqueda de informacion
+            var etqruta = document.createElement("LABEL");
+            etqruta.id = "infoLabelRutaPrimUltServ" + rutasAnalisis[i].trim();
+            etqruta.innerText = "Primer Ultimo pedido de la ruta:" + rutasAnalisis[i].trim() +  " De " + fecha_ini+" a "+fecha_fin;
+            // se crea el div de la tabla
+            var divTabla = document.createElement("DIV");
+            divTabla.id = idDiv;
+            //divTabla.style.cssFloat = "left";
+            // se crea el boton de imprimir
+
+
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            //
+            var titulosalto = document.createElement("H3")
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + "scroll" + rutasAnalisis[i].trim() + "','PrimerUltimoServicio')");
+
+            // se agregan los elementos a sus contenedores
+           /// divScroll.appendChild(img);
+            divScroll.appendChild(salto);
+            divScroll.appendChild(img);
+            divScroll.appendChild(etqruta);
+            divScroll.appendChild(divTabla);
+            divScroll.appendChild(btnImprimir);
+           
+            document.getElementById("contenedorPrimerUltimoServico").appendChild(divScroll);
+            document.getElementById("contenedorPrimerUltimoServico").appendChild(titulosalto);
+
+           // if ((i % 4) == 0) {
+           //     document.getElementById("contenedorPrimerUltimoServico").appendChild(titulosalto);
+           // }
+
+
+
+
+
+            calculaPrimerUltimoSer(rutasAnalisis[i].trim(),idDiv);
+        }
+        
+        //impRepPrimUltServ();
+        cerrarDialogo();
+        var msg = document.getElementById('ReportePrimerUltimoServico');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+
+    }
+    function calculaPrimerUltimoSer(ruta, contenedor) {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+        var fechas = [];
+        var encontrado = false;
+        var dia = "0";
+        // obtener el arreglo de fechas laboradas
+        for (var i = 0; i < pedidos.length; i++) {
+            if (pedidos[i].ruta_ped.trim()==ruta & pedidos[i].edo_ped.trim()==edo) {
+
+
+
+            for (var j = 0; j < fechas.length; j++) {
+                if (fechas[j].fecha.trim() == pedidos[i].fecrsur_ped.trim()) {
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                fechas.push({ fecha: pedidos[i].fecrsur_ped.trim(), primerSer: '', ultimoSer: '', dia: getStringdia(pedidos[i].dia_sur_can.trim()) });
+            }
+            encontrado = false;
+        }
+    }
+        // obtener el primer y ultimo pedido surtido de cada dia  campo horrsur_ped
+
+        var hrPrimerServicio = "25:61";
+        var hrUltimoServicio = "00:00";
+
+        var varHrPriSer = [];
+        var varHrUltSer = [];
+        var HrServicio = [];
+
+        var minPrimerSer = 0;
+        var minUltimoSer = 0;
+
+        var minServ = 0;
+
+        for (var k = 0; k < fechas.length; k++) {
+
+            for (var m = 0; m < pedidos.length; m++) {
+                if (pedidos[m].ruta_ped.trim() == ruta) {
+                if (fechas[k].fecha.trim() == pedidos[m].fecrsur_ped.trim()) {
+                    // partes de las horas
+                    varHrPriSer = hrPrimerServicio.split(':');
+                    varHrUltSer = hrUltimoServicio.split(':');
+                    HrServicio = pedidos[m].horrsur_ped.trim().split(':');
+                    // valor en minutos de la hora
+                    minPrimerSer = (parseInt(varHrPriSer[0]) * 60) + parseInt(varHrPriSer[1]);
+                    minUltimoSer = (parseInt(varHrUltSer[0]) * 60) + parseInt(varHrUltSer[1]);
+
+                    minServ = (parseInt(HrServicio[0]) * 60) + parseInt(HrServicio[1]);
+
+                    // deteminar primer y ultimo servicio
+                    if (minServ>0) {
+
+
+                    if (minServ < minPrimerSer) {
+                        hrPrimerServicio = pedidos[m].horrsur_ped;
+                    }
+                    if (minServ > minUltimoSer) {
+                        hrUltimoServicio = pedidos[m].horrsur_ped;
+                    }
+                    }
+
+                }
+            }
+
+            }
+
+            // asignar  los servicios almacenados en las variables
+            fechas[k].primerSer = hrPrimerServicio;
+            fechas[k].ultimoSer = hrUltimoServicio;
+            // reseteamos las variables
+            hrPrimerServicio = "25:61";
+            hrUltimoServicio = "00:00";
+        }
+        // se muestra en una tabla
+        //tblPriUltSer
+        var tablaPrimUltServ = new google.visualization.DataTable();
+        tablaPrimUltServ.addColumn('string', 'Fecha');
+        tablaPrimUltServ.addColumn('string', 'Dia semana');
+        tablaPrimUltServ.addColumn('string', 'Primer servicio');
+        tablaPrimUltServ.addColumn('string', 'Ultimo servicio');
+
+
+        for (var n = 0; n < fechas.length; n++) {
+
+            tablaPrimUltServ.addRow([
+                                   fechas[n].fecha.substring(0,10),
+                                   fechas[n].dia,
+                                   fechas[n].primerSer,
+                                   fechas[n].ultimoSer])
+
+
+
+        }
+
+
+
+
+
+
+        var contenedor2 = new google.visualization.Table(document.getElementById(contenedor));
+        contenedor2.draw(tablaPrimUltServ, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor2, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+    }
+    // obtiene una leyenda que espesifica los detalles del reporte
+    function getDetallesReporte(tipo) {
+
+        // obtener los  tipos de pedidos involucrados
+        var tpdoPedidos = "";
+        //  var app = true, cll = true, ccr = true, pro = true, pxs = true, enc = true, web = true;
+        if (app)
+            tpdoPedidos= tpdoPedidos+'Aplicación, ';
+        if (cll) 
+            tpdoPedidos= tpdoPedidos+'Calle, ';
+        if (ccr) 
+            tpdoPedidos= tpdoPedidos+'CallCenter, ';
+        if (pro) 
+            tpdoPedidos= tpdoPedidos+'Proactivo, ';
+        if (pxs)
+            tpdoPedidos= tpdoPedidos+'Prog x Sis, ';
+        if (enc) 
+            tpdoPedidos= tpdoPedidos+'Encuesta, ';
+        if (web) 
+            tpdoPedidos = tpdoPedidos + 'Web, ';
+
+        // obtenemos las ruta (s)
+        var ruta = $("#Slcrutas option:selected").text().trim();
+        // obtenemos el tipo de servicio
+        var servicio = "";
+        if (est)
+            servicio = "Estacionario";
+        if (cil)
+            servicio = "Cilindro";
+
+        // se optiene el estado del pedido 
+
+        // se obtiene el intervalo de fechas
+
+        var intervalo = "";
+        intervalo =  document.getElementById('lblrangoFechaini').innerText + ' a ' + document.getElementById('lblrangoFechafin').innerText;
+        var finalStr="";
+        switch (tipo) {
+            case "choferes":
+                finalStr =  ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "descGral":
+                finalStr = 'Tipos de pedidos considerados  (' + tpdoPedidos + ' )  Ruta:' + ruta + ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "primUltServ":
+                finalStr = 'Ruta:' + ruta + ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+            case "promedios":
+                finalStr = ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+                break;
+
+            case "promchof":
+                finalStr = ' Servicio:' + servicio + ' Estado: ' + getEdoPedido() + ' Intervalo de ' + intervalo;
+            default:
+
+        }
+        
+        return finalStr;
+      
+
+    }
+    function getEdoPedido()
+    {
+        if (sur) {
+            return "Surtido";
+        }
+
+        if (can) {
+            return "Cancelado";
+        }
+    }
+    // crea un reporte con los promedios y porcentajes de tiempo de los servicios surtidos/cancelados 
+    function reportimepochoferes() {
+        var edo = "";
+        if (sur) {
+            edo = "S";
+        } else if (can) {
+            edo = "C";
+        }
+
+        var tipServ = "";
+        if (est) {
+            tipServ = "M";
+        } else if (cil) {
+            tipServ = "C";
+        }
+
+        document.getElementById('contenedorPorcPromChof').innerHTML = "";
+        var liquidasChoferes = [];
+        var liquidasChoferesAux = [];
+        var choferEcontrado = false;
+        var arrChoferes = [];
+
+        var labelTitulo = document.createElement("LABEL");
+        labelTitulo.innerText = getDetallesReporte("choferes");
+        labelTitulo.id = "encabezado";
+        labelTitulo.style.fontSize = "small";
+        var salto = document.createElement("BR");
+        document.getElementById("contenedorPorcPromChof").appendChild(labelTitulo);
+        document.getElementById("contenedorPorcPromChof").appendChild(salto);
+
+        // se obtiene las liquidaciones correspondientes a los pedidos en cuestion.
+        for (var i = 0; i < liquidas.length; i++) {
+
+            for (var j = 0; j < pedidos.length; j++) {
+
+                if (pedidos[j].edo_ped == edo & pedidos[j].ruta_ped.substring(0, 1).includes(tipServ))
+                {               
+                    if (pedidos[j].ruta_ped == liquidas[i].rut_eru & pedidos[j].fecrsur_ped == liquidas[i].fec_eru) {
+                        choferEcontrado = true;
+                    }
+               }
+          }
+            if (choferEcontrado) {
+                liquidasChoferes.push({ chofer: liquidas[i].chf_erup, ruta: liquidas[i].rut_eru, fecha: liquidas[i].fec_eru });
+            }
+            choferEcontrado = false;
+        }
+        // obtener la relacion de los choferes
+        for (var k = 0; k < liquidasChoferes.length; k++) {
+
+            for (var m = 0; m < arrChoferes.length; m++) {
+                if (liquidasChoferes[k].chofer == arrChoferes[m]) {
+                    choferEcontrado = true;
+                }
+            }
+            if (!choferEcontrado) {
+                arrChoferes.push(liquidasChoferes[k].chofer);
+            }
+            choferEcontrado = false;
+
+        }
+
+        var liquidaEncontrada = false;
+        // obtener fechas unicas de las liquidaciones 
+        for (var w = 0; w < liquidasChoferes.length; w++) {
+
+            for (var z = 0; z < liquidasChoferesAux.length; z++) {
+                if ((liquidasChoferes[w].chofer==liquidasChoferesAux[z].chofer && liquidasChoferes[w].fecha == liquidasChoferesAux[z].fecha  )) {
+                    liquidaEncontrada = true;
+                }
+            }
+            if (!liquidaEncontrada) {
+                liquidasChoferesAux.push(liquidasChoferes[w]);
+            }
+
+            liquidaEncontrada = false;
+        }
+
+        liquidasChoferes = liquidasChoferesAux;
+
+
+        // obtner los pedidos por chofer
+
+        for (var n = 0; n < arrChoferes.length; n++) {
+            var pedidosXchofer = [];
+
+            for (var p = 0; p < liquidasChoferes.length; p++) {
+
+                if (arrChoferes[n] == liquidasChoferes[p].chofer) {
+
+                    for (var q = 0; q < pedidos.length; q++) {
+
+                        if (pedidos[q].ruta_ped == liquidasChoferes[p].ruta & pedidos[q].fecrsur_ped == liquidasChoferes[p].fecha) {
+                            pedidosXchofer.push(pedidos[q]);
+                        }
+
+                    }
+                }
+
+            }// fin de obtener los pedidos del chofer en cuestion
+
+            // crear el elemento html para almacenar los resultados  del analisis 
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divTblChoferes";
+            divContenedor.id = "tablaChofer:" + arrChoferes[n].trim();
+            var label = document.createElement("LABEL");
+            label.innerText = "Chofer:" + arrChoferes[n] + " Rutas asociadas: " + getRutasChofer(liquidasChoferes, arrChoferes[n]) + '\n'+getDetallesReporte('promchof');
+
+            var salto = document.createElement("BR");
+
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "graficas";
+            divScroll.style.width = "width: 100%";
+            divScroll.id = "Chofer:" + arrChoferes[n].trim();
+
+            var salto2 = document.createElement("BR");
+
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','promediosTiepmosServicios')");
+
+            divContenedor.appendChild(label);
+            divContenedor.appendChild(divScroll);
+            divContenedor.appendChild(salto2);
+            divContenedor.appendChild(btnImprimir);
+
+
+
+            document.getElementById("contenedorPorcPromChof").appendChild(divContenedor);
+            promediosChoferes(pedidosXchofer, divScroll.id);
+
+            // promXchofer
+
+
+        }
+        var msg = document.getElementById('ReportePorcentajesPromediosChoferes');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+        function getRutasChofer(liquidas, chofer) {
+
+            var rutasChofer = [];
+            var rutaExiste = false;
+            for (var i = 0; i < liquidas.length; i++) {
+
+                if (chofer == liquidas[i].chofer) {
+
+
+                    for (var j = 0; j < rutasChofer.length; j++) {
+                        if (rutasChofer[j] == liquidas[i].ruta) {
+                            rutaExiste = true;
+                        }
+                    }
+
+                    if (!rutaExiste) {
+
+                        rutasChofer.push(liquidas[i].ruta);
+                    }
+                    rutaExiste = false;
+                }
+            }
+
+            var relacion_rutas = "";
+
+            for (var k = 0; k < rutasChofer.length; k++) {
+                relacion_rutas += rutasChofer[k] + ', ';
+            }
+            return relacion_rutas;
+
+        }
+
+
+    }
+
+    //////////// tiempos para los choferes //////////////////////
+    function tiempoChoferes() {
+        document.getElementById('promXchofer').innerHTML = "";
+        var liquidasChoferes = [];
+        var liquidasChoferesAux = [];
+        var choferEcontrado = false;
+        var arrChoferes = [];
+
+        var labelTitulo = document.createElement("LABEL");
+        labelTitulo.innerText = getDetallesReporte("choferes")
+        var salto = document.createElement("BR");
+        document.getElementById("promXchofer").appendChild(labelTitulo);
+        document.getElementById("promXchofer").appendChild(salto);
+
+        // se obtiene las liquidaciones correspondientes a los pedidos en cuestion.
+        for (var i = 0; i < liquidas.length; i++) {
+
+            for (var j = 0; j < pedidosAnalisis.length; j++) {
+
+                if (pedidosAnalisis[j].ruta_ped == liquidas[i].rut_eru & pedidosAnalisis[j].fecrsur_ped==liquidas[i].fec_eru) {
+                    choferEcontrado = true;
+                }
+            }
+            if (choferEcontrado) {
+                liquidasChoferes.push({ chofer: liquidas[i].chf_erup, ruta: liquidas[i].rut_eru, fecha:liquidas[i].fec_eru});
+            }
+            choferEcontrado = false;
+        }
+        // obtener la relacion de los choferes
+        for (var k = 0; k < liquidasChoferes.length; k++) {
+
+            for (var m = 0; m < arrChoferes.length; m++) {
+                if (liquidasChoferes[k].chofer == arrChoferes[m]) {
+                    choferEcontrado = true;
+                }
+            }
+            if (!choferEcontrado) {
+                arrChoferes.push(liquidasChoferes[k].chofer);
+            }
+            choferEcontrado = false;
+
+        }
+
+        var liquidaEncontrada = false; 
+        // obtener fechas unicas de las liquidaciones 
+        for (var w = 0; w < liquidasChoferes.length; w++) {
+
+            for (var z = 0; z < liquidasChoferesAux.length; z++) {
+                if (liquidasChoferes[w].fecha == liquidasChoferesAux[z].fecha && liquidasChoferes[w].chofer==liquidasChoferesAux[z].chofer) {
+                    liquidaEncontrada = true;
+                }
+            }
+            if (!liquidaEncontrada) {
+                liquidasChoferesAux.push(liquidasChoferes[w]);
+            }
+            liquidaEncontrada = false;
+        }
+
+        liquidasChoferes = liquidasChoferesAux;
+
+        // obtner los pedidos por chofer
+
+        for (var n = 0; n < arrChoferes.length; n++) {
+            var pedidosXchofer = [];
+
+            for (var p = 0; p < liquidasChoferes.length; p++) {
+
+                if (arrChoferes[n] == liquidasChoferes[p].chofer) {
+
+                    for (var q = 0; q < pedidosAnalisis.length; q++) {
+
+                        if (pedidosAnalisis[q].ruta_ped == liquidasChoferes[p].ruta & pedidosAnalisis[q].fecrsur_ped == liquidasChoferes[p].fecha) {
+                            pedidosXchofer.push(pedidosAnalisis[q]);
+                        }
+
+                    }
+                }
+               
+            }// fin de obtener los pedidos del chofer en cuestion
+
+            // crear el elemento html para almacenar los resultados  del analisis 
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divTblChoferes";
+
+            var label = document.createElement("LABEL");
+            label.innerText = "Chofer:" + arrChoferes[n]; 
+
+            var salto = document.createElement("BR");
+
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "tblChoferes";
+            divScroll.style.width = "width: 100%";
+            divScroll.id = "Chofer: " + arrChoferes[n];
+
+            var salto2 = document.createElement("BR");
+
+            divContenedor.appendChild(label);
+            divContenedor.appendChild(divScroll);
+            //divContenedor.appendChild(salto2);
+            
+
+
+            document.getElementById("promXchofer").appendChild(divContenedor);
+            promediosChoferes(pedidosXchofer, divScroll.id);
+
+           // promXchofer
+
+
+        }
+
+        // obiene una lelacion con datos unicos de las rutas en las que laboro el chofer
+     
+
+    }
+
+    // reporte general para la gerencia 
+    
+</script>
+
+<style>
+    body{
+          margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100%;
+    }
+    #contenedorPrimerUltimoServico {        
+            overflow: scroll;
+        }
+    #promXchofer{
+        overflow: scroll;
+        width: 50%;
+    }
+      #contenedorReporteRutas {        
+            overflow: scroll;
+        }
+       #informacion {        
+            overflow: scroll;
+        }
+    #ReportePorcentajesPromediosChoferes{
+        overflow: scroll;
+    }
+   input[type=range] {
+  height: 26px;
+  -webkit-appearance: none;
+  margin: 10px 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #50555C;
+  background: #a7dcf2;
+  border-radius: 14px;
+  border: 0px solid #000000;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #2b5b7a;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -3px;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  
+  box-shadow: 1px 1px 1px #50555C;
+  background: #50555C;
+  border-radius: 14px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #529DE1;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 14px;
+  cursor: pointer;
+  
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #50555C;
+  border: 0px solid #000000;
+  border-radius: 28px;
+  box-shadow: 1px 1px 1px #50555C;
+}
+
+input[type=range]::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 0px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 40px;
+  border-radius: 12px;
+  background: #529DE1;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #50555C;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #50555C;
+}
+
+      table tr:nth-child(even) {
+        background-color: #a7dcf2;
+        border:black 1px solid;
+
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #fff;
+        border:black 1px solid;
+    }
+    table td {
+       border:black 1px solid;
+    }
+
+</style>
+
+
+
+
+
+

@@ -1,0 +1,259 @@
+﻿@{
+    ViewBag.Title = "EquiposComputo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+</head>
+<body>
+    <CENTER>
+        <br />
+        <h3>Para bridarte un mejor soporte por parte del departamento de sistemas de </h3>
+        <h3>GAS EXPRESS NIETO captura la informacion de tu equipo de computo</h3>
+        <br />
+        <div class="card shadow" style="width:50%; display:inline-block; ">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 class=" m-0 font-weight-bold text-primary">Datos Administrativos</h6>
+
+            </div>
+            <div style="width:100%;" class="card-body">
+                <table style="width:100%;">
+                    <tr>
+                        <td><label>Administracion</label></td>
+                        <td><select id="SLCADM_PC" class="form-control">
+                                <option value="0">seleccionar</option>
+                                <option value="Acambaro">Acambaro</option>
+                                <option value="Aguascalientes">Aguascalientes</option>
+                                <option value="Arandas">Arandas</option>
+                                <option value="Celaya">Celaya</option>
+                                <option value="Consolid">Consolid</option>
+                                <option value="Culiacan">Culiacan</option>
+                                <option value="Dolores">Dolores</option>
+                                <option value="Guadalaj">Guadalaj</option>
+                                <option value="Guamuchi">Guamuchi</option>
+                                <option value="Irapuato">Irapuato</option>
+                                <option value="LaPiedad">LaPiedad</option>
+                                <option value="LazaroCardenas">LazaroCardenas</option>
+                                <option value="Leon">Leon</option>
+                                <option value="Mazatlan">Mazatlan</option>
+                                <option value="Mochis">Mochis</option>
+                                <option value="Monterrey">Monterrey</option>
+                                <option value="Morelia">Morelia</option>
+                                <option value="Moroleon">Moroleon</option>
+                                <option value="Queretar">Queretar</option>
+                                <option value="Salvatierra">Salvatierra</option>
+                                <option value="SanJoseI">SanJoseI</option>
+                                <option value="SanJuan">SanJuan</option>
+                                <option value="SanLuis">SanLuis</option>
+                                <option value="SnMiguel">SnMiguel</option>
+                                <option value="Tepatitlan">Tepatitlan</option>
+                                <option value="Tula">Tula</option>
+                                <option value="Uruapan">Uruapan</option>
+                                <option value="Veracruz">Veracruz</option>
+                                <option value="Xalapa">Xalapa</option></select></td>
+                        <td><label>Planta/Estacion</label></td>
+                        <td><input id="NOM_PC" type="text" class="form-control" placeholder="Nombre de la planta o estacion"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Compañia</label></td>
+                        <td><input id="CIA_PC" type="number" class="form-control" placeholder="##"></td>
+                        <td><label>Planta</label></td>
+                        <td><input id="PLA_PC" type="number" class="form-control" placeholder="##"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Area</label></td>
+                        <td><select id="SLCARE_PC" class="form-control">
+                                <option value="0">seleccionar</option>
+                                <option value="GERENCIA">GERENCIA</option>
+                                <option value="SUBDIRECCION">SUBDIRECCION</option>
+                                <option value="RECURSOS HUMANOS">RECURSOS HUMANOS</option>
+                                <option value="HIGIENE Y SEGURIDAD">HIGIENE Y SEGURIDAD</option>
+                                <option value="VENTAS">VENTAS</option>
+                                <option value="OPERACIONES">OPERACIONES</option>
+                                <option value="SUPERVISOR">SUPERVISOR</option>
+                                <option value="JEFE DE PLANTA">JEFE DE PLANTA</option>
+                                <option value="JEFE DE TALLER">JEFE DE TALLER</option>
+                                <option value="FACTURACION">FACTURACION</option>
+                                <option value="RECEPCIÓN">RECEPCIÓN</option>
+                                <option value="PEDIDOS">PEDIDOS</option>
+                                <option value="CUENTAS POR COBRAR">CUENTAS POR COBRAR</option>
+                                <option value="ESTACION DE CARBURACIÓN">ESTACION DE CARBURACIÓN</option>
+                                <option value="CONTABILIDAD">CONTABILIDAD</option>
+                                <option value="ALMACEN">ALMACEN</option>
+                                <option value="TESORERÍA">TESORERIA</option>
+                                <option value="COMERSALIZACIÓN">COMERSALIZACIÓN</option>
+                                <option value="CAJA">CAJA</option>
+                                <option value="OTRO">OTRO</option>
+                            </select></td>
+                        <td><label>Encargado(a)</label></td>
+                        <td><input id="ENC_PC" type="number" class="form-control" placeholder="Nombre(s) del (de los) usuario (s)"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Correo asociado</label></td>
+                        <td><input id="CORR_PC" type="text" class="form-control" placeholder="Correo asociado opcional"></td>
+                        <td><label>Telefono</label></td>
+                        <td><input id="TEL_PC" type="text" class="form-control" placeholder="Numero telefono opcional"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Ubicacion</label></td>
+                        <td><button class="btn btn-primary" data-toggle="modal" data-target="#ubicacion"><span class="fas fa-map-marker-alt" role="status" aria-hidden="true"></span></button></td>
+                       
+                    </tr>
+                </table>
+                
+
+            </div>
+
+        </div>
+        <div class="card shadow" style="width:50%; display:inline-block; ">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 class=" m-0 font-weight-bold text-primary">SOFTWARE</h6>
+
+            </div>
+
+            <div style="width:100%;" class="card-body">
+                <table style="width:100%;">
+                    <tr>
+                        <td><label>Sistema Operativo</label></td>
+                        <td><input id="SO_PC" type="text" class="form-control"></td>
+                        <td></td>
+                        <td><label>Arquitectura</label></td>
+                        <td><input id="ARQ_PC" type="text" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Antivirus</label></td>
+                        <td><select id="SLCANT_PC" class="form-control">
+                                <option value="0">seleccionar</option>
+                                <option value="KASPERSKY">KASPERSKY</option>
+                                <option value="ESET">ESET</option>
+                                <option value="NORTON">NORTON</option>
+                                <option value="AVG">AVG</option>
+                                <option value="PC tools">PC TOOLS</option>
+                                <option value="BITDEFENDER">BITDEFENDER</option>
+                                <option value="AVAST">AVAST</option>
+                                <option value="MCAFEE">MCAFEE</option>
+                                <option value="PANDA">PANDA</option>
+                                <option value="WEBROOT">WEBROOT</option>
+                                <option value="TREND micro">TREND MICRO</option>
+                                <option value="BULLGUARD">BULLGUARD</option>
+                                <option value="AVIRA">AVIRA</option>
+                                <option value="SOPHOS">SOPHOS</option>
+                                <option value="FORTINET">FORTINET</option>
+                                <option value="OTRO">OTRO</option>
+
+                            </select></td>
+                        <td></td>
+                        <td><label>Dias restantes</label></td>
+                        <td><input id="DIAS_PC" type="number" class="form-control" placeholder="###"></td>
+                    </tr>
+                    <tr>
+                        <td><label>Framework</label></td>
+                        <td><input id="FRA_PC" type="number" class="form-control"></td>
+                        <td><button class="btn btn-primary" ><span class="fas fa-info-circle" role="status" aria-hidden="true"></span></button></td>
+                        @*<td><label>Encargado(a)</label></td>
+                        <td><input type="number" class="form-control"></td>*@
+                    </tr>
+                </table>
+
+
+            </div>
+
+        </div>
+        <div class="card shadow" style="width:50%; display:inline-block; ">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 class=" m-0 font-weight-bold text-primary">Hardware</h6>
+
+            </div>
+
+            <div style="width:100%;" class="card-body">
+                <table style="width:100%;">
+                    <tr>
+                        <td><label>Disco duro (Gb)</label></td>
+                        <td><input id="DDR_PC" type="number" class="form-control"></td>
+                        <td><button class="btn btn-primary"><span class="fas fa-info-circle" role="status" aria-hidden="true"></span></button></td>
+
+                        <td><label>Ram (Gb)</label></td>
+                        <td><input id="RAM_PC" type="number" class="form-control"></td>
+                        <td><button class="btn btn-primary"><span class="fas fa-info-circle" role="status" aria-hidden="true"></span></button></td>
+
+                    </tr>
+                    <tr>
+                        <td><label>Procesador</label></td>
+                        <td><input type="text" class="form-control"></td>
+                        <td><button class="btn btn-primary"><span class="fas fa-info-circle" role="status" aria-hidden="true"></span></button></td>
+
+                        <td><label>Nucleos</label></td>
+                        <td><input type="number" class="form-control"></td>
+                        <td><button class="btn btn-primary"><span class="fas fa-info-circle" role="status" aria-hidden="true"></span></button></td>
+
+                    </tr>
+                    <tr>
+                        @*<td><label>Framework</label></td>
+                        <td><input type="number" class="form-control"></td>*@
+                        @*<td><label>Encargado(a)</label></td>
+                <td><input type="number" class="form-control"></td>*@
+                    </tr>
+                </table>
+
+
+            </div>
+
+        </div>
+    </CENTER>
+</body>
+<div class="modal fade" id="ubicacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ubicacion del equipo ( coloca la ubicacion aproximada del equipo de computo)</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+             <div id="map" style="width:100%; height:400px;"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+</html>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+<script>
+    $(document).ready(function () {
+        BuscaEquipo();
+    });
+  
+    // inicializa el mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 0, lng: 0 },
+            zoom: 13,
+        });
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+
+        //map.addListener('click', function (mapsMouseEvent) {
+        //    if (document.getElementById('checNegocios').checked) {
+        //        getNegocios(mapsMouseEvent.latLng);
+        //    }
+
+        //});
+    }
+</script>
+

@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GENAnalizerWebETY
+{
+     public class clsDatosAppCliente
+    {
+         public String Id { set; get; }
+         public String Dispositivo { set; get; }
+         public String Latitud { set; get; }
+         public String Longitud { set; get; }
+         public String Asistencia { set; get; }
+         public String Pedidos { set; get; }
+         public String ServicioDefault { set; get; }
+         public String Nombre{ set; get; }
+         public String Fecha_Pedido{ set; get; }
+         public String Estado_Pedido { set; get; }
+         public String Telefono { set; get; }
+         public String Fecha_Surtido{ set; get; } 
+         public String ruta{ set; get; }
+
+
+
+
+    }
+}

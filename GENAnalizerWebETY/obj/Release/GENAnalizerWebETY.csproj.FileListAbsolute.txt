@@ -1,0 +1,16 @@
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GENAnalizerWebETY.dll
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GENAnalizerWebETY.pdb
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.BLL.NH.dll
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.DAL.NH.dll
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.ETY.dll
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.csprojResolveAssemblyReference.cache
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.dll
+C:\Users\HALEMAN\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.pdb
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GENAnalizerWebETY.dll
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GENAnalizerWebETY.pdb
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.BLL.NH.dll
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.DAL.NH.dll
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\bin\Release\GEN.ETY.dll
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.dll
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.pdb
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebETY\obj\Release\GENAnalizerWebETY.csprojResolveAssemblyReference.cache

@@ -1,0 +1,410 @@
+﻿@{
+    ViewBag.Title = "PagosQr";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>Credito y cobranza</title>
+
+</head>
+
+
+
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Analyzer</span>
+                </a>
+            </li>
+
+
+
+
+
+            <li id="seccPagosQR" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Pagos QR</span>
+                </a>
+
+            </li>
+
+           
+           
+
+            
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    
+                    
+                    
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+
+
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
+
+                                    <li class="nav-item active" style="margin:10px;">
+                                        <select class="form-control" id="slcservidor"></select>
+                                    </li>
+                                    <li class="nav-item active" style="margin:10px;">
+
+                                        <label id="pwd" style="display:none;">@ViewBag.Pwd</label>
+                                    </li>
+                                    <li class="nav-item active" style="margin:10px;">
+                                        <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:40px;" />
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </nav>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Servidor:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><label id="serv">@ViewBag.Srv</label></span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"><label id="usr">@ViewBag.Usr</label></span>
+                              
+                            </a>
+                            <!-- Dropdown - User Information -->
+                           
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content <div class="container-fluid">-->
+                <div class="container-fluid">
+                   
+                   <div  id="divPagosQR" style="width:100%">
+                       <div class="card shadow" style="  width:100%;   ">
+                           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                               <h6 class=" m-0 font-weight-bold text-primary"> Pagos QR</h6>
+                              <div style="float:right; width:100%;">
+                                  
+                                  <a class="btn btn-success btn-icon-split" onclick="PagosQrToExcel()" style="display:inline-block; float:right;margin:5px;">
+                                      <span class="icon text-white-50">
+                                          <i class="fas fa-clipboard-check"></i>
+                                      </span>
+                                      <span class="text" style="color:white;">Reporte Excel</span>
+                                  </a>
+                                  <a class="btn btn-primary btn-icon-split" onclick="getPagosQR(this)" style="display:inline-block; float:right;margin:5px;">
+                                      <span class="icon text-white-50">
+                                          <i class="fas fa-clipboard-check"></i>
+                                      </span>
+                                      <span class="text" style="color:white;">Consutar</span>
+                                  </a>
+                                  <input id="inpPla" type="text" class="form-control" style="display:inline-block; width:100px;float:right;margin:5px;" placeholder="Pla" />
+                                  <input id="inpCia" type="text" class="form-control" style="display:inline-block; width:100px;float:right;margin:5px;" placeholder="Cia" />     
+                                  <input id="ff" type="date" class="form-control" style="display:inline-block; width:300px;float:right;margin:5px;" />
+                                  <label style="display:inline-block;width:30px;float:right;margin:5px;">A:</label>                                 
+                                  <input id="fi" type="date" class="form-control" style="display:inline-block; width:300px;float:right;margin:5px;" />
+                                  <label style="display:inline-block; width:30px;float:right;margin:5px;">De:</label>                                                                 
+                              </div>
+                           </div>
+
+                           <div style="width:100%;" class=" shadow card">
+                               <div class="card-body" style="width:100%">
+                                   <div id="tblQr" style="width:100%"></div>
+
+                               </div>
+
+
+
+                           </div>
+
+                       </div>
+                   </div>
+
+                </div>
+                <!-- End of Content Wrapper -->
+            </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+</body>
+
+</html>
+
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+<script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
+<script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
+<script>
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables de uso general
+    
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+    var descuentoDir = 0;
+    var lstQr = [];
+    $(document).ready(function () {
+       
+
+        $("#ff").val(today);
+        $("#fi").val(today);
+    
+        /// se llena el listado se servidres para el usuario admin
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slcservidor");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+
+        // si es usuario admin se oculata la etiqueda del servidor
+
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+
+            document.getElementById('slcservidor').style.display = "inline";
+            document.getElementById('serv').style.display = "none";
+        }
+        else {
+            document.getElementById('slcservidor').style.display = "none";
+            document.getElementById('serv').style.display = "inline";
+        }
+    });
+    // muestra el segmento correspendiente a la seleccion del usuario
+    function mostrarSecmento(ref) {
+        document.getElementById('divcPagosQR').style.display = 'none';
+        
+
+        switch (ref.id) {
+            case "seccPagosQR":
+                document.getElementById('divcPagosQR').style.display = 'inline';
+                getLecturas();
+                break;
+
+           
+        }
+    }
+    //Obtiene lista de pagos obtenidos por QR
+    function getPagosQR(btn) {
+
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+        if ($('#fi').val()> $('#ff').val()) {
+            mensajeSweet("Ooops", "Fecha inicial no puede ser mayor a la fecha final", "warning");
+            return;
+        }
+        if ($('#inpCia').val()=='') {
+            mensajeSweet("Ooops", "Coloca la compañia ", "warning");
+            return;
+        }
+        if ($('#inpPla').val() == '') {
+            mensajeSweet("Ooops", "Coloca la planta", "warning");
+            return;
+        }
+      
+        $.ajax({
+            type: "POST",
+            url: "/Home/getPagosQR/",
+            data: { paramSrv: serv, paramCia: $('#inpCia').val(), paramPla: $('#inpPla').val(), fechaI: $('#fi').val(), fechaF: $('#ff').val() },
+            datatype: "json",
+            beforeSend: function (objeto) {
+
+                btn.innerHTML = '<span class="icon text-white-50"> ' +
+                    '<i class="fas fa-sync fa-spin"></i> ' +
+                '</span> ' +
+                '<span class="text" style="color:white;">Actualizando</span> ';
+                
+
+            },
+            complete: function () {
+                btn.innerHTML = ' <span class="icon text-white-50"> ' +
+                                          '<i class="fas fa-clipboard-check"></i> '+
+                                      '</span> '+
+                                      '<span class="text" style="color:white;">Consutar</span> ';
+              
+
+              
+
+            },
+            success: function (data) {
+
+                if (data != null) {
+                    if (data.iconMessage=='success') {
+
+                        if (data.ObjetReturn.length > 0) {
+                            lstQr = data.ObjetReturn;
+                            showPagosQR();
+                        }
+                        else
+                        {
+                            mensajeSweet("Ooops", "No se encontraron registros", "info");
+                        }
+                    } else {
+                        mensajeSweet("Ooops", data.MesajeReturn, data.iconMessage);
+                    }
+
+                }
+                /*
+                 respuesta.iconMessage = "info";
+                    respuesta.MesajeReturn
+                    respuesta.ObjetReturn
+                */
+            },
+            error: function (request, status, error) {
+                mensajeSweet("Ooops", request.responseText, "error");
+               
+            }
+        });
+
+
+    }
+    // muestra los pagos con QR
+    function showPagosQR() {
+
+        var tabla = new google.visualization.DataTable();
+        tabla.addColumn("string", "Fecha");
+        tabla.addColumn("string", "Folio");
+        tabla.addColumn("string", "litros/kilos");
+        tabla.addColumn("string", "Ruta");
+        tabla.addColumn("string", "Compañia");
+        tabla.addColumn("string", "Planta");
+        tabla.addColumn("string", "Monto");
+
+        for (var i = 0; i < lstQr.length; i++) {
+
+            tabla.addRow([lstQr[i].creation_date,
+                         lstQr[i].folnvta_qr,
+                        lstQr[i].ltskgs_qr,
+                        lstQr[i].ruta_qr,
+                        lstQr[i].cia_qr,
+                        lstQr[i].pla_qr,
+                        lstQr[i].amount_tran]);
+
+
+
+
+        }
+
+
+
+        var contenedor5 = new google.visualization.Table(tblQr);
+        contenedor5.draw(tabla, {
+            allowHtml: true, showRowNumber: true, chartArea: {
+                // leave room for y-axis labels
+                width: '100%'
+            },
+            legend: {
+                position: 'top'
+            },
+            width: '100%'
+        });
+
+    }
+
+    function PagosQrToExcel() {
+
+        if (lstQr.length<=0) {
+            mensajeSweet("Ooops", "No hay registros de pagos QR por exportar", "warning");
+            return;
+        }
+
+        var csvRows = [];
+
+        csvRows = [[ "Fecha", "Folio", "litros/kilos","Ruta", "Compañia","Planta","Monto"]];
+        for (var i = 0; i < lstQr.length; i++) {
+            csvRows.push([
+                        lstQr[i].creation_date,
+                        'Folio: '+lstQr[i].folnvta_qr,
+                        lstQr[i].ltskgs_qr,
+                        lstQr[i].ruta_qr,
+                        lstQr[i].cia_qr,
+                        lstQr[i].pla_qr,
+                        lstQr[i].amount_tran
+            ]);
+        }
+
+
+        var csvString = csvRows.join("%0A"); //join("%0A")
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' + csvString;
+        a.target = '_blank';
+        a.download = 'Pagos QR.csv';
+        document.body.appendChild(a);
+        a.click();
+    }
+</script>

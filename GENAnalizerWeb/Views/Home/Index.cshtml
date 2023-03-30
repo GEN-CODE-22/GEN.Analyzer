@@ -1,0 +1,666 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Inicio Sesion</title>
+    <meta>
+    <link rel="stylesheet" type="text/css" href="~/Styles/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Styles/main.css">
+    <meta />
+</head>
+<body>
+    <!--inicio de secion don -->
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"><center><img src="~/Images/LOGO_ANALIZER.png" alt="IMG" style="margin:10px;"></center></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4"> ANALYZER </h1>
+                                    </div>
+                                    
+                                        <center>       
+                                                <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
+                                                <select id="slectservidor2" class="form-control"> </select> 
+                                                <br />                                                                
+                                                <input class="form-control" type="text" placeholder="Usuario" id="usr">
+                                                <br />                                             
+                                                <input class="form-control" type="password" placeholder="Contraseña" id="pwd">
+                                                <br /> 
+                                                    <div  id="div_comp" class="" style="display:none">
+                                                        <label>Plantas</label>
+                                                        <input class="form-control" type="text" placeholder="01,02,03,...,##" id="pla">
+                                                        <label>Compañias</label>
+                                                        <input class="form-control" type="text" placeholder="15,...,##" id="cia">                                                       
+                                                        <button class="btn btn-danger" style="width:100%" onclick="compInfo()">Completar información</button>
+                                                    </div>
+                                                
+                                                <center>
+                                                    <div class="checkbox" style="display:none;">
+                                                        <input id="chkGte" type="checkbox" onchange="esGerente(this)"> <label>¿Eres Gerente?</label>
+                                                    </div>
+                                                    <div id="SeccGte" style="display:none;">
+                                                        <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
+                                                        <!--<select id="slectservidor2" class="form-control"> </select>-->
+                                                        <br />
+                                                    </div>
+                                                </center>
+                                                
+                                                    <button class="btn btn-danger" style="width:100%" onclick="login(this)">Entrar</button>
+                                              
+
+                                            <div class="text-center p-t-12" style="display:none;">
+                                                <span class="txt1">
+                                                    ¿Nuevo?
+                                                </span>
+                                                <a class="txt2" href="#" onclick="solitarCuenta()">
+                                                    Solicta una cuenta...
+                                                </a>
+                                            </div>                                          
+                                        </center>
+                                                                   
+                                </div>
+                           
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+  
+
+ 
+    <center>
+        <dialog id="DlgPeticionUsr" style="width:33%" >
+
+
+            <div class="card"><center>
+    
+        SOLICITUD DE USUARIO
+    
+</center>
+<table style="width:100%;">
+    <tr>
+        <td>
+            <center>Servidor:</center>            
+        </td>
+        <td>
+
+           <!-- <select id="slectservidor" class="form-control"> </select>-->
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Usuario:</center>
+        </td>
+        <td>
+            <input class="form-control" type="text" name="" placeholder="Usuario" id="InpUsr">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Contraseña:</center>
+        </td>
+        <td>
+
+            <input class="form-control" type="text" name="" placeholder="Contraseña" id="InpPass">
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Correo:</center>
+            
+
+        </td>
+        <td>
+
+            <input class="form-control" type="email" name="" placeholder="Correo" id="InpEml">
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <center>Nombre:</center>
+            
+
+        </td>
+        <td>
+            <input class="form-control" type="text" name="" placeholder="Nombre" id="InpNom">
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+
+           
+
+        </td>
+        <td>
+
+           
+
+        </td>
+    </tr>
+</table>
+            <div style="width:100%"><button class="btn btn-danger" onclick="enviarSolicitud()" style="width:30%; display:inline-block"> Enviar </button>
+<button class="btn btn-danger" onclick="cerrarDialogo()" style="width:30%; display:inline-block">Cerrar </button>
+                </div>                
+             </div>
+        </dialog>
+        <dialog id="DlgSlcCiaPla" style="width:20%">
+            <div class="card-body">
+                <label>Selecciona compañia planta:</label>
+                <select id="slcCiaPla" class="form-control" onchange="getCiaPla()"></select>
+                @*<label>Compañia</label>
+                <select id="slcCia" class="form-control"></select>
+                <label>Planta</label>
+                <select id="slcPla" class="form-control"></select>*@
+                <br />
+                <button class="btn btn-danger" style="width:100%" onclick="setCiaPla()">Iniciar</button>
+            </div>
+        </dialog>
+</center>
+</body>
+</html>
+
+<script src="~/Scripts/main.js"></script>
+<script src="~/Scripts/tilt.jquery.min.js"></script>
+
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+<script>
+    var usuario = null;
+    var dialogos = [];
+    var compañia = null;
+    var planta = null;
+    var isPlusGen = null;
+    $(document).ready(function () {
+        localStorage.removeItem('empresa');
+        document.getElementById('header_layout').style.display = "none";
+
+        // var x = document.getElementById("slectservidor");
+        var y = document.getElementById("slectservidor2");
+        var option = document.createElement("option");
+        option.text = "selecciona";
+        //x.add(option);
+        y.add(option);
+
+        for (var k = 0; k < servers.length; k++) {
+          
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+           // x.add(option);
+            y.add(option);
+        }
+        
+
+
+        //ExisteEquipo();
+    });
+   
+    function login(btn) {
+        var usr = $("#usr").val();
+        var pwd = $("#pwd").val();
+        var srv = $("#slectservidor2").val();
+        var gte = 'user';
+        if (document.getElementById('chkGte').checked) {
+            var gte = 'Gerente';
+        }
+
+        if (usr.trim() != null | usr.length<1)
+        {
+            if (pwd.trim() != null | pwd.length < 1)
+                {
+               
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/userLogin/",
+                    data: { paramUsr: usr, paramPwd: pwd, paramString1: gte, paramSrv: srv },
+                    datatype: "json",
+                    beforeSend: function (objeto)
+                    {
+                        btn.innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Iniciando...';
+                    },
+                    complete: function ()
+                    {
+                        btn.innerHTML = 'Entrar';
+                    },
+                    success: function (data) {
+
+                        if (data.iconMessage != "success")
+                        {
+                            mensajeSweet("Opss", data.MesajeReturn, data.iconMessage);
+                        }
+                        else
+                        {
+                            if (data.ObjetReturn[0].Tpu_ucve == "GG" || data.ObjetReturn[0].Tpu_ucve == "Administrador")
+                            {
+                                document.getElementById("slcCiaPla").innerHTML += '<option value="">Selecciona</option>';
+
+                                for (var i = 0; i < data.ObjetReturn[1].length; i++)
+                                {
+                                    document.getElementById("slcCiaPla").innerHTML += '<option value="' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + '">' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + " " + data.ObjetReturn[1][i].Nom_pla + '</option>';
+                                }
+                                cerrarDialogo();
+                                var msg = document.getElementById('DlgSlcCiaPla');
+                                msg.showModal();
+                                dialogos.push(msg);
+
+                            }
+                            else
+                            {
+                                compañia = data.ObjetReturn[0].Cia_ucve;
+                                planta = data.ObjetReturn[0].Pla_ucve;
+                                isPlusGen = data.ObjetReturn[1][0].Nom_pla;
+                                setCiaPla();
+                            }
+
+                        }
+                    },
+                    error: function (request, status, error) {
+
+                        alert(request.responseText);
+                    }
+
+
+                        ///////////////////////////////////////////////
+                       
+                        //if (data.usr_usr != null && data.usr_usr != '')
+                        //{
+                        //    usuario = data;
+                        //    if (data.cia_pla == '' || data.cia_usr == '')
+                        //    {
+                                
+                        //        mensajeSweet("Perfil incompleto", "complementa tu perfil con la informacion solicitada", "info");
+                        //       document.getElementById('div_comp').style.display = 'inline';
+                        //    }
+                        //    else
+                        //    {
+
+                                /*
+                                 <select id="slcCia"></select>
+                <label>Planta</label>
+                <select id="slcPla"></select>
+                                */
+                                //document.getElementById("slcCia").innerHTML = '';
+                                //for (var i = 0; i < data.cia_usr.trim().split(',').length; i++)
+                                //{
+                                //    document.getElementById("slcCia").innerHTML += '<option value="' + data.cia_usr.trim().split(',')[i] + '">' + data.cia_usr.trim().split(',')[i] + '</option>';
+                                //}
+                                //document.getElementById("slcPla").innerHTML = '';
+                                //for (var i = 0; i < data.pla_usr.trim().split(',').length; i++) {
+                                //    document.getElementById("slcPla").innerHTML += '<option value="' + data.pla_usr.trim().split(',')[i] + '">' + data.pla_usr.trim().split(',')[i] + '</option>';
+                                //}
+
+                                //cerrarDialogo();
+                                //var msg = document.getElementById('DlgSlcCiaPla');
+                                //msg.showModal();
+                                //dialogos.push(msg);
+
+                               // window.location = '/Home/Impresion';
+                //            }
+
+                           
+                //           }
+                //        else {
+                //            mensajeSweet("Ooops", "No se encontro usuario con esas credenciales", "warning")
+                //        }
+                //    },
+                //    error: function (request, status, error) {
+
+                //        alert(request.responseText);
+                //    }
+               });
+
+                }
+            else
+                {
+                    alert('Ingresa tu contraseña...');
+                }
+
+
+         }else
+         {
+            alert("Ingresa tu usuario...");
+         }
+
+
+       
+    }
+    function getCiaPla()
+    {
+        compañia = null;
+        planta = null;
+        isPlusGen = $('#slcCiaPla  option:selected').text();
+        if ($('#slcCiaPla').val().toString().split('-').length==2)
+        {
+            compañia = $('#slcCiaPla').val().toString().split('-')[0];
+            planta = $('#slcCiaPla').val().toString().split('-')[1];
+        }
+
+        
+    }
+    function solitarCuenta() {
+       
+        cerrarDialogo();
+        var msg = document.getElementById('DlgPeticionUsr');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+    function enviarSolicitud() {
+
+        try {
+            if (document.getElementById("slectservidor").value == '') {
+                miExcepcionUsuario = new Exception("Selecciona un servidor...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpUsr").value == '') {
+                miExcepcionUsuario = new Exception("Coloca nombre de usuario...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpPass").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu contraseña...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpEml").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu correo...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpNom").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu nombre...");
+                throw miExcepcionUsuario;
+            }
+
+
+            var datos = document.getElementById("slectservidor").value + "/" + document.getElementById("InpUsr").value + "/" + document.getElementById("InpPass").value +
+                  "/" + document.getElementById("InpEml").value + "//" + document.getElementById("InpNom").value +
+                  "// ";
+
+
+
+
+         
+            $.ajax({
+                type: "POST",
+                url: "/Home/emailSolicitud/", // the method we are calling            
+                data: { id: datos },
+                dataType: "json",
+                success: function (result) {
+
+                    alert(result);
+                    cerrarDialogo();
+
+                },
+                error: function (result) {
+                    alert('Problemas al mandar la solicitud');
+                }
+            });
+           
+
+        } catch (excepcion) {
+            alert(excepcion.mensaje);
+
+        }
+        function Exception(mensaje) {
+            this.mensaje = mensaje;
+            this.nombre = "ExceptionUsuario";
+        }
+
+    }
+    function esGerente(check) {
+        if (check.checked) {
+            document.getElementById('SeccGte').style.display = "inline";
+        }
+        else {
+            document.getElementById('SeccGte').style.display = "none";
+        }
+
+    }
+    function compInfo()
+    {
+       
+        try
+        {
+            if($('#pla').val()=='')
+            {
+                mensajeSweet("Informacion incompleta", "No has colocado las plantas asociadas", "warning");
+                return;
+            }
+            if ($('#cia').val() == '') {
+                mensajeSweet("Informacion incompleta", "No has colocado las compañias asociadas", "warning");
+                return;
+            }
+            usuario.cia_usr=$('#cia').val();
+            usuario.pla_usr = $('#pla').val();
+            $.ajax({
+                type: "POST",
+                url: "/Home/uptUserLogin/",
+                data:  usuario ,
+                datatype: "json",
+                success: function (data) {
+
+                    if (data.usr_usr != null && data.usr_usr != '') {
+                        usuario = data;
+                        if (data.cia_pla == '' || data.cia_usr == '') {
+
+                            mensajeSweet("Perfil incompleto", "complementa tu perfil con la informacion solicitada", "info");
+                            document.getElementById('div_comp').style.display = 'inline';
+                        }
+                        else {
+                            mensajeSweet("Perfil completo", "Inicia secion nuevamente", "success");
+                            document.getElementById('div_comp').style.display = 'none';
+                        }
+
+
+                    }
+                    else {
+                        mensajeSweet("Ooops", "Problemas al actualizar", "warning")
+                    }
+                },
+                error: function (request, status, error) {
+
+                    alert(request.responseText);
+                }
+            });
+
+
+        } catch (e) {
+
+        }
+
+    }
+    function setCiaPla()
+    {
+        if (compañia==null || planta==null)
+        {
+            mensajeSweet("Opss", "Ingresa valores validos", "waning");
+            return;
+        }
+       
+            $.ajax({
+                type: "POST",
+                url: "/Home/setCiaPla/",
+                data:{ id:compañia+","+planta},
+                datatype: "json",
+                success: function (data) {
+
+                    if (data=='OK') {
+                        localStorage.setItem('cia', compañia);
+                        localStorage.setItem('pla', planta);
+                        localStorage.setItem('cias', compañia);
+                        localStorage.setItem('plas', planta);
+
+                        //Determiar si es plus gas o gas express
+                        //var sucursal = "";
+                        //for (var i = 0; i < plantas.length; i++)
+                        //{
+                        //    if ( plantas[i].includes($("#slcPla").val()))
+                        //    {
+                        //        sucursal = plantas[i];
+                        //    }
+                        //}
+
+                        localStorage.removeItem("empresa");
+                        if (isPlusGen.toUpperCase().includes("PLUS")) {
+                            localStorage.setItem("empresa", "PLUS");
+                        } else {
+                            localStorage.setItem("empresa", "GEN");
+                        }
+
+                        window.location = '/Home/Impresion';
+                    }
+                    else {
+                        mensajeSweet("Ooops", "Problemas al ingresar", "warning")
+                    }
+                },
+                error: function (request, status, error) {
+
+                    alert(request.responseText);
+                }
+            });
+
+
+       
+
+    }
+</script>
+<script>
+    var plantas = [
+'92-PLUS GAS EST. CARBURACION               ',
+'84-GAS EXPRESS NIETO EST. CARB. ZITACUARO  ',
+'12-GAS EXPRESS NIETO ACAMBARO, S.A. DE C.V.',
+'87-PLUS GAS ZINAPECUARO                    ',
+'29-GAS EXPRESS NIETO AGUASCALIENTES        ',
+'80-GAS EXPRESS NIETO EST. SAN PANCHO       ',
+'19-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'01-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'93-PLUS GAS                                ',
+'58-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'59-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'57-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'24-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'07-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'90-PLUS GAS SAN FELIPE                     ',
+'89-PLUS GAS DOLORES                        ',
+'66-GAS EXPRESS NIETO ACATLAN               ',
+'26-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'04-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'05-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'81-GAS EXPRESS NIETO SA DE CV (PENJAMO)    ',
+'82-GAS EXPRESS NIETO SA DE CV (SILAO Y GTO)',
+'16-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'55-GAS EXPRESS NIETO                       ',
+'14-GASEXPRESS NIETO, S.A. DE C.V.          ',
+'61-GAS EXPRESS NIETO,S.A.DE C.V.           ',
+'45-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'95-GAS EXPRESS NIETO (LAGOS DE MORENO)     ',
+'94-PLUS GAS LEON                           ',
+'20-GAS EXPRESS NIETO                       ',
+'47-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'25-GAS EXPRESS NIETO S. A. DE C. V.        ',
+'46-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'49-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'48-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'27-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'72-GAS EXPRESS NIETO EST CARB STA ROSA     ',
+'74-GAS EXPRESS NIETO SALTILLO              ',
+'73-GAS EXPRESS NIETO EST CARB TOPOCHICO    ',
+'67-GAS EXPRESS NIETO EST CARB ALLENDE      ',
+'71-GAS EXPRESS NIETO EST CARB GARCIA       ',
+'68-GAS EXPRESS NIETO EST CARB APODACA      ',
+'21-GAS EXPRESS NIETO (MONTERREY)           ',
+'69-GAS EXPRESS NIETO EST CARB STA CATARINA ',
+'70-GAS EXPRESS NIETO EST CARB GUADALUPE    ',
+'97-GAS EXPRESS NIETO (ARTEAGA COAHUILA)    ',
+'40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
+'41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
+'44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
+'09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
+'85-PLUS GAS ESTACION DE CARBURACION        ',
+'86-PLUS GAS MORELIA                        ',
+'43-GAS EXPRESS ALFAGAS, S.A. DE C.V.       ',
+'42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
+'39-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'18-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'38-GAS EXPRESS NIETO, S.A DE C.V           ',
+'37-PLUS GAS PURUANDIRO                     ',
+'91-PLUS GAS URIANGATO                      ',
+'33-GAS EXPRESS NIETO (GALERAS)             ',
+'30-GAS EXPRESS NIETO BANCHIS               ',
+'02-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'32-PLUS GAS QUERETARO                      ',
+'31-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'17-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'79-PLUS GAS, SAN LUIS DE LA PAZ            ',
+'13-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'78-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'88-PLUS GAS CAZADERO                       ',
+'06-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'22-GAS EXPRESS NIETO                       ',
+'23-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'76-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'03-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'65-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'28-GAS EXPRESS NIETO, S.A. DE C.V          ',
+'53-GAS EXPRESS NIETO, S.A DE C.V. ALVARADO ',
+'34-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+'50-GAS EXPRESS NIETO S A DE C V CORDOBA    ',
+'54-GAS EXPRESS NIETO SA DE CV COSAMALOAPAN ',
+'52-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
+'10-GAS EXPRESS NIETO S.A. DE C.V. VERACRUZ ',
+'51-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
+'98-PLUS GAS VERACRUZ                       ',
+'08-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'34-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'35-GAS EXPRESS NIETO S.A. DE C.V.          ',
+'36-GAS EXPRESS NIETO SA DE CV (MARTINEZ)   ',
+'15-GAS EXPRESS NIETO,URUAPAN',
+'56-GAS EXPRESS NIETO APATZINGAN',
+'62-GAS EXPRESS NIETO EST. NUEVA ITALIA',
+'64-PLANTA TECAL',
+'60-GAS EXPRESS NIETO EST. CARB. TANCITARO',
+'77-GAS EXPRESS NIETO EST. CARB. COTIJA',
+'96-GAS EXPRESS NIETO EST. CARB. SAHUAYO',
+'63-GAS EXPRESS NIETO EST. CARB. PERIBAN',
+'09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
+'40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
+'41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
+'42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
+'85-PLUS GAS ESTACION DE CARBURACION        ',
+'86-PLUS GAS MORELIA                        ',
+'44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
+    ];
+</script>
+<style>
+     dialog{      
+        color: #000;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50px);
+        box-sizing: border-box;       
+        position: absolute;   
+        border:none;
+        border-radius:5px;    
+    }
+</style>

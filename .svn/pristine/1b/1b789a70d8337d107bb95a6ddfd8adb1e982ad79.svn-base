@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Impresion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+
+<head>
+
+</head>
+<body>
+    SERVIDOR:
+    <label id="serv">@ViewBag.Srv</label>
+    <label id="usr">USUARIO: @ViewBag.Usr</label>
+   
+    <center>
+        <table id="tlb_plantas">
+            <tr>
+                <td><center><a href="href=" #" onclick="openNewWindowPedidos(); return false;"><img src="@Url.Content("~/Images/LOGO_PEDIDOS_ANALIZER.png")" /></a></center></td>
+                <td><center><a href="href=" #" onclick="openNewWindowEstaciones(); return false;"><img src="@Url.Content("~/Images/Estacion.png")" /></a></center></td>  
+                <td><center><a href="href=" #" onclick="openNewWindowTiempos(); return false;"><img src="@Url.Content("~/Images/tiempo.png")" /></a></center></td>                
+            </tr>
+            <tr>
+                <td><center><h2>ACTIVIDAD PEDIDOS</h2></center></td>
+                <td><center><h2>ACTIVIDAD ESTACIONES (DESARROLLO)</h2></center></td>
+                <td><center><h2>TIEMPOS (DESARROLLO)</h2></center></td>
+            </tr>
+        </table>
+        <table id="tlb_admin">
+            <tr>                
+                <td><center><a href="href=" #" onclick="openNewWindowGestionApp();return false;"><img src="@Url.Content("~/Images/LOGO_APP_ANALIZER.png")" /></a></center></td>
+            </tr>
+            <tr>
+                <td><center><h2>ACTIVIDAD APP</h2></center></td>
+            </tr>
+        </table>
+        <table id="toolAux">
+            <tr>
+                <td><center><a href="href=" #" onclick="openNewWindowClientes();return false;"><img src="@Url.Content("~/Images/FindClient.png")" /></a></center></td>
+                <td><center><a href="href=" #" onclick="openNewWindowLogeos(); return false;"><img src="@Url.Content("~/Images/control_logeo.png")" /></a></center></td>
+            </tr>
+            <tr>
+                <td><center><h2>CLIENTES</h2></center></td>
+                <td><center><h2>LOGEOS</h2></center></td>
+            </tr>
+        </table>
+    </center>
+
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        var servidor = document.getElementById('serv').innerText;
+        if (servidor != "Admin") {
+            document.getElementById('toolAux').style.display = "none";
+        }
+       
+    });
+    function openNewWindowPedidos() {
+        window.open("/Home/MapaGeneral");
+    }
+    function openNewWindowGestionApp() {
+         window.open("/Home/Analizer_app");
+    }
+    function openNewWindowTiempos() {
+        window.open("/Home/Tiempos");
+    }
+    function openNewWindowClientes() {
+        window.open("/Home/Clientes");
+    }
+    function openNewWindowLogeos() {
+        window.open("/Home/logeos");
+    }
+    function openNewWindowEstaciones() {
+        window.open("/Home/Estaciones");
+    }
+</script>
+<style>
+     body{
+        margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100vh;
+    }
+</style>

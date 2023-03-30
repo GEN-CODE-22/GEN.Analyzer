@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/Common/mensajesSweetAlert.js"></script>
+    <script src="~/Scripts/infobubble.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+   <!-- <link href="~/Styles/bootstrap.min.css" rel="stylesheet">-->
+    <!-- Custom styles for this template -->
+     <!--<link href="~/Styles/simple-sidebar.css" rel="stylesheet">-->
+     <!--<script src="~/Scripts/bootstrap.bundle.min.js"></script>-->
+    <link href="~/Content/BoostrapTemplate/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/BoostrapTemplate/vendor/fontawesome-free/css/font_google.css" rel="stylesheet">
+    <link href="~/Content/BoostrapTemplate/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="~/Content/BoostrapTemplate/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/Content/Resource/bootstrap-select.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    
+
+
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<body style="background:#ffffff;">
+    <header id="header_layout">
+        <a href="@Url.Action("Index")"><img src="@Url.Content("~/Images/logo.png")"  style="display:none"/></a>
+        
+    </header>
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script src="~/Content/BoostrapTemplate/vendor/jquery/jquery.min.js"></script>
+<script src="~/Content/BoostrapTemplate/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/Content/BoostrapTemplate/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="~/Content/BoostrapTemplate/js/sb-admin-2.js"></script>
+<script src="~/Content/BoostrapTemplate/vendor/chart.js/Chart.min.js"></script>
+<script src="~/Content/BoostrapTemplate/js/demo/chart-area-demo.js"></script>
+<script src="~/Content/BoostrapTemplate/js/demo/chart-pie-demo.js"></script>
+<script src="~/Scripts/Resource/sweetalert2@10.js"></script>
+<script src="~/Content/BoostrapTemplate/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/BoostrapTemplate/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="~/Scripts/Resource/bootstrap-select.js"></script>
+<script src="~/Scripts/Common/common.js"></script>
+
+<script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
+<script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
+<style>
+    .float-left{
+         right: 0 ; 
+    
+    }
+     
+    
+     
+    
+   
+     
+</style>
+ 
+<style>
+    #body {
+        width: 100%;
+        min-height: 100vh;
+        background: #ffffff;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+<script>
+    var arr_plantas =
+        [
+    'Aguascalientes|29|GEN AGUASCALIENTES',
+    'Arandas|19|GEN ARANDAS',
+    'Celaya|01|GEN CELAYA',
+    'Celaya|93|PLG CELAYA',
+    'Culiacan|24|GEN CULIACAN',
+    'Culiacan|58|GEN CULIACAN',
+    'Culiacan|59|GEN CULIACAN',
+    'Dolores|07|GEN DOLORES',
+    'Dolores|89|PLG  DOLORES',
+    'Dolores|90|PLG  SAN FELIPE ',
+    'Guamuchi|26|GEN GUAMUCHIL ',
+    'Irapuato|04|HGS IRAPUATO ',
+    'Irapuato|05|GEN VALLE DE SANTIAGO',
+    'Irapuato|81|GEN PENJAMO ',
+    'Irapuato|82|GEN SILAO-GTO  ',
+    'Leon|20|GEN LEON, GUANAJUATO',
+    'Leon|95|GEN LAGOS DE MORENO ',
+    'LaPiedad|16|GEN',
+    'LaPiedad|55|GEN',
+    'Mazatlan|25|GEN MAZATLAN ',
+    'Mazatlan|46|GEN ESCUINAPA ',
+    'Mochis|27|GEN LOS MOCHIS',
+    'Mochis|48|GEN LOS MOCHIS ',
+    'Mochis|49|GEN GUASAVE ',
+    'Queretar|02|GEN QUERERETARO  ',
+    'Queretar|32|PLG QUERETARO  ',
+    'Queretar|33|GEN GALERAS ',
+    'SanJoseI|13|GEN SAN JOSE ITURBIDE ',
+    'SanJoseI|79|PLG  SAN LUIS DE LA PAZ ',
+    'SanJuan|06|GEN SAN JUAN DEL RIO ',
+    'SanJuan|88|PLG  CAZADERO',
+    'SanLuis|23|GEN SAN LUIS POTOSI ',
+    'SanLuis|76|GEN RIO VERDE ',
+    'SnMiguel|03|GEN SAN MIGUEL',
+    'Mazatlan|03|GAS NE MAZATLAN ',
+    'Tula|28|GEN ATITALAQUIA',
+    'Veracruz|10|GEN VERACRUZ ',
+    'Veracruz|34|GEN LA MANCHA ',
+    'Veracruz|50|GEN CORDOBA',
+    'Veracruz|53|GEN ALVARADO ',
+    'Veracruz|54|GEN COSAMALOAPAN',
+    'Xalapa|08|XALAPA',
+    'Xalapa|36|MARTINEZ',
+    'Xalapa|34|XALAPA',
+    'Xalapa|35|XALAPA',   
+    'Acambaro|12|GEN ACAMBARO',
+    'Acambaro|84|GEN ZITACUARO',
+    'Acambaro|87|PLG ZINAPECUARO',
+    'LazaroCardenas|14|GEN',
+    'LazaroCardenas|45|GEN',
+    'Moroleon|18|GEN',
+    'Moroleon|91|PLG URIANGATO',
+    'Moroleon|37|PLG PURUANDIRO',
+    'Moroleon|38|GEN',
+    'Moroleon|39|GEN',    
+    'Salvatierra|17|GEN SALVATIERRA'
+
+        ];
+
+    var servers =
+        [
+        'Acambaro' ,      
+'Aguascalientes' ,
+'Arandas'   ,     
+'Celaya'   ,      
+'Culiacan'  ,     
+'Dolores'  ,      
+'Guadalaj' ,      
+'Guamuchi'  ,     
+'Irapuato' ,      
+'LaPiedad'  ,     
+'LazaroCardenas' ,
+'Leon'     ,      
+'Mazatlan'  ,     
+'Mochis'   ,      
+'Monterrey' ,     
+'Morelia'  ,      
+'Moroleon' ,      
+'Queretar' ,      
+'Salvatierra' ,   
+'SanJoseI'  ,     
+'SanJuan'  ,      
+'SanLuis' ,       
+'SnMiguel',       
+'Tepatitlan' ,    
+'Tula'   ,        
+'Uruapan'  ,      
+'Veracruz'   ,    
+'Xalapa'   ,      
+        'Admin'
+        ];
+
+
+    var arrPlaRep = [
+    { planta: "01", servidor: 'Celaya' },
+    { planta: "02", servidor: 'Queretar' },
+    { planta: "03", servidor: 'SnMiguel' },
+    { planta: "04", servidor: 'Irapuato' },
+    { planta: "06", servidor: 'SanJuan' },
+    { planta: "07", servidor: 'Dolores' },
+    { planta: "08", servidor: 'Xalapa' },
+    { planta: "09", servidor: 'Morelia' },
+    { planta: "10", servidor: 'Veracruz' },
+    { planta: "12", servidor: 'Acambaro' },
+    { planta: "13", servidor: 'SanJoseI' },
+    { planta: "14", servidor: 'LazaroCardenas' },
+    { planta: "15", servidor: 'Uruapan' },
+    { planta: "16", servidor: 'LaPiedad' },
+    { planta: "17", servidor: 'Salvatierra' },
+    { planta: "18", servidor: 'Moroleon' },
+    { planta: "19", servidor: 'Arandas' },
+    { planta: "20", servidor: 'Leon' },
+    { planta: "21", servidor: 'Monterrey' },
+    { planta: "23", servidor: 'SanLuis' },
+    { planta: "24", servidor: 'Culiacan' },
+    { planta: "25", servidor: 'Mazatlan' },
+    { planta: "26", servidor: 'Guamuchi' },
+    { planta: "27", servidor: 'Mochis' },
+    { planta: "28", servidor: 'Tula' },
+    { planta: "29", servidor: 'Aguascalientes' },
+    { planta: "65", servidor: 'Tepatitlan' },
+    { planta: "66", servidor: 'Guadalaj' }
+    ];
+</script>

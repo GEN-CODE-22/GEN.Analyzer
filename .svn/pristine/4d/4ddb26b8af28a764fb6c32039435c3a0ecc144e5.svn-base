@@ -1,0 +1,295 @@
+﻿@{
+    ViewBag.Title = "Impresion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>Analyzer</title>
+
+</head>
+
+    <body style="overflow:scroll; background:#ffffff;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!--<a class="navbar-brand" href="#">ANALYZER</a>-->
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <!--
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>
+                </ul>
+                    -->
+                <form style="float:right" class="form-inline my-2 my-lg-0">
+
+                    <a class="nav-link" href="#">SERVIDOR: @ViewBag.Srv</a>
+                    <a id="usr" class="nav-link" href="#">USUARIO: @ViewBag.Usr</a>
+
+                    <!--
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        -->
+                </form>
+            </div>
+        </nav>
+
+
+        <label id="serv" style="display:none;">@ViewBag.Srv</label>
+        <!--
+        <label id="usr">USUARIO: @ViewBag.Usr</label>
+            -->
+        <label id="rol" style="display:none;">@ViewBag.Rol</label>
+
+        <!-- nuevo menu-->
+        <table id="tablaRecepcion" style="width:100%;display:inline">
+            <tr>
+                <!--
+                <th class="tg2-ed5u" colspan="5">
+                    <div class=" card bg-primary text-white shadow">
+                        <div class="card-body">
+                            Analisis recepción / distribución
+
+                        </div>
+                    </div>
+                </th>-->
+            </tr>
+            <tr style="width:100%">
+                <!-- Actividad pedidos-->
+                <td style="width:33%">
+                    <div id="divActPed" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%; cursor:pointer;" onclick="openNewWindowPedidos()">
+                        <div class=" card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%;float:left">
+                                <img src="@Url.Content("~/Images/LOGO_PEDIDOS_ANALIZER.png")" style="width: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>ACTIVIDAD PEDIDOS</h3>
+                                <p>Muestra de forma geografica la distrubucion de notas de venta, y generacion de reportes varios.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- estaciones-->
+                <td style="width:33%">
+                    <div id="divActEst" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowEstaciones()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%;float:left">
+                                <img src="@Url.Content("~/Images/Estacion.png")" style="width: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>ACTIVIDAD ESTACIONES (DESARROLLO)</h3>
+                                <p>Muestra informacion sobre la actividad de las estaciones de carburación.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- tiempos-->
+                <td style="width:33%">
+                    <div id="divTiem" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowTiempos()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%;float:left">
+                                <img src="@Url.Content("~/Images/tiempo.png")" style="width: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>TIEMPOS</h3>
+                                <p>Genera reportes de tiempos de atención, recepción de pedidos, cancelaciones etc.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <!-- gestion app-->
+                <td style="width:33%">
+                    <div id="divActApp" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowGestionApp()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%;float:left">
+                                <img src="@Url.Content("~/Images/LOGO_APP_ANALIZER.png")" style="height: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>ACTIVIDAD APP</h3>
+                                <p>Muetstra la distribucion de descargas de la APP del cliente asi como su actividad.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- gerentes-->
+                <td style="width:33%">
+                    <div id="divActGer" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowGerentes()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%;float:left">
+                                <img src="@Url.Content("~/Images/personal.png")" style="width: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>GERENTES</h3>
+                                <p>Muestra información de interes para la gerencia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- clientes-->
+                <td style="width:33%">
+                    <div id="divCte" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowClientes()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%; float:left;">
+                                <img src="@Url.Content("~/Images/FindClient.png")" style="width: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>CLIENTES</h3>
+                                <p>Muestra de forma geografica las descargas de los clientes. </p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <!-- logeos-->
+                <td style="width:33%">
+                    <div id="divLog" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowLogeos()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%; float:left;">
+                                <img src="@Url.Content("~/Images/control_logeo.png")" style="height: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>LOGEOS</h3>
+                                <p>Registro, modificacion, bajas, monitoreos de usuarios.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- credito y cobranza-->
+                <td style="width:33%">
+                    <div id="divcc" class="card mb-4 py-3  shadow border-bottom-primary" style="height:200px; width:100%;cursor:pointer;" onclick="openNewWindowCC()">
+                        <div class="card-body" style="height:100%; width:100%;">
+
+                            <div style="display:inline-block; width:30%; float:left;">
+                                <img src="@Url.Content("~/Images/bill.png")" style="height: 130px" />
+                            </div>
+                            <div style="display:inline-block; width:65%;">
+                                <h3>CREDITO Y COBRANZA</h3>
+                                <p>Informacion de seguimiento de cobranza.</p>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+               
+                <td style="width:33%">
+                   
+                </td>
+            </tr>
+
+        </table>
+       
+     
+
+
+       
+
+
+
+    </body>
+</html>
+
+
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+
+<script src="~/Scripts/main.js"></script>
+<script src="~/Scripts/tilt.jquery.min.js"></script>
+<script>
+    $("#scrollH").scrollLeft(300);
+    $(document).ready(function () {
+        var servidor = document.getElementById('serv').innerText;
+
+
+        var rol = document.getElementById('rol').innerText;
+
+
+
+        switch (rol) {
+            case "Personal":
+                document.getElementById('divCte').style.display = "none";
+                document.getElementById('divLog').style.display = "none";
+                document.getElementById('divcc').style.display = "none";
+                document.getElementById('divActGer').style.display = "none";
+                break;
+            case "Gerente":
+                if (servidor != "Admin") {
+                    document.getElementById('divCte').style.display = "none";
+                    document.getElementById('divLog').style.display = "none";
+
+                }
+
+                break;
+            case "CredCob":
+                document.getElementById('divActPed').style.display = "none";
+                document.getElementById('divActEst').style.display = "none";
+                document.getElementById('divTiem').style.display = "none";
+                document.getElementById('divActApp').style.display = "none";
+                document.getElementById('divActGer').style.display = "none";
+                document.getElementById('divCte').style.display = "none";
+                document.getElementById('divLog').style.display = "none";
+
+                break;
+            default:
+
+        }
+
+
+
+    });
+    function openNewWindowPedidos() {
+        window.open("/Home/MapaGeneral");
+    }
+    function openNewWindowGestionApp() {
+        window.open("/Home/Analizer_app");
+    }
+    function openNewWindowTiempos() {
+        window.open("/Home/Tiempos");
+    }
+    function openNewWindowClientes() {
+        window.open("/Home/Clientes");
+    }
+    function openNewWindowLogeos() {
+        window.open("/Home/logeos");
+    }
+    function openNewWindowEstaciones() {
+        window.open("/Home/Estaciones");
+    }
+    function openNewWindowGerentes() {
+        window.open("/Home/Gerentes");
+    }
+    function openNewWindowCC() {
+        window.open("/Home/CreditoyCobranza");
+    }
+    function openNewWindowNegocios() {
+        window.open("/Home/Negocios");
+    }
+
+</script>
+<style>
+    #scrollH {
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+</style>

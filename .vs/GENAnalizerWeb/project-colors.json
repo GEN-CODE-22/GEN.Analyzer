@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c48dd185-24fe-46b5-9fe2-07b25f238fd7": {
+      "ProjectGuid": "c48dd185-24fe-46b5-9fe2-07b25f238fd7",
+      "DisplayName": "GENAnalizerWebDAL",
+      "ColorIndex": 0
+    },
+    "c34b73cc-d13a-4f65-9d03-595dd006416a": {
+      "ProjectGuid": "c34b73cc-d13a-4f65-9d03-595dd006416a",
+      "DisplayName": "GENAnalizerWeb",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

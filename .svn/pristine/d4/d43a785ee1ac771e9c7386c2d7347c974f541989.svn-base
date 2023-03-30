@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Inicio Sesion</title>
+    <meta>
+    <link rel="stylesheet" type="text/css" href="~/Styles/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Styles/main.css">
+    <meta />
+</head>
+<body>
+    <!--inicio de secion don -->
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"><center><img src="~/Images/LOGO_ANALIZER.png" alt="IMG" style="margin:10px;"></center></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4"> ANALYZER </h1>
+                                    </div>
+                                    
+                                        <center>                                                                            
+                                                <input class="form-control" type="text" placeholder="Usuario" id="usr">
+                                                <br />                                             
+                                                <input class="form-control" type="password" placeholder="Contraseña" id="pwd">
+                                                    
+                                                
+                                                <center>
+                                                    <div class="checkbox">
+                                                        <input id="chkGte" type="checkbox" onchange="esGerente(this)"> <label>¿Eres Gerente?</label>
+                                                    </div>
+                                                    <div id="SeccGte" style="display:none;">
+                                                        <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
+                                                        <select id="slectservidor2" class="form-control"> </select>
+                                                        <br />
+                                                    </div>
+                                                </center>
+                                                
+                                                    <button class="btn btn-danger" style="width:100%" onclick="login()">Entrar</button>
+                                              
+
+                                                <div class="text-center p-t-12">
+                                                    <span class="txt1">
+                                                        ¿Nuevo?
+                                                    </span>
+                                                    <a class="txt2" href="#" onclick="solitarCuenta()">
+                                                        Solicta una cuenta...
+                                                    </a>
+                                                </div>                                          
+                                        </center>
+                                                                   
+                                </div>
+                           
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+  
+
+ 
+    <center>
+        <dialog id="DlgPeticionUsr" style="width:33%" >
+
+
+            <div class="card"><center>
+    
+        SOLICITUD DE USUARIO
+    
+</center>
+<table style="width:100%;">
+    <tr>
+        <td>
+            <center>Servidor:</center>            
+        </td>
+        <td>
+
+            <select id="slectservidor" class="form-control"> </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Usuario:</center>
+        </td>
+        <td>
+            <input class="form-control" type="text" name="" placeholder="Usuario" id="InpUsr">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Contraseña:</center>
+        </td>
+        <td>
+
+            <input class="form-control" type="text" name="" placeholder="Contraseña" id="InpPass">
+
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>Correo:</center>
+            
+
+        </td>
+        <td>
+
+            <input class="form-control" type="email" name="" placeholder="Correo" id="InpEml">
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <center>Nombre:</center>
+            
+
+        </td>
+        <td>
+            <input class="form-control" type="text" name="" placeholder="Nombre" id="InpNom">
+
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+
+           
+
+        </td>
+        <td>
+
+           
+
+        </td>
+    </tr>
+</table>
+            <div style="width:100%"><button class="btn btn-danger" onclick="enviarSolicitud()" style="width:30%; display:inline-block"> Enviar </button>
+<button class="btn btn-danger" onclick="cerrarDialogo()" style="width:30%; display:inline-block">Cerrar </button>
+                </div>
+                
+             </div>
+           
+               
+            
+        </dialog>
+    </center>
+</body>
+</html>
+<style>
+    body{
+        margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100vh;
+         background: #9053c7;
+  background: -webkit-linear-gradient(-135deg, #bdbbbb, #fff);
+  background: -o-linear-gradient(-135deg, #bdbbbb, #fff);
+  background: -moz-linear-gradient(-135deg, #bdbbbb, #fff);
+  background: linear-gradient(-135deg,#bdbbbb, #fff);
+    }
+    .login_box{
+        width: 320px;
+        height :430px;
+        background:#d7d8e6;
+        color:#fff;
+        top:50%;
+        left:50%;
+        position:absolute;
+        transform:translate(-50%,-50%);
+        box-sizing:border-box;
+        padding:70px 30px;
+        border-radius: 10%;
+    }
+    .login_box .imgLogin {
+        width: 150px;
+        height: 200px; 
+        border-radius: 10%;
+        position: absolute;
+
+        top:-100px;
+        left: calc(50% - 80px);
+
+    }
+        .login_box h1 {
+            margin:0;
+            padding:80px 0 20px ;
+            text-align:center;
+            font-size: 22px; 
+
+        }
+
+    .login_box label{
+        margin : 0;
+        padding:0 ;
+        top:100px;
+        font-weight: bold;
+        display: block;
+    }
+        .login_box input {
+            width: 100%;
+            margin-bottom: 20px;          
+            border: none;
+            outline: none; 
+            height: 30px; 
+            color:#000000;
+            font-size: 16px; 
+        }
+
+       .login_box button{
+           border: none;
+           outline: none;
+           height: 40px;
+           background: #f25858;
+           color: #000000;
+           border-radius: 20px; 
+           width: 100%;
+           padding:0  20px ;
+       }
+</style>
+<script src="~/Scripts/main.js"></script>
+<script src="~/Scripts/tilt.jquery.min.js"></script>
+
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+<script>
+
+    var dialogos = [];
+    $(document).ready(function () {
+        document.getElementById('header_layout').style.display = "none";
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slectservidor");
+            var y = document.getElementById("slectservidor2");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+            y.add(option);
+        }
+        var option = document.createElement("option");
+        option.text = "selecciona";
+        x.add(option);
+        y.add(option);
+
+
+
+    });
+   
+    function login() {
+        var usr = $("#usr").val();
+        var pwd = $("#pwd").val();
+        var srv = $("#slectservidor2").val();
+        var gte = 'user';
+        if (document.getElementById('chkGte').checked) {
+            var gte = 'Gerente';
+        }
+
+        if (usr.trim() != null | usr.length<1)
+        {
+            if (pwd.trim() != null | pwd.length < 1)
+                {
+               
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/userLogin/",
+                    data: { paramUsr: usr, paramPwd: pwd, paramString1: gte, paramSrv: srv },
+                    datatype: "json",
+                    success: function (data) {
+
+                        if (data != '0') {
+
+                            window.location = '/Home/Impresion';
+                        }
+                        else {
+                            alert("Error de logeo o no existe el usuario");
+                        }
+                    },
+                    error: function (request, status, error) {
+
+                        alert(request.responseText);
+                    }
+                });
+
+                }
+            else
+                {
+                    alert('Ingresa tu contraseña...');
+                }
+
+
+         }else
+         {
+            alert("Ingresa tu usuario...");
+         }
+
+
+       
+    }
+    function solitarCuenta() {
+       
+        cerrarDialogo();
+        var msg = document.getElementById('DlgPeticionUsr');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+    function enviarSolicitud() {
+
+        try {
+            if (document.getElementById("slectservidor").value == '') {
+                miExcepcionUsuario = new Exception("Selecciona un servidor...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpUsr").value == '') {
+                miExcepcionUsuario = new Exception("Coloca nombre de usuario...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpPass").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu contraseña...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpEml").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu correo...");
+                throw miExcepcionUsuario;
+            }
+            if (document.getElementById("InpNom").value == '') {
+                miExcepcionUsuario = new Exception("Coloca tu nombre...");
+                throw miExcepcionUsuario;
+            }
+
+
+            var datos = document.getElementById("slectservidor").value + "/" + document.getElementById("InpUsr").value + "/" + document.getElementById("InpPass").value +
+                  "/" + document.getElementById("InpEml").value + "//" + document.getElementById("InpNom").value +
+                  "// ";
+
+
+
+
+         
+            $.ajax({
+                type: "POST",
+                url: "/Home/emailSolicitud/", // the method we are calling            
+                data: { id: datos },
+                dataType: "json",
+                success: function (result) {
+
+                    alert(result);
+                    cerrarDialogo();
+
+                },
+                error: function (result) {
+                    alert('Problemas al mandar la solicitud');
+                }
+            });
+           
+
+        } catch (excepcion) {
+            alert(excepcion.mensaje);
+
+        }
+        function Exception(mensaje) {
+            this.mensaje = mensaje;
+            this.nombre = "ExceptionUsuario";
+        }
+
+    }
+    function esGerente(check) {
+        if (check.checked) {
+            document.getElementById('SeccGte').style.display = "inline";
+        }
+        else {
+            document.getElementById('SeccGte').style.display = "none";
+        }
+
+    }
+</script>
+<style>
+     dialog{      
+        color: #000;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50px);
+        box-sizing: border-box;       
+        position: absolute;   
+        border:none;
+        border-radius:5px;    
+    }
+</style>

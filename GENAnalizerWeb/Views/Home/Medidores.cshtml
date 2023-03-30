@@ -1,0 +1,737 @@
+﻿@{
+    ViewBag.Title = "Medidores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>Medidores</title>
+
+</head>
+
+
+
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Analyzer</span>
+                </a>
+            </li>
+
+
+
+
+
+            <li id="seccPagosQR" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Pagos QR</span>
+                </a>
+
+            </li>
+
+
+
+
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+
+
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
+
+                                    
+                                    <li class="nav-item active" style="margin:10px;">
+
+                                        <label id="pwd" style="display:none;">@ViewBag.Pwd</label>
+                                    </li>
+                                    <li class="nav-item active" style="margin:10px;">
+                                        <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:40px;" />
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </nav>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Servidor:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><label id="serv">@ViewBag.Srv</label></span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"><label id="usr">@ViewBag.Usr</label></span>
+
+                            </a>
+                            <!-- Dropdown - User Information -->
+
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content <div class="container-fluid">-->
+                <div class="container-fluid">
+
+                    <div id="divPagosQR" style="width:100%">
+                        <div class="card shadow" style="  width:100%;   ">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                <h6 class=" m-0 font-weight-bold text-primary"> Medidores</h6>
+                                <div style="float:right; width:100%;">
+
+                                   
+                                    <div style="float:right; margin:10px;">
+                                        <div class="fi fi-size-sm fi-round-md fi-xlsx" onclick="PagosQrToExcel()" style="display:inline-block;">
+                                            <div class="fi-content">XLSX</div>
+                                        </div>
+
+                                    </div>
+                                    <a class="btn btn-primary btn-icon-split" onclick="getHistMediciones()" style="display:inline-block; float:right;margin:5px;">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-clipboard-check"></i>
+                                        </span>
+                                        <span class="text" style="color:white;">2.-Consutar Mediciones</span>
+                                    </a>
+                                    <a class="btn btn-primary btn-icon-split" onclick="getMedidores(this)" style="display:inline-block; float:right;margin:5px;">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-clipboard-check"></i>
+                                        </span>
+                                        <span class="text" style="color:white;"> 1.- Consutar Medidores</span>
+                                    </a>
+                                    <div style="display:inline-block; float:right;margin:5px;">
+                                        <div style="display:inline-block">
+                                           
+                                            <div style="display:inline-block; float:right"><input id="fecha_ini" type="date" class="form-control" style="display:inline-block; float:right;margin:5px;" /></div>                                                                                       
+                                            <div style="display:inline-block; float:right"><span class="mr-2 d-none d-lg-inline text-gray-600 small">Fecha I:</span></div>
+                                         </div>
+                                        <div style="display:inline-block">
+                                            
+                                            <div style="display:inline-block; float:right"><input id="fecha_fin" type="date" class="form-control" style="display:inline-block; float:right;margin:5px;" /></div>
+                                            <div style="display:inline-block; float:right"><span class="mr-2 d-none d-lg-inline text-gray-600 small">Fecha F:</span></div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div style="width:100%;" class=" shadow card">
+                                <center> <div id="map" style="width:100%; height:1000px;"></div></center>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <!-- End of Content Wrapper -->
+            </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+</body>
+
+<dialog id="dlgGfrMed" style="width:100%; height:99%; overflow:scroll ">
+    <div class="card">
+        <div  style="width:100%; height:100%">
+            <div class="card shadow" style=" width: 100%; height: 100%; ">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                    <h6 class=" m-0 font-weight-bold text-primary"> Graficas</h6>
+                    <div style="float:right; width:100%;">
+
+                        <a class="btn btn-danger btn-icon-split" onclick="cierraDialog()" style="display:inline-block; float:right;margin:5px;">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-window-close"></i>
+                            </span>
+                            
+                        </a>
+                        <a class="btn btn-danger btn-icon-split" onclick="javascript: window.imprimirDIV('dlgGfrMedDiv', 'informacion')" style=" display:inline-block; float:right;margin:5px;">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-print"></i>
+                            </span>
+
+                        </a>
+                        
+                     
+
+                    </div>
+                </div>
+
+                <div style="width:100%;overflow:scroll;height:100%" class=" shadow card">
+                   
+                    <div id="dlgGfrMedDiv" style="width:100%; height:600px" class="shadow card">
+
+
+
+
+                    </div>
+
+                   
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</dialog>
+<dialog id="cargando">
+    <img id="imgCargando" src="~/Images/CARGANDO.gif" />
+
+</dialog>
+
+
+</html>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+<script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
+<script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
+<script>
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables de uso general
+    var map;
+    var Medidores = [];
+    var MedidoresinMap = [];
+    var sensoresUnicos = [];
+    var lecturas = [];
+    var venta = [];
+    var arrBase = [];
+    var dialogos = [];
+
+
+    $(document).ready(function () {
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+        initMap();
+    });
+    // muestra el segmento correspendiente a la seleccion del usuario
+    function mostrarSecmento(ref) {
+        document.getElementById('divcPagosQR').style.display = 'none';
+
+
+        switch (ref.id) {
+            case "seccPagosQR":
+                document.getElementById('divcPagosQR').style.display = 'inline';
+                getLecturas();
+                break;
+
+
+        }
+    }
+    //Inicializa el mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 13,
+        });
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        //google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+
+        //map.addListener('click', function (mapsMouseEvent) {
+        //    if (document.getElementById('checNegocios').checked) {
+        //        getNegocios(mapsMouseEvent.latLng);
+        //    }
+
+        //});
+    }
+    function getMedidores(btn) {
+        /*if (solicitudEnCurso) {
+
+            mensajeSweet("Espera", "Tienes una solicitud en curso, espera a que finalice", "warning");
+            return;
+        }
+        // verifica si tiene otro proceso en curso 
+        if (localStorage.getItem('proceso') != null) {
+            mensajeSweet("Espera", localStorage.getItem('proceso'), "info");
+            return;
+        }
+        var param = {
+            compañia: compañia,
+            planta: planta,
+            fechaI: today,
+            servidor: servidor
+        };*/
+
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+
+        var settings = {
+            "url": "https://apigen.ubiqo.net/v1/Medidores/Sensados/Todos/" + now.getFullYear().toString().substr(2, 2) + ("0" + (now.getMonth() + 1)).slice(-2) + ("0" + now.getDate()).slice(-2) + "0000",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic Z2VuOmdAc0V4cHJlc3NOaTN0MA=="
+            },
+        };
+        /*
+        localStorage.setItem('proceso', 'Tienes un proceso en obtener las lecturas de medidores, espera a que finalice');
+        solicitudEnCurso = true;
+        btn.innerHTML = '<span class="icon text-white-50"> ' +
+            '<i class="fas fa-sync fa-spin"></i> ' +
+        '</span> ' +
+        '<span class="text" style="color:white;">Actualizando</span> ';
+        clearInterval(intervalMedidor);*/
+
+        $.ajax(settings).done(function (response) {
+            Medidores = response;
+            showMedidores();
+           // getNotificacionesNivelDia();
+            localStorage.removeItem('proceso');
+            solicitudEnCurso = false;
+            btn.innerHTML =
+                  '<span class="icon text-white-50"> ' +
+                                        '<i class="fas fa-sync-alt"></i> ' +
+                                    '</span> ' +
+                                    '<span class="text" style="color:white;">Actualizar</span> ';
+            btn.style.display = 'none';
+            intervalMedidor = setInterval(function () { btn.style.display = 'inline'; }, 180000);
+        });
+
+
+        
+    }
+    function showMedidores() {
+       
+        // limpiar los marcadores del  mapa
+        for (var i = 0; i < MedidoresinMap.length; i++) {
+            MedidoresinMap[i].setMap(null);
+        }
+        sensoresUnicos = [];
+        var sensorEncontrado = false;
+        //Obtener una coleccion de sensores unicos buscando la ultima lectura por sensor.
+        for (var i = Medidores.length; i >= 0; i--) {
+            for (var j = 0; j < sensoresUnicos.length; j++) {
+
+                if (sensoresUnicos[j].sensor == Medidores[i].sensor) {
+                    sensorEncontrado = true;
+                    break;
+                }
+            }
+            if (!sensorEncontrado) {
+                if (Medidores[i] != null) {
+                    if (medidorEnplanta(Medidores[i])) {
+                        sensoresUnicos.push(Medidores[i]);
+                    }
+                    //document.getElementById('divMedidores').innerHTML += Medidores[i].sensor + ", " + Medidores[i].direccion.latitud + " " + Medidores[i].direccion.longitud +"</br>";
+                }
+
+            }
+
+            sensorEncontrado = false;
+        }
+
+        // grficar los medidores 
+        var iconSensor = "";
+        var labelPorc = "";
+        for (var i = 0; i < sensoresUnicos.length; i++) {
+
+
+                //Reviso si tiene alguna notificacion previa el cliente sobre su sensor
+               /* for (var j = 0; j < MedidoresConNoti.length; j++)
+                {
+                    if (sensoresUnicos[i].sensor.trim() == MedidoresConNoti[j].sensor_not.trim())
+                    {
+                        iconSensor = iconSensor.replace(".png", "_noti.png");
+                        break;
+                    }
+
+                }*/
+            
+
+
+            var marker = new google.maps.Marker({
+                position: { lat: parseFloat(sensoresUnicos[i].direccion.latitud + ''), lng: parseFloat(sensoresUnicos[i].direccion.longitud + '') },
+                map: map,
+                title: "Dir:" + sensoresUnicos[i].direccion.calle + " " + sensoresUnicos[i].direccion.numero + " " + sensoresUnicos[i].direccion.colonia + " Cte:" + sensoresUnicos[i].cliente.nombre + " Tel:" + sensoresUnicos[i].cliente.telefonoPrincipal,
+                html: sensoresUnicos[i].sensor,
+                icon: {
+                    url: "/Images/Medidor_rojo.png",
+                    labelOrigin: { x: 12, y: -10 }
+                },
+                label: {
+                    text: sensoresUnicos[i].sensor,
+                    color: '#222222',
+                    fontSize: '15px'
+                },
+                //html: id
+            });
+            //mapMedidores.setCenter(marker.position);
+            MedidoresinMap.push(marker);
+            infoWindowG = new google.maps.InfoWindow();
+            google.maps.event.addListener(marker, 'click', MuestraInfo);
+
+            function MuestraInfo(event)
+            {
+                
+            }
+        }
+    }
+    // revisa si el sensor tiene relacion con la planta logeada.
+    function medidorEnplanta(sensor) {
+        for (var i = 0; i < sensor.direccion.companias.length; i++) {
+            if (sensor.direccion.companias[i].planta.trim() == localStorage.getItem("pla"))
+                return true;
+        }
+        return false;
+    }
+    //Consulta mediciones historicas
+    function  getHistMediciones() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+        var findLectidDom="";
+        for (var i = 0; i < sensoresUnicos.length; i++)
+        {
+            findLectidDom +=  sensoresUnicos[i].idDomicilio + ",";
+        }
+            //consultar las notas
+            $.ajax({
+                type: "POST",
+                url: "/Home/getHistMediciones/",
+                data: {  fechaI: fecha_ini, fechaF: fecha_fin,paramString1:findLectidDom },
+                datatype: "json",
+                beforeSend: function () {
+
+                    muestraDialog('cargando');
+                },
+                complete: function () {
+                   
+                },
+                success: function (data) {
+
+                    if (data.length > 0) 
+                    {
+                        cierraDialog();
+                        lecturas=data[0];
+                        venta = data[1];
+                        CalculaConsumoPorc();
+
+                        muestraGraficas();
+                        
+                    }
+                    
+                },
+                error: function (request, status, error) {
+                    document.getElementById('imgload').style.display = "none";
+                    alert(request.responseText);
+                }
+            });
+    }
+    //Grafica una barra deacuerdo al consumo y porcentaje de gas en los medidores
+    function CalculaConsumoPorc()
+    {
+        //var msg = document.getElementById('dlgGfrMed');
+        //msg.showModal();
+       // dialogos.push(msg);
+         arrBase = [];
+        var encontrado = false;
+        var idDomAux = 0;
+        var vtaEncontrada = false;
+        var diaExiste = false;
+        for (var i = 0; i < sensoresUnicos.length; i++)
+        {
+            var arrXObj = [];
+            arrXObj.push(sensoresUnicos[i]);
+            var arrXObjDataLec = [];
+            var data;
+            for (var j = 0; j < lecturas.length; j++)
+            {
+                //reviso si la fecha ya existe para evitar redundancias de dias
+                for (var m = 0; m < arrXObjDataLec.length; m++)
+                {
+                    if (arrXObjDataLec[m].dia == lecturas[j].feclec_mdr.substr(0, 10))
+                    {
+                        diaExiste = true;
+                    }
+                }
+                if (!diaExiste)
+                if (sensoresUnicos[i].idDomicilio == parseInt(lecturas[j].iddom_mdr))
+                {
+                    ///buscar venta en consulta de ubico
+                    for (var k = 0; k < venta.length; k++)
+                    {
+                        if (venta[k].Fecha_surtido.substr(0, 10) == lecturas[j].feclec_mdr.substr(0, 10) && parseInt(venta[k].Id_domicilio) == parseInt(lecturas[j].iddom_mdr))
+                        {
+                            vtaEncontrada = true;
+                            arrXObjDataLec.push({ dia: lecturas[j].feclec_mdr.substr(0, 10), venta: parseFloat(venta[k].Total), porsentaje: parseFloat(lecturas[j].porgas_mdr), Folio_venta: venta[k].Folio_venta });
+
+                        }
+
+                    }
+                    if (!vtaEncontrada)
+                    {
+                        arrXObjDataLec.push({ dia: lecturas[j].feclec_mdr.substr(0, 10), venta: 0, porsentaje: parseFloat(lecturas[j].porgas_mdr), Folio_venta: '' });
+                    }
+                    vtaEncontrada = false;
+                }
+
+                diaExiste = false;
+            }
+            arrXObj.push(arrXObjDataLec);
+
+            arrBase.push(arrXObj);
+        }
+
+        
+
+       
+       
+
+        //imprimirDIV("dlgGfrMed", "");
+
+
+
+
+
+
+    }
+    function muestraGraficas()
+    {
+        document.getElementById("dlgGfrMedDiv").innerHTML = "";
+        //id="dlgGfrMed"id="dlgGfrMed"
+        for (var i = 0; i < arrBase.length ; i++) {
+           
+            graficaGrafxMed(arrBase[i])
+
+        }
+        muestraDialog('dlgGfrMed');
+       
+    }
+    function graficaGrafxMed(med)
+        {
+        document.getElementById("dlgGfrMedDiv").innerHTML += '<div class="graficas" id="divGrfMed' + med[0].sensor + '" class="card shadow" style="width:100%"><div id="divGrf_' + med[0].sensor + '" style="width:100%"> </div>' +
+            '<button class="btn btn-danger" onclick="javascript: window.imprimirDIV(\'divGrf_' + med[0].sensor + '\', \'informacion\')" style="width:40px; float:left;" ><span class="icon text-white-50">' +
+           '                                 <i class="fas fa-print"></i>' +
+           '                             </span></button>';
+
+        
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'DIA');
+        data.addColumn('number', 'VENTA');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+
+        data.addColumn('number', 'PORCENTAJE');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        var labelFec = "";
+        for (var l = 0; l < med[1].length; l++) {
+
+            if (med[1].length >= 60) {
+                labelFec = med[1][l].dia.substr(0, 2);
+            }
+            if (med[1].length < 60)
+            {
+                labelFec = med[1][l].dia.substr(0, 2);
+            }
+            if (med[1].length < 31)
+            {
+                labelFec =med[1][l].dia.substr(0, 2) + med[1][l].dia.substr(3, 2) + med[1][l].dia.substr(8, 2);
+            }
+
+
+            if (med[1][l].venta == 0)
+            {
+                if (l==0 || l==med[1].length-1) 
+                {
+                    data.addRow([labelFec,
+                                                                  0,
+                                                                  med[1][l].dia,
+                                                                 med[1][l].dia,
+                                                                 med[1][l].porsentaje,
+                                                                 med[1][l].porsentaje + '%',
+                                                                 med[1][l].porsentaje + '%']);
+                }
+                else
+                {
+                    data.addRow([labelFec,
+                                              0,
+                                              null,
+                                              null,
+                                             med[1][l].porsentaje,
+                                             med[1][l].porsentaje + '%',
+                                             med[1][l].porsentaje + '%']);
+                }
+               
+            } else
+            {
+                data.addRow([labelFec,
+                            10,
+                            '$' + med[1][l].venta + " Fol:" + med[1][l].Folio_venta + " " + med[1][l].dia,
+                            '$' + med[1][l].venta + " Fol:" + med[1][l].Folio_venta + " " + med[1][l].dia,
+                           med[1][l].porsentaje,
+                           med[1][l].porsentaje + '%',
+                           med[1][l].porsentaje + '%']);
+            }
+
+        }
+        var options = {
+             
+            width: 2500,
+            height: 400,
+            title: med[0].cliente.nombre + " TEL:" + med[0].cliente.telefonoPrincipal + " DIR:" + med[0].direccion.calle + " " + med[0].direccion.numero + " " + med[0].direccion.colonia,
+            hAxis:  {
+              
+                //textPosition: 'out',
+                //slantedText: true,
+                //slantedTextAngle: 90
+            }, 
+            vAxis: {
+                //slantedTextAngle: -90,
+                title: "Porcentaje",
+                // direction: 1,
+            },
+           
+        
+        };
+        // var data = google.visualization.arrayToDataTable(valores);
+        var chart = new google.visualization.AreaChart(document.getElementById('divGrf_' + med[0].sensor));
+        chart.draw(data, options);
+        }
+
+    //function imprimirDIV(contenido, seccion) {
+    //    var ficha = document.getElementById(contenido);
+
+    //    var ventanaImpresion = window.open(' ', 'popUp');
+
+    //    // ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+
+    //    ventanaImpresion.document.write('<html>');
+    //    ventanaImpresion.document.write('<body>');
+    //    ventanaImpresion.document.write('<img src="/Images/logo.png" style="width:150px;"');
+    //    ventanaImpresion.document.write('<center>');
+    //    ventanaImpresion.document.write('<div id="cuerpo">');
+    //    ventanaImpresion.document.write(ficha.innerHTML);
+    //    ventanaImpresion.document.write('</div>');
+    //    ventanaImpresion.document.write('</center>');
+
+    //    ventanaImpresion.document.write('<style type="text/css">');
+    //    switch (seccion) {
+    //        case "PrimerUltimoServicio":
+    //            ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  div.divContenedor { page-break-before: always;   page-break-inside: avoid; } button { display: none;}  .divContenedor { margin: 0mm 0mm 0mm 40mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   }');
+    //            break;
+    //        case "promediosTiepmosServicios":
+    //            ventanaImpresion.document.write('@@media print{ body { } img {display: inline; width: 100px; height: 50px;}   img { position: fixed; top: 0; left: 2px; }  div.contenedores { page-break-inside: avoid; } button { display: none;}  .contenedores { margin: 0mm 0mm 0mm 30mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #infogral {display: inline; position: fixed; bottom: 0; opacity: 0.5; }   }');
+    //            break;
+    //        case "informacion":
+    //            ventanaImpresion.document.write('@@media print{ body { } img {display: inline;}   img { position: fixed; top: 0; left: 2px;  width: 150px; height: 75px;}  .descGral {position: fixed; bottom: 0;  font-size: 15px;   } .divTblChoferes {page-break-inside: avoid;  } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  .graficas { page-break-inside: avoid;   page-break-inside: avoid; } button { display: none;}  .graficas { margin: 25mm 0mm 0mm 0mm; }  .descGral {color: #2C5690; font-weight: bold;display: block; font-size: 20px;  opacity: 0.5; } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }   #promXchofer { overflow: visible; width: 100%}  }');
+    //            break;
+    //        case "porcPromChof":
+    //            ventanaImpresion.document.write('@@media print{ body { } img {display: inline; margin-bottom: 5cm;} #encabezado{ position: fixed; bottom: 0; left: 1px;  opacity: 0.5; }  img { position: fixed; botton: 0; left: 1px;  width: 100px; height: 70px;}   .divTblChoferes {  page-break-inside: avoid; margin: 0mm 0mm 0mm 30mm; width: 100% } button { display: none;}   label {color: #2C5690; font-weight: bold;display: block; font-size: 15px;  } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }  #logo{ }}');
+    //            break;
+    //        case "gerencial":
+    //            ventanaImpresion.document.write('@@media print{ body { } img {display: inline; margin-bottom: 5cm;} #fechaReporte {position: fixed; bottom: 0; rigth: 20px;  opacity: 0.5;} #EncabezadoReporteGerencial{ position: fixed; top: 0; left: 200px;  opacity: 0.5; }  img { position: fixed; botton: 0; left: 1px;  width: 150px; height: 70px;}  button { display: none;}   label {color: #2C5690; font-weight: bold;display: block; font-size: 20px;  } #logo {display: inline; position: fixed; top: 0; left: 2px;  width: 150px; height: 75px; }  #lblCancelaciones{  }');
+    //            break;
+    //    }
+
+    //    ventanaImpresion.document.write('@@media print{     table tr:nth-child(even) { border:black 1px solid; } table tr:nth-child(odd) { background-color: #fff; border:black 1px solid;} table td {border:black 1px solid; }}');
+
+    //    ventanaImpresion.document.write('</style>');
+    //    ventanaImpresion.document.write('</body>');
+    //    ventanaImpresion.document.write('</html>');
+    //    ventanaImpresion.document.close();
+    //    ventanaImpresion.print();
+    //    ventanaImpresion.close();
+
+    //}
+   
+
+
+
+
+    
+    
+</script>

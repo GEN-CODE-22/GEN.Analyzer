@@ -1,0 +1,773 @@
+﻿@{
+    ViewBag.Title = "Estaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<body>
+    <div id="map">
+    </div>
+    <div id="form_map">
+        <CENTER>
+            <h2>ESTACIONES</h2>
+        </CENTER>
+        SERVIDOR:
+        <label id="serv">@ViewBag.Srv</label>
+        USUARIO:
+        <label id="usr">@ViewBag.Usr</label>
+        <label id="notastotales"></label>
+        <label id="notascongps"></label>
+        <label id="notassingps"></label><button id="btnnotassingpstoexcel" onclick="notasToExcel('sinGPS')" style="display:none;"></button>
+        <br />
+        <center>
+            PLANTA:<br />
+            <select id="select_plantas" class="field-style field-split align-left"></select><br />
+            FECHA INICIAL:<br />
+            <input type="date" class="field-style field-split align-left" style=" width: 95%" id="fecha_ini"><br />
+            FECHA FINAL:<br />
+            <input type="date" class="field-style field-split align-left" style=" width: 95%" id="fecha_fin"><br />
+            <br />
+            <button id="btnInfoServer" onclick="getNotas()" style="width: 100%">Consultar Notas</button><br /><br />
+
+        <div>
+            <button id="btnNotasAnalizar" onclick="vtaRutas(this)" style="width: 100%"></button><br />
+            <button id="btnNotasSinGPS" onclick="vtaRutas(this)" style="width: 100%"></button><br />
+            <button id="btnNotasConGPS" onclick="vtaRutas(this)" style="width: 100%"></button><br />
+            <br />
+            <select id="select_rutas_estaciones"> </select><br />          
+            <textarea id="colRutas" rows="10" style="width: 85%; height: 30px;"></textarea><br />
+            <button  onclick="agregaRutasAnalisi()" style="width: 30%"> Agregar</button>
+            <button onclick="quitarultimaRuta()" style="width: 30%"> Quitar</button>
+            <button  onclick="analizarColRutas()" style="width: 30%"> Analizar</button>
+        </div>
+          
+
+
+        </center>
+    </div>
+
+    <!--imagen de cargando-->
+    <div id="imgload">
+        <img src="~/Images/CARGANDO.gif" style="display:inline" />
+    </div>
+    <!-- div para seleccionar el servidor para el usuario admin-->
+    <dialog id="buscarColonina">
+        <select id="select_servidores" ></select>
+        <br />
+        <button onclick="cerrarDialogo()">Cerrar</button>     
+    </dialog>
+
+    <dialog id="dialogReportes">     
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('divReportes', 'rutas')">Imprimir Todo</button>
+        <div id="divReportes" style="height: 400px;">
+
+        </div>
+    </dialog>
+    <dialog id="dialogReporteColRutas">
+        <button onclick="cerrarDialogo()">Cerrar</button>
+        <button onclick="javascript: window.imprimirDIV('contenedordivReporteColRutas', 'colrutas')">Imprimir </button>
+        <br />
+        <div id="contenedordivReporteColRutas">
+            <label id="descGral"></label>
+           
+         <div id="divReporteColRutas"></div>
+        </div>
+        
+    </dialog>
+
+
+</body>
+</html>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables de uso General
+    var notas = [];        // almacena las notas de la consulta a la base de datos.
+    var dialogos = [];        // contiene los dialogos en pantalla.
+    var plantas = [];         // contiene las plantas relacionas con la consulta.
+    var rutas = [];          // contiene las rutas que trae la consulta.
+    var arr_marcadores = []; // contiene los marcadores mostrados en el mapa.
+    var notasEvaluar = [];   //  nota que se grafican
+    var notasSinGPS = [];
+    var notasConGPS = [];
+    var strIntervaloFechas;
+
+    // inicializacion de los componentes del modulo 
+    $(document).ready(function () {
+        // colocar fechas actuales en los campos de fecha 
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+   
+      
+        document.getElementById('imgload').style.display = "none";
+      
+        // desabilitar opciones si no es usuario administrador
+        if (document.getElementById("serv").innerHTML.trim() != 'Admin') {
+            document.getElementById('btnToExcel').style.display = "none";
+        }
+
+
+        // colocar los servidores en el select de los servidores
+        var x = document.getElementById("select_servidores");
+        var option = document.createElement("option");
+        option.text = "...";
+        x.add(option);
+        for (var k = 0; k < servers.length; k++) {
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+
+
+    });
+    // inicializa el mapa en el navegador
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+
+
+        map.addListener('click', function (e) {
+            // 3 seconds after the center of the map has changed, pan back to the
+            // marker.
+            alert(e.latLng);
+        });
+
+        //marker.addListener('click', function () {
+        //    map.setZoom(8);
+        //    map.setCenter(marker.getPosition());
+       // });
+    }
+    // evento que ocurre al finalizar el trazado de un poligono.
+    function finDraw(event)
+    {
+
+    }
+    // obtiene las notas de tipo carburacion.
+    function getNotas()
+    {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+        strIntervaloFechas = fecha_ini + ' - ' + fecha_fin;
+
+        document.getElementById('imgload').style.display = "inline";
+       
+
+        var serv = document.getElementById("serv").innerHTML.trim();
+
+        if (serv == 'Admin' & $("#select_servidores option:selected").text() == "...") {
+            servidoresNotas = '';
+            // seleccionar los servidores que seran consultados por el usuario admin
+            document.getElementById('imgload').style.display = "none";
+           
+                cerrarDialogo();
+                var msg = document.getElementById('buscarColonina');
+                msg.showModal();
+                dialogos.push(msg);
+
+        } else {
+            if (serv != 'Admin')
+                servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+            else
+                servidoresNotas = $("#select_servidores option:selected").text();
+        }
+
+        if (servidoresNotas != '') {
+         
+            //consultar las notas
+            $.ajax({
+                type: "POST",
+                url: "/Home/getNotasCarb/",
+                data: { paramSrv: "'"+servidoresNotas.toLowerCase()+"'", fechaI: fecha_ini, fechaF: fecha_fin },
+                datatype: "json",
+                success: function (data) {
+
+                    if (data.length > 0)
+                    {
+                        notas = [];
+                        notas = data;
+                        document.getElementById('imgload').style.display = "none";
+                        //getNotasSinGPS(notas);
+                        //muestraIconos();
+                        $("#select_servidores").val("...");
+                        colocarPlantas();
+                        dibujanotas();
+                    }
+                    else {
+                           alert("No existen notas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                           cerrarDialogo();
+                         }
+                },
+                error: function (request, status, error) {
+                    cerrarDialogo();
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+    }
+    // colocar las notas en el mapa
+    function dibujanotas()
+    {
+        var planta = $("#select_plantas option:selected").text();
+        var ptosLatLong = [];
+        limpiarMarcadores();
+        var indice = 0;
+        var iconPath = "";
+        notasEvaluar = [];
+
+
+        for (var i = 0; i < notas.length; i++) {
+
+            if (notas[i].pla_nvta.trim() == planta || planta == "Todas") {
+              
+                notasEvaluar.push(notas[i]);
+
+                for (var j = 0; j < plantas.length; j++) {
+                    if (plantas[j].planta == notas[i].pla_nvta) {
+                        indice = plantas[j].indice;
+                        
+                    }
+                    
+                }
+
+                
+                iconPath = "/Images/EST_PLA_"+indice+".png";
+
+                ptosLatLong = notas[i].gps_nvta.split(' ');
+                var marker = new google.maps.Marker({
+                    position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
+                    map: map,
+                    title: 'PLANTA:' + notas[i].pla_nvta + 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fes_nvta,
+                    icon: iconPath,
+                    html: ''
+                });
+
+                arr_marcadores.push(marker);
+
+            }
+        }
+        notasConSinGPS();
+    }
+    // evento al cambiar de planta 
+    $(select_plantas).change(function () {
+        dibujanotas();
+    });
+    // obtiene las notas con y sin gps
+    function notasConSinGPS()
+    {
+        notasSinGPS = [];
+        notasConGPS = [];
+
+        for (var i = 0; i < notasEvaluar.length; i++) {
+            if (notasEvaluar[i].gps_nvta != null && notasEvaluar[i].gps_nvta.trim() != '') {
+                notasConGPS.push(notasEvaluar[i]);
+            }
+            else
+            {
+                notasSinGPS.push(notasEvaluar[i]);
+            }
+        }
+
+        
+
+            document.getElementById('btnNotasAnalizar').innerText="Notas totales para Analizar "+ notasEvaluar.length;
+            document.getElementById('btnNotasSinGPS').innerText="Notas sin GPS "+notasSinGPS.length;
+            document.getElementById('btnNotasConGPS').innerText="Notas con GPS "+notasConGPS.length;
+
+    }
+    // obtiene las el resumen de las ventas de las rutas de carburacion.
+    function vtaRutas(button) {
+        var AnalizarNotas = [];
+        document.getElementById('divReportes').innerHTML = "";
+        switch (button.id) {
+            case "btnNotasAnalizar":
+                AnalizarNotas = notas;
+                break;
+            case "btnNotasSinGPS":
+                AnalizarNotas = notasSinGPS;
+                break;
+            case "btnNotasConGPS":
+                AnalizarNotas = notasConGPS;
+                break;       
+        }
+
+        var noServicios = 0;
+        var importe = 0;
+        var nolts = 0;
+
+        var encabezado = document.createElement("LABEL");
+        encabezado.id = "encabezado";
+        encabezado.innerText = "Intervalo " + strIntervaloFechas
+        document.getElementById('divReportes').appendChild(encabezado);
+        for (var i = 0; i < rutas.length; i++) {
+
+
+            var divContenedor = document.createElement("DIV");
+            divContenedor.className = "divRutas";
+            divContenedor.id = "ruta" + rutas[i].trim();
+            divContenedor.style.paddingTop = "40px";
+            divContenedor.style.paddingRight = "20px";
+            divContenedor.style.display = "inline-block";
+
+
+           
+            var label = document.createElement("LABEL");
+            label.innerText = "Ruta" + rutas[i].trim();
+
+            var salto = document.createElement("BR");
+
+            var divScroll = document.createElement("DIV");
+            divScroll.className = "tablas";
+            divScroll.style.width = "width: 100%";
+            divScroll.id = "TblRuta" + rutas[i].trim();
+
+            var salto2 = document.createElement("BR");
+
+            var btnImprimir = document.createElement("BUTTON")
+            btnImprimir.innerText = "Imprimir";
+
+            btnImprimir.setAttribute('onclick', "javascript: window.imprimirDIV('" + divContenedor.id + "','rutas')");
+
+            divContenedor.appendChild(label);
+            divContenedor.appendChild(divScroll);
+            divContenedor.appendChild(salto2);
+            divContenedor.appendChild(btnImprimir);
+
+
+            document.getElementById('divReportes').appendChild(divContenedor);
+
+
+
+             
+            for (var j = 0; j < AnalizarNotas.length; j++) {
+
+                if (AnalizarNotas[j].ruta_nvta.trim()==rutas[i].trim()) {
+                    noServicios++;
+                    importe = importe + parseFloat(AnalizarNotas[j].impt_nvta);
+                    nolts = nolts + parseFloat(AnalizarNotas[j].tlts_nvta);
+                    
+                }
+            }
+
+            // crear tabla api Google 
+            // Tabla promedios
+            var tablapromedios = new google.visualization.DataTable();
+            tablapromedios.addColumn('string', 'No pedidos');
+            tablapromedios.addColumn('string', 'Importe total');
+            tablapromedios.addColumn('string', 'Total de litros');
+                           
+            tablapromedios.addRow([noServicios + '', importe.toFixed(2) + '', nolts.toFixed(2) +''])
+            
+            var contenedor2 = new google.visualization.Table(document.getElementById("TblRuta" + rutas[i].trim()));
+            contenedor2.draw(tablapromedios, { allowHtml: true, showRowNumber: false });
+            google.visualization.events.addListener(contenedor2, 'select', function () {
+                //var row = table3.getSelection()[0].row
+            });
+            // fin de crear tabla api google
+
+
+             noServicios = 0;
+             importe = 0;
+             nolts = 0;
+
+
+           
+
+        }
+
+        cerrarDialogo();
+        var msg = document.getElementById('dialogReportes');
+        msg.showModal();
+        dialogos.push(msg);
+
+
+      
+
+
+
+
+
+    }
+    // analiza un conjunto de rutas
+    function analizarColRutas() {
+        var rutasAnalizar = document.getElementById('colRutas').value.trim().split(',');
+        var NotasAnalizar = [];
+        var notaAnalizar = false;
+
+        for (var i = 0; i < notas.length; i++) {
+
+            for (var j = 0; j < rutasAnalizar.length; j++) {
+                if (rutasAnalizar[j].trim()==notas[i].ruta_nvta.trim()) {
+                    notaAnalizar = true;
+                }
+            }
+            if (notaAnalizar) {
+
+                NotasAnalizar.push(notas[i]);
+            }
+            notaAnalizar = false;
+        }
+        //////////////////////// comenzar a hacer el analisis////////////////////////////
+
+
+        // decalramos la matriz
+        var matrizPedidosxHrxDia = new Array(24);
+        for (i = 0; i < 24; i++) {
+
+            matrizPedidosxHrxDia[i] = Array(7);
+        }
+
+        // rellenamos la matriz con 0´s
+        for (var j = 0; j < 24; j++) {
+
+            for (var k = 0; k < 7; k++) {
+                matrizPedidosxHrxDia[j][k] = 0;
+            }
+        }
+
+        var y = 0, x = 0;
+
+        for (var i = 0; i < NotasAnalizar.length; i++) {
+
+            if (NotasAnalizar[i].fhs_nvta.trim()!='') {
+                var valoresHF = NotasAnalizar[i].fhs_nvta.split(" ");
+                horaPedido = determinaTurno(valoresHF);
+                y = parseInt(horaPedido);
+                x = parseInt(NotasAnalizar[i].dia_semana_sur.trim())
+                matrizPedidosxHrxDia[y][x]++;
+            }
+           
+        }
+
+        var valores = [];
+        var Header = ['Hora', 'DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+        valores.push(Header);
+        for (var m = 0; m < 24; m++) {
+            var temp = [];
+            temp.push(m + '\n Hrs');
+            temp.push(matrizPedidosxHrxDia[m][0]);
+            temp.push(matrizPedidosxHrxDia[m][1]);
+            temp.push(matrizPedidosxHrxDia[m][2]);
+            temp.push(matrizPedidosxHrxDia[m][3]);
+            temp.push(matrizPedidosxHrxDia[m][4]);
+            temp.push(matrizPedidosxHrxDia[m][5]);
+            temp.push(matrizPedidosxHrxDia[m][6]);
+
+            valores.push(temp);
+        }
+
+        var options = {
+
+            width: 1200,
+            height: 500,
+            title: 'Pedidos por dia por hora',
+
+            hAxis: {
+                //slantedTextAngle: -90,
+                title: 'Horas',
+                //direction: 1,
+            },
+            vAxis: {
+
+                title: 'No pedidos',
+
+            }
+        };
+        var data = google.visualization.arrayToDataTable(valores);
+        var chart = new google.visualization.AreaChart(document.getElementById('divReporteColRutas'));
+        chart.draw(data, options);
+
+        cerrarDialogo();
+        var msg = document.getElementById('dialogReporteColRutas');
+        msg.showModal();
+        dialogos.push(msg);
+
+    }
+
+    /////////////////////// funciones de uso general///////////////////////////
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+        
+    }
+    function colocarPlantas()
+    {
+        plantas =[];
+        rutas = [];
+
+        var plantaEncontrada = false;
+        var rutaEncontrada = false;
+        for (var i = 0; i < notas.length; i++) {
+            // obtener las plantas
+            for (var j = 0; j < plantas.length; j++) {
+                if (notas[i].pla_nvta.trim()==plantas[j].planta.trim()) {
+                    plantaEncontrada = true;
+                }
+
+            }
+            if (!plantaEncontrada) {
+                plantas.push( { planta: notas[i].pla_nvta, indice: plantas.length });
+            }
+            plantaEncontrada = false;
+
+            // obtener las rutas
+            for (var k = 0; k < rutas.length; k++) {
+                if (notas[i].ruta_nvta.trim() == rutas[k]) {
+                    rutaEncontrada = true;
+                }
+
+            }
+            if (!rutaEncontrada) {
+                rutas.push(notas[i].ruta_nvta.trim());
+            }
+            rutaEncontrada = false;
+        }
+
+        plantas.sort();
+        rutas.sort();
+        
+        // colcoar las plantas
+        var x = document.getElementById("select_plantas");
+        x.innerHTML = "";
+        var option = document.createElement("option");
+        option.text = "Todas";
+        x.add(option);
+        for (var k = 0; k < plantas.length; k++) {
+            var option = document.createElement("option");
+            option.text = plantas[k].planta.trim();
+            x.add(option);
+        }
+        // colocar las rutas
+       
+        var y = document.getElementById("select_rutas_estaciones");
+        for (var k = 0; k < rutas.length; k++) {
+            var option = document.createElement("option");
+            option.text = rutas[k].trim();
+            y.add(option);
+        }
+
+
+
+
+
+
+    }
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_marcadores.length; i++) {
+            arr_marcadores[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+    function imprimirDIV(contenido, seccion) {
+        var ficha = document.getElementById(contenido);
+        var script1='</scrip';
+        var script2 = 't>';
+        var jquery1=' <script src="https://ajax.googleapis.com/';
+        var jquery2 = 'ajax/libs/jquery/3.4.1/jquery.min.js"></s';
+        var jquery3 = 'cript>';
+        switch (seccion) {
+
+            case "colrutas":
+                document.getElementById('descReporte').value = document.getElementById('descReporte').value;
+                break;
+
+        }
+
+        var ventanaImpresion = window.open(' ', 'popUp');
+
+        // ventanaImpresion.document.write('<link rel="stylesheet" type="text/css" href="~/Styles/stilosImpresion.css" media="print">');
+
+        ventanaImpresion.document.write('<html>');
+        ventanaImpresion.document.write('<body>');
+        ventanaImpresion.document.write('<img src="/Images/logo.png"');
+        ventanaImpresion.document.write('<center>');
+        ventanaImpresion.document.write('<div id="cuerpo">');
+        ventanaImpresion.document.write(ficha.innerHTML);
+        ventanaImpresion.document.write('</div>');
+        ventanaImpresion.document.write('</center>');       
+        ventanaImpresion.document.write('</body>');
+        ventanaImpresion.document.write('</html>');
+        // se agrega el css
+        ventanaImpresion.document.write('<style type="text/css">');
+        switch (seccion) {
+
+            case "colrutas":
+                ventanaImpresion.document.write('@@media print{ body { } img {display: inline; width: 100px; height: 50px;}   img { position: fixed; top: 0; left: 2px; }  div.contenedores { page-break-inside: avoid; } button { display: none;}  .contenedores { margin: 0mm 0mm 0mm 30mm; } #cuerpo { margin: 15mm 0mm 0mm 0mm; }  label {color: #2C5690; font-weight: bold;display: block; font-size: 20px } #encabezado {display: inline; position: fixed; bottom: 0; opacity: 0.5; }   }');
+                break;
+
+        }
+
+        ventanaImpresion.document.write('@@media print{ table tr:nth-child(even) { border:black 1px solid; } table tr:nth-child(odd) { background-color: #fff; border:black 1px solid;} table td {border:black 1px solid; }}');
+
+        ventanaImpresion.document.write('</style>');
+        // se agrega el java script
+      
+        ventanaImpresion.document.write(jquery1 + jquery2 + jquery3);
+
+        ventanaImpresion.document.write('<script type="text/javascript">');
+        ventanaImpresion.document.write(' $(document).ready(function () {');
+       
+        switch (seccion) {
+
+            case "colrutas":
+                
+                ventanaImpresion.document.write(' document.getElementById(\'descGral\').innerText= document.getElementById(\'descReporte\').value;');
+                ventanaImpresion.document.write(' document.getElementById(\'descReporte\').style.display="none";');
+                break;
+
+        }
+
+        ventanaImpresion.document.write('});');
+
+
+
+
+        ventanaImpresion.document.write(script1 + script2);
+       // ventanaImpresion.document.close();
+       // ventanaImpresion.print();
+        //ventanaImpresion.close();
+
+
+
+
+
+    }
+    function agregaRutasAnalisi() {
+        var rutasExistentes = document.getElementById('colRutas').value.split(',');
+        var ruta = $("#select_rutas_estaciones option:selected").text();
+        var rutaConsiderada = false;
+
+        for (var i = 0; i < rutasExistentes.length; i++) {
+            if (rutasExistentes[i] == ruta)
+                rutaConsiderada = true;
+        }
+        if (!rutaConsiderada) {
+            document.getElementById('colRutas').value = document.getElementById('colRutas').value + ruta + ','
+        }
+        
+
+    }
+    function quitarultimaRuta() {
+
+        document.getElementById('colRutas').value = document.getElementById('colRutas').value.substring(0, document.getElementById('colRutas').value.length-5);
+    }
+    function determinaTurno(valores) {
+        var valoresHora = valores[1].split(":");
+        if (valores[2].includes("p")) {
+            switch (valoresHora[0].trim()) {
+                case "01":
+                    return "13";
+                    break;
+                case "02":
+                    return "14";
+                    break;
+                case "03":
+                    return "15";
+                    break;
+                case "04":
+                    return "16";
+                    break;
+                case "05":
+                    return "17";
+                    break;
+                case "06":
+                    return "18";
+                    break;
+                case "07":
+                    return "19";
+                    break;
+                case "08":
+                    return "20";
+                    break;
+                case "09":
+                    return "21";
+                    break;
+                case "10":
+                    return "22";
+                    break;
+                case "11":
+                    return "23";
+                    break;
+                default:
+                    return valoresHora[0].trim();
+
+
+            }
+            return valoresHora[0].trim();
+        }
+        else {
+            return valoresHora[0].trim();
+        }
+    }
+
+
+</script>
+<style>
+
+    #divReportes{
+        overflow: scroll;
+    }
+     #map {
+        height: 100%;
+        width: 100%;
+        border-radius: 2%;
+    }
+      #form_map {           
+        position: relative;
+        top: -95%;
+        float: left;      
+        margin: 10px;
+        width: 320px;
+        height: 800px;
+        background: #d7d8e6;
+        color: #000;
+        opacity: 0.2;
+        border-radius: 5%;
+        }
+        #form_map:hover {
+     opacity: 0.9;
+    }
+
+         #imgload{
+
+
+            background: #d7d8e6;
+            color: #000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50px);
+            box-sizing: border-box;
+            border-radius: 30%;
+            position: absolute;
+            opacity: 0.9;
+
+        }
+</style>
+

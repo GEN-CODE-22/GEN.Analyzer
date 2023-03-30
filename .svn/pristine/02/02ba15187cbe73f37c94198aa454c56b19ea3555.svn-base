@@ -1,0 +1,2123 @@
+﻿@{
+    ViewBag.Title = "Analizer APP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <title>Analyzer APP</title>
+</head>
+
+
+
+
+<!--Nueva Imagen-->
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Analyzer</span>
+                </a>
+            </li>
+             
+            <li   class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed"  aria-expanded="true" aria-controls="collapseUtilities">
+                  
+                    <span>Servidor</span>
+                </a>
+
+            </li>
+                 <select id="select_servidores" class="form-control"></select>
+
+            <li class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed"  aria-expanded="true" aria-controls="collapseUtilities">
+
+                    <span>Plantas</span>
+                </a>
+
+            </li>
+                 <select id="select_plantas" class="form-control"></select>
+            <li class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed"  aria-expanded="true" aria-controls="collapseUtilities">
+
+                    <span>Tipo visualizacion</span>resumen
+                </a>
+
+            </li>
+                        <select id="select_tipo_visualisacion" class="form-control">
+                            <option>PRESENCIA</option>
+                            <option>TIPO DISPOSITIVO</option>
+                            <option>PEDIDOS</option>
+                            <option>SERVICIO DEFAULT</option>
+                        </select><br />
+            <button class="btn btn-outline-primary" onclick="ctesInPoligons()">Clientes en Poligonos</button>
+            <button class="btn btn-outline-primary" onclick="quitarPoligonoLibre()">Borrar poligonos libres</button>
+            <button class="btn btn-outline-primary" onclick=" imprimePoligonos()">Descarga Poligonos Libres</button>
+           
+
+
+           
+
+                    
+
+              
+         
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:60px;" />
+                        <li class="nav-item dropdown">
+                            
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Reportes
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                               
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-danger" onclick="CtestoCSV('Notificacion')">
+                                    <span>
+                                        <img src="~/Images/nietoApp.jpg" style="width:20px;" />
+                                    </span> Ctes para notificacion
+                                </button>                                                             
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-danger" onclick="CtestoCSV('Domicilios')">
+                                    <span>
+                                        <img src="~/Images/nietoApp.jpg" style="width:20px;" />
+                                    </span> Lista de Domicilios
+                                </button>                                                             
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-danger" onclick="CtestoCSV('Consumos')">
+                                    <span>
+                                        <img src="~/Images/nietoApp.jpg" style="width:20px;" />
+                                    </span> Lista de domicilios con consumo
+                                </button>
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-success" onclick="CtesWhatstoCSV('Clientes')">
+                                    <span>
+                                        <img src="~/Images/whatsIcon.png" style="width:20px;" />
+                                    </span> Lista Ctes whats app
+                                </button>
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-success" onclick="CtesWhatstoCSV('Consumos')">
+                                    <span>
+                                        <img src="~/Images/whatsIcon.png" style="width:20px;" />
+                                    </span> Consumo Ctes whats app
+                                </button>
+                                
+
+                                   
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Municipios colonias
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                <label>Colonia</label>
+                                <input class="form-control" placeholder="Plabra clave" type="text" id="txtcolonia" />
+                                ESTADO:
+                                <select class="form-control" id="select_estados"></select>
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="width:32%"><button style="width:100%" class="btn btn-primary" onclick="buscarColonia()">           Buscar Colonia</button></td>
+                                        <td style="width:32%"><button style="width:100%" class="btn btn-primary" onclick="dialogDibujarColonia()">   Colonias Consultadas</button></td>
+                                        <td style="width:32%"><button style="width:100%" class="btn btn-primary" onclick="quitarcolonias()"> Quitar Colonias</button></td>
+                                    </tr>
+                                    <tr>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <td><button class="btn btn-danger" onclick="cerrarDialogo()">Cerra</button></td>
+
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </li>
+                            </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 
+                                 Registros
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                <label>Fecha Incial de registro</label>
+                                <input id="fecIniDes" type="date" class="form-control" style="width:200px;" />
+                                <label>Fecha Final de registro</label>
+                                <input id="fecFinDes" type="date" class="form-control" />
+                                <br />
+                                <button style="width:100%; margin:2px;" class="btn btn-outline-danger" onclick="getInfoApp()">
+                                    <span>
+                                        <img src="~/Images/nietoApp.jpg" style="width:20px;" />
+                                    </span> Consulta descargas app nieto
+                                </button>
+                                
+                                <div style="width:100%;">
+                                    <center>
+                                        <button style="width:100%;" class="btn btn-outline-success" onclick="getInfoCtesWhatsApp()">
+                                            <span>
+                                                <img src="~/Images/whatsIcon.png" style="width:20px;" />
+                                            </span> Consulta registro con Mia
+                                        </button>
+                                        <div style="display:inline-block; width:49%;"><input id="inpCiaWhats" type="text" placeholder="Cia" style="width:100%" class="form-control  is-valid" /></div>
+                                        <div style="display:inline-block; width:49%;"><input id="inpPlaWhats"  type="text" placeholder="Pla" style="width:100%" class="form-control  is-valid" /></div>
+                                    </center>
+                                </div>
+
+                               
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               
+                                 Consumo Clientes 
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+
+                                <label >Fecha Incial de Consumo</label>
+                                <input id="fecIniCons" type="date" class="form-control" />
+                                <label >Fecha Final de Consumo</label>
+                                <input id="fecFinCons" type="date" class="form-control" />
+
+                                <br />
+                                <div style="width:100%; border-radius:3px; background:#ffffff">
+                                    <center><label>Servicio</label></center>
+                                    <input id="chk_ConsCil" type="checkbox" name="srvCil" value="ConsCil"  onchange="cambioValorCheck(this)">Cilindro
+                                    <input id="chk_ConsEst" type="checkbox" name="srvEst" value="ConsEst"  onchange="cambioValorCheck(this)">Estacionario
+
+                                </div>
+                                <br />
+                                <input id="inpConsCte" type="number" style="width:100%" placeholder="Consumo Minimo en pesos" />
+                                <br />
+                                
+                                <center>
+                                    <button style="width:100%;" class="btn btn-outline-danger" onclick="getConsumoClientes()">
+                                        <span>
+                                            <img src="~/Images/nietoApp.jpg" style="width:20px;" />
+                                        </span>  Consumo Clientes APP
+                                    </button>
+                                    
+                                    <button style="width:100%;" class="btn btn-outline-success" onclick="getPedCtesWhatsApp()">
+                                        <span>
+                                            <img src="~/Images/whatsIcon.png" style="width:20px;" />
+                                        </span> Consulta pedidos con Mia
+                                    </button>
+
+                                    <label>Compañia y planta (opcional)</label>
+                                    <div style="display:inline-block; width:49%;"><input id="inpCiaPed" type="text" placeholder="Cia" style="width:100%" class="form-control" /></div>
+                                    <div style="display:inline-block; width:49%;"><input id="inpPlaPed" type="text" placeholder="Pla" style="width:100%" class="form-control" /></div>
+                                </center>
+                            </div>
+                        </li>
+                             <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               Geocercas
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+
+                                    
+                                    <label>Turnos</label>
+                                    <input id="chk_mañana" type="checkbox" name="geo_mañana" value="mañana" checked onchange="cambioValorCheck(this)"> Mañana
+                                    <input id="chk_tarde" type="checkbox" name="geo_tarde" value="tarde" checked onchange="cambioValorCheck(this)">Tarde<br />
+                                    <br />
+                                    <label>Servicio</label>
+                                    <input type="checkbox" name="rut_cil" value="cilindro" checked onchange="cambioValorCheck(this)"> Cilindros
+                                    <input type="checkbox" name="rut_pip" value="pipa" checked onchange="cambioValorCheck(this)">Pipas
+                                    <br />
+                                    <br />
+                                   
+                                    <label>Intencidad</label>
+                                   <input type="range" id="inten_geo" name="points" min="1" max="99" class="form-control"><br />
+
+
+
+                             </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               
+                                 Resumen
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <div>
+                                    <center>
+
+                                        <label id="descargasTotales"></label><br />
+                                        Domicilios totales : <label id="descargasDescTot"></label>
+                                    </center>
+                                </div>
+                                <a class="dropdown-item" href="#"><img src="~/Images/markerAppNieto.png" style="display:inline" />  (Domicilios principales):<label id="descargas"></label></a>
+                                <a class="dropdown-item" href="#"><img src="~/Images/android.png" style="display:inline" /> Domicilios Android:<label id="descargasA"></label></a>
+                                <a class="dropdown-item" href="#"><img src="~/Images/apple.png" style="display:inline" /> Domicilios IOS:<label id="descargasI"></label></a>
+                                <a class="dropdown-item" href="#"><img src="~/Images/PEDIDO_Android.png" style="display:inline" /> Domicilios con pedidos Android:<label id="pedidosA"></label></a>
+                                <a class="dropdown-item" href="#"><img src="~/Images/PEDIDO_IOS.png" style="display:inline" /> Domicilios con pedidos IOS:<label id="pedidosI"></label></a>
+                                <a class="dropdown-item" href="#">Domicilios sin pedidos Android: <label id="sinPedidosA"></label></a>
+                                <a class="dropdown-item" href="#"> Domicilios sin pedidos IOS: <label id="sinPedidosI"></label></a>
+                                <a class="dropdown-item" href="#"><img src="~/Images/whatsAppMarker.png" style="display:inline" /> Domicilios con mia:<label id="registroWhatsApp"></label></a>
+
+
+
+                            </div>
+                        </li>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><label id="serv">@ViewBag.Srv</label></span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
+                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content <div class="container-fluid">-->
+                <div class="container-fluid">
+                    <div id="map" style="width:100%; height:700px; border:1px"/>
+                    
+                    <!-- End of Content Wrapper -->
+                </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <dialog id="geoload">
+                    <img src="~/Images/loadGeocercas.gif" style="display:inline" />
+                </dialog>
+                <dialog id="resultadosPedidosClientes">
+                    <h3 id="nomCte"></h3>
+                    <h3 id="numCte"></h3>
+                    <br />
+                    <center><h3>Pedidos Realizados</h3><br /></center>
+                    <div id="tblPedidos"></div>
+                    <br />
+                    <button onclick="cerrarDialogo()">cerrar</button>
+
+                </dialog>
+                <dialog id="resultados_Coloninas">
+                    <div id="tblColonias"></div>
+
+                    <button class="btn btn-danger" onclick="cerrarDialogo()">cerrar</button>
+                    <button class="btn btn-primary" onclick="dialogBuscarColonia()">Nueva busqueda</button>
+                </dialog>
+               
+
+</body>
+</html>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables globales
+    var geocercas = [];          // contiene las informacion de las geocercas en crudo
+    var geocercas_en_mapa = [];  // contiene las geocercas que estan en el mapa en forma de poligono.
+    var turno_mañana = false;     // controla la visualizacion de las geocercas de turno matutino
+    var turno_tarde = false;      // controla la visualizacion de las geocercas de turno vespertino
+    var ruta_cil = true;         // controla la visualizacion de las geocercas de rutas de cilindro
+    var ruta_pip = true;         // controla la visualizacion de las geocercas de rutas de pipa
+    var intencidad = 30;         // variable que controla la intencidad de color de las geocercas
+    var servidores = [];         // almacena los servidores resultado de consultar las geogercas;
+    var plantas = [];            //almacena de form temporar las plantas de un servidor
+    var infoApp = [];            // guarda la informacion consultada de la aplicacion del cliente;
+    var arr_iconInfoApp = [];    // contiene los iconos mostrados en el mapa
+    var geocercas_usadas = [];   // contiene las geocercas que representa la informacion de un servidor en espesifico
+    var dialogos = [];           // contiene los dialogos en la pantalla
+    // varibles de resumen general
+    var appsDescargadasDomP = 0, appsDescargadas = 0, descargasAndroid = 0, descargasIOS = 0, sinPedidosA = 0, sinPedidosI = 0, pedidosA = 0, pedidosI = 0;
+
+    var map = null;
+
+    var listDomsConsumo=[] // contiene el listado de los domicilios con un consumo espesifico
+
+    var edosIndices = [];
+
+    var arr_colonias = [];
+
+    var arr_PoligonosLibres = [];
+
+    var ctesInMap = []; // contiene un listado de los clientes en  mapa de la aplicacion del cliente
+    var ctesInMapWhatsApp = []; // contiene un listado de los clientes en  mapa de la aplicacion del cliente
+
+    var listCtesWhatsApp = [];
+    // consulta de las geocercas
+    $(document).ready(function () {
+        document.getElementById('geoload').style.display = "none";
+        document.getElementById('geoload').style.display = "inline";
+        document.getElementById("chk_mañana").checked = false;
+        document.getElementById("chk_tarde").checked = false;
+        //document.getElementById('header_layout').style.display = "none";
+
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecIniDes").val(today);
+        $("#fecFinDes").val(today);
+        $("#fecIniCons").val(today);
+        $("#fecFinCons").val(today);
+       
+        
+        //obtener las geocercas
+        $.ajax({
+            type: "POST",
+            url: "/Home/getGeocercas/",
+            data: { paramSrv: document.getElementById('serv').innerHTML },
+            datatype: "json",
+            beforeSend: function () {
+                var msg = document.getElementById('geoload');
+                msg.showModal();
+                dialogos.push(msg);
+            },
+            complete: function () {
+                cerrarDialogo();
+            },
+            success: function (data) {
+
+                if (data.length > 0) {
+                    geocercas = data;
+                    document.getElementById('geoload').style.display = "none";
+                    guardaServidores();
+                    dibujaGeocercas();
+                    //getInfoApp();
+
+                }
+                else {
+                    alert("No existe información de geocercas en el servidor ingresado");
+                }
+            },
+            error: function (request, status, error) {
+                cerrarDialogo();
+                alert(request.responseText);
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "/Home/getEstadosIndex/",
+            data: { paramSrv: document.getElementById('serv').innerHTML },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    edosIndices = data;
+                    agregaEstados();
+
+                }
+
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+       
+    });
+    //  obtiene informacion de la los usuarios de la aplicacion
+   
+    function getInfoApp() {
+        document.getElementById('imgCargando').style.display = "inline";
+        limpiaMapayArreglos();
+        var srv = "";
+        if (document.getElementById('serv').innerHTML != 'Admin') {
+            srv = document.getElementById('serv').innerHTML;
+        }
+        else {
+            srv = $('#select_servidores').val();
+        }
+        $.ajax({
+            type: "POST",
+            url: "/Home/infoApp/",
+            data: { paramSrv: srv, fechaI: $("#fecIniDes").val(), fechaF: $("#fecFinDes").val() },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    limpiarMarcadores();
+                    listDomsConsumo = []
+                    ctesInMap = [];
+                    document.getElementById('imgCargando').style.display = "none";
+                    infoApp = data;
+                    if (document.getElementById('serv').innerHTML != 'Admin') {
+                        getInfoPorServidor();
+                        
+                    }
+                    dibujaPuntosApp();
+                    resumenGral();
+                }
+                else {
+                    alert("No existe información de usuarios ");
+                    document.getElementById('imgCargando').style.display = "none";
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+
+    }
+    // realiza una consulta sobre el consumo de clientes
+    function getConsumoClientes() {
+        limpiaMapayArreglos();
+        document.getElementById('imgCargando').style.display = "inline";
+        tipoRuta = "";
+        var srv = "";
+        if (document.getElementById('serv').innerHTML != 'Admin') {
+            srv = document.getElementById('serv').innerHTML;
+        }
+        else {
+            srv = $('#select_servidores').val();
+        }
+         if (document.getElementById("chk_ConsCil").checked) {
+             tipoRuta = "C";
+         } else if (document.getElementById("chk_ConsEst").checked)
+            
+             tipoRuta = "M";
+            
+         else
+             tipoRuta = "";
+
+
+         if ($('#inpCiaPed').val() == '' && $('#inpPlaPed').val() != '') {
+             mensajeTimer("Ooops", "Introduce la compañia", "warning");
+             document.getElementById('imgCargando').style.display = "none";
+             return;
+
+         }
+         if ($('#inpCiaPed').val() != '' && $('#inpPlaPed').val() == '') {
+             mensajeTimer("Ooops", "Introduce la plantas", "warning");
+             document.getElementById('imgCargando').style.display = "none";
+             return;
+
+         }
+         if ($('#inpConsCte').val() == '') {
+             mensajeTimer("Ooops", "Introduce consumo minimo", "warning");
+             document.getElementById('imgCargando').style.display = "none";
+             return;
+         }
+        $.ajax({
+            type: "POST",
+            url: "/Home/infoConsumoCte/",
+            data: { paramSrv: srv, fechaI: $("#fecIniCons").val(), fechaF: $("#fecFinCons").val(), paramString1: $("#inpConsCte").val(), paramRuta: tipoRuta, paramCia: $('#inpCiaPed').val(), paramPla: $('#inpPlaPed').val() },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    limpiarMarcadores();
+                    infoApp = []
+                    ctesInMap = [];
+                    document.getElementById('imgCargando').style.display = "none";
+                    listDomsConsumo = data;
+                    /*
+                    if (document.getElementById('serv').innerHTML != 'Admin') {
+                        getInfoPorServidor();
+
+                    }
+                   
+                    resumenGral();*/
+                    dibujaPuntosApp();
+                    resumenGral();
+                }
+                else {
+                    alert("No existe información de usuarios ");
+                    document.getElementById('imgCargando').style.display = "none";
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+
+    }
+    // creacion del mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+        var drawingManager = new google.maps.drawing.DrawingManager({
+            // drawingMode: google.maps.drawing.OverlayType.MARKER,
+            drawingControl: true,
+            drawingControlOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT,
+                drawingModes: ['polygon']
+            },
+            markerOptions: { draggable: true },
+
+        });
+        drawingManager.setMap(map);
+        google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
+    }
+    function finDraw(event) {
+
+        arr_PoligonosLibres.push(event.overlay);
+      
+    }
+    function quitarPoligonoLibre() {
+        for (var i = 0; i < arr_PoligonosLibres.length; i++) {
+            arr_PoligonosLibres[i].setMap(null);
+        }
+        arr_PoligonosLibres = [];
+    }
+    //dibuja las geocrecas en el mapa
+    function dibujaGeocercas() {
+        var servidor = "";
+        var color = "";
+        var srvSeleccionado = $("#select_servidores option:selected").text();
+        var plaSeleccionada = $("#select_plantas option:selected").text();
+        var valores_plaSeleccionada = plaSeleccionada.split('-');
+        quitarGeocercas();
+        for (var i = 0; i < geocercas.length; i++) {
+            //dibuja las geocercas del server seleccionado
+            if ( (geocercas[i].srv_geo.trim()== srvSeleccionado) |srvSeleccionado== 'Todos' ) {
+                //dibuja las geocrecas de la planta seleccionada
+                if ((geocercas[i].pla_geo.trim() == valores_plaSeleccionada[0].trim()) |  valores_plaSeleccionada[0].trim() == 'Todas') {
+
+
+                var puntos = geocercas[i].puntos_geo.trim();
+                var coordenadas = puntos.split('),(');
+                var poligon = [];
+                var lonlat;
+                if (servidor!= geocercas[i].srv_geo) {
+                    color = geocercas[i].color_geo;
+                    servidor = geocercas[i].srv_geo;
+                }
+                // obtener las coredenadas en areglo
+                for (var j = 0; j < coordenadas.length; j++) {
+                    coordenadas[j] = coordenadas[j].replace('(', '');
+                    coordenadas[j] = coordenadas[j].replace(')', '');
+                    lonlat = coordenadas[j].split(",");
+                    poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+                    point = new google.maps.LatLng(lonlat[0], lonlat[1]);
+                }
+                //map.setCenter(point);
+                // Contruccion del la geocerca
+                var geopoligon = new google.maps.Polygon({
+                    paths: poligon,
+                    strokeColor: '#000',
+                    strokeOpacity: 0.6,
+                    strokeWeight: 2,
+                    fillColor: color,
+                    //fillColor: geocercas[i].color_geo.trim(),
+                    fillOpacity: intencidad / 100,
+                    title: geocercas[i].nom_geo,
+                    html: 'SERVIDOR:' + geocercas[i].srv_geo + 'PLANTA:' + geocercas[i].pla_geo+ ' RUTA: ' + geocercas[i].nom_geo.trim() + '\n' + 'HORARIO: ' + geocercas[i].hraini_geo + 'hrs - ' + geocercas[i].hrafin_geo + 'hrs'
+                });
+
+                // determinar si mostrar el turno y ruta
+                switch (geocercas[i].turno_geo.trim()) {
+                    case "MAÑANA":
+                        if (turno_mañana) {
+
+                            switch (geocercas[i].tipuni_geo.trim()) {
+                                case "Cilindro":
+                                    if (ruta_cil) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+
+                                    }
+                                    break;
+                                case "Pipa":
+                                    if (ruta_pip) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+                                    }
+                                    break;
+                                default:
+                            }
+                        }
+                        break;
+                    case "TARDE":
+                        if (turno_tarde) {
+                            switch (geocercas[i].tipuni_geo.trim()) {
+                                case "Cilindro":
+                                    if (ruta_cil) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+
+                                    }
+                                    break;
+                                case "Pipa":
+                                    if (ruta_pip) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+                                    }
+                                    break;
+                                default:
+
+                            }
+                        }
+                        break;
+                    default:
+
+                }
+
+                infoWindowG = new google.maps.InfoWindow();
+                google.maps.event.addListener(geopoligon, 'click', MuestraInfo);
+            }
+        }
+
+
+        }
+    }
+    // mestra informacion de las geocercas al darle clic
+    function MuestraInfo(event) {
+        infoWindowG.setContent(this.html);
+        infoWindowG.setPosition(event.latLng);
+        infoWindowG.open(map);
+    }
+    //verifica la seleccion de un cambio de valor en los checkbox
+    function cambioValorCheck(checbox) {
+      
+        var valor = checbox.value;
+        switch (valor) {
+            case "mañana":
+                if (checbox.checked)
+                    turno_mañana = true;
+                else
+                    turno_mañana = false;
+                dibujaGeocercas();
+                break;
+            case "tarde":
+                if (checbox.checked)
+                    turno_tarde = true;
+                else
+                    turno_tarde = false;
+                dibujaGeocercas();
+                break;
+
+            case "cilindro":
+                if (checbox.checked)
+                    ruta_cil = true;
+                else
+                    ruta_cil = false;
+                dibujaGeocercas();
+                break;
+            case "pipa":
+                if (checbox.checked)
+                    ruta_pip = true;
+                else
+                    ruta_pip = false;
+                dibujaGeocercas();
+                break;
+                //forma de pedido
+            case "app":// aplicacion
+                if (checbox.checked)
+                    app = true;
+                else
+                    app = false;
+                muestraIconos();
+                break;
+            case "cll":// calle
+                if (checbox.checked)
+                    cll = true;
+                else
+                    cll = false;
+                muestraIconos();
+                break;
+            case "ccr"://callcenter
+                if (checbox.checked)
+                    ccr = true;
+                else
+                    ccr = false;
+                muestraIconos();
+                break;
+            case "pro"://proactivo
+                if (checbox.checked)
+                    pro = true;
+                else
+                    pro = false;
+                muestraIconos();
+                break;
+            case "pxs"://programado por sistema
+                if (checbox.checked)
+                    pxs = true;
+                else
+                    pxs = false;
+                muestraIconos();
+                break;
+            case "enc"://encuesta
+                if (checbox.checked)
+                    enc = true;
+                else
+                    enc = false;
+                muestraIconos();
+                break;
+            case "web"://web
+                if (checbox.checked)
+                    web = true;
+                else
+                    web = false;
+                muestraIconos();
+                break;
+                // servicios
+            case "est"://web
+                if (checbox.checked)
+                    est = true;
+                else
+                    est = false;
+                muestraIconos();
+                break;
+            case "cil"://web
+                if (checbox.checked)
+                    cil = true;
+                else
+                    cil = false;
+                muestraIconos();
+                break;
+                // uso de nota de venta
+            case "dom":// domestico
+                if (checbox.checked)
+                    dom = true;
+                else
+                    dom = false;
+                muestraIconos();
+                break;
+            case "com"://comercial
+                if (checbox.checked)
+                    com = true;
+                else
+                    com = false;
+                muestraIconos();
+                break;
+            case "ind"://indistrial
+                if (checbox.checked)
+                    ind = true;
+                else
+                    ind = false;
+                muestraIconos();
+                break;
+            case "ser"://servicios
+                if (checbox.checked)
+                    ser = true;
+                else
+                    ser = false;
+                muestraIconos();
+                break;
+            case "car"://carburacion
+                if (checbox.checked)
+                    car = true;
+                else
+                    car = false;
+                muestraIconos();
+                break;
+                // var dom = true, com = true, ind = true, ser = true, car = true, gra = true, tor = true, pan = true, exj = true, pgs = true;
+            case "gra"://granjas
+                if (checbox.checked)
+                    gra = true;
+                else
+                    gra = false;
+                muestraIconos();
+                break;
+            case "tor"://tortillerias
+                if (checbox.checked)
+                    tor = true;
+                else
+                    tor = false;
+                muestraIconos();
+                break;
+            case "pan"://panaderias
+                if (checbox.checked)
+                    pan = true;
+                else
+                    pan = false;
+                muestraIconos();
+                break;
+            case "pgs"://plus gas
+                if (checbox.checked)
+                    pgs = true;
+                else
+                    pgs = false;
+                muestraIconos();
+                break;
+            case "exj"://extrajudicial
+                if (checbox.checked)
+                    exj = true;
+                else
+                    exj = false;
+                muestraIconos();
+                break;
+                //presencia
+            case "pre"://extrajudicial
+                if (checbox.checked)
+                    pre = true;
+                else
+                    pre = false;
+                muestraIconos();
+                break;
+            case "ConsCil":
+                if (checbox.checked) {
+                    document.getElementById('chk_ConsEst').checked= false;
+                }
+                break;
+            case "ConsEst":
+                if (checbox.checked) {
+                    document.getElementById('chk_ConsCil').checked= false;
+                }
+                break;
+
+               
+        }
+
+
+
+
+
+    }
+    //quita las geocercas actuales en el mapa
+    function quitarGeocercas() {
+        if (geocercas_en_mapa.length > 0) {
+            for (var i = 0; i < geocercas_en_mapa.length; i++) {
+                geocercas_en_mapa[i].setMap(null);
+            }
+        }
+
+
+    }
+    //agrega los servidores a un objeto select
+    function guardaServidores() {
+        var existe = false;
+        for (var i = 0; i < geocercas.length; i++) {
+
+            for (var j = 0; j < servidores.length; j++) {
+                if (geocercas[i].srv_geo.trim() == servidores[j].trim())
+                    existe = true;
+            }
+
+            if (!existe) {
+                servidores.push(geocercas[i].srv_geo.trim());
+
+            }
+            existe = false;
+
+
+        }
+        // agregar los servidores al selec para uausuario admin
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            var x = document.getElementById("select_servidores");
+            var option = document.createElement("option");
+            option.text = 'Todos';
+            x.add(option);
+
+        }
+
+        for (var k = 0; k < servidores.length; k++) {
+             x = document.getElementById("select_servidores");
+             option = document.createElement("option");
+            option.text = servidores[k].trim();
+            x.add(option);
+
+        }
+        guardaPlantas();
+
+    }
+    //guardas las plantas dependiendo el servidor consultado
+    function guardaPlantas() {
+        var x = document.getElementById("select_plantas");
+        x.length = 0;
+        var valores = [];
+        var server_actual=document.getElementById("select_servidores").value.trim();
+        var x = document.getElementById("select_plantas");
+        // agregamos la opcion de todas las plantas
+        option = document.createElement("option");
+        option.text ='Todas';
+        x.add(option);
+        // se agregan las plantas correspondientes al servidor
+        if (server_actual!='Todos') {
+        for (var i = 0; i < arr_plantas.length; i++) {
+            valores = arr_plantas[i].split('|');
+            if (valores[0].trim()==server_actual.trim()) {
+                option = document.createElement("option");
+                option.text = valores[1]+'-'+valores[2];
+                x.add(option);
+            }
+        }
+    }
+    }
+    // diduja las geoercas de dicho servidor
+    $(select_servidores).change(function () {
+        guardaPlantas();
+        dibujaGeocercas();
+    });
+    //dibuja las geocercas de dicha planta
+    $(select_plantas).change(function () {
+        dibujaGeocercas();
+    });
+    $(document).on("change", "#inten_geo", function () {
+        intencidad = document.getElementById("inten_geo").value
+        dibujaGeocercas();
+    });
+    //grafica los iconos de  la app
+    function dibujaPuntosApp() {
+        limpiarMarcadores();
+        ctesInMap=[];
+        var listaPuntos = [];
+
+        if (listDomsConsumo.length>0) {
+            listaPuntos = listDomsConsumo;
+        }
+        if (infoApp.length > 0) {
+            listaPuntos = infoApp;
+        }
+
+        var punto;
+        var tipoIcono = document.getElementById("select_tipo_visualisacion").value.trim();
+        var pathIcon = "";
+        var titulo = "";
+        var id = "";
+        for (var i = 0; i < listaPuntos.length; i++) {
+            ctesInMap.push(listaPuntos[i]);
+            //if (listaPuntos[i].principal.trim() == 'True') {
+    
+            
+                id = listaPuntos[i].Id;
+            switch (tipoIcono) {
+                case "PRESENCIA":
+                    pathIcon = "/Images/markerAppNieto.png";
+                    titulo = "Dispositivo con app NIETO";
+                    break;
+                case "TIPO DISPOSITIVO":
+
+                    if (listaPuntos[i].Dispositivo == "Android") {
+                        pathIcon = "/Images/android.png";
+                        titulo = "Dispositivo Android";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/apple.png";
+                        titulo = "Dispositivo IOS";
+                    }
+
+
+                    break;
+                case "PEDIDOS":
+                    if (listaPuntos[i].Pedidos != '0') {
+                        pathIcon = "/Images/PEDIDO_" + infoApp[i].Dispositivo.trim() + ".png";
+                        titulo = "Cliente con almenos un pedido realizado";
+
+                    } else if (listaPuntos[i].Dispositivo == "Android")
+                    {
+                        pathIcon = "/Images/android.png";
+                        titulo =  "Cliente sin un pedido realizado";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/apple.png";
+                        titulo = "Cliente sin un pedido realizado";
+                    }
+                    break;
+                case "SERVICIO DEFAULT":
+                    if (listaPuntos[i].ServicioDefault == "Estacionario") {
+                        pathIcon = "/Images/Estacionario.png";
+                        titulo = " Servicio Estacionario";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/Cilindro.png";
+                        titulo = " Servicio de Cilindro";
+                    }
+                    break;
+                }
+
+            if (listDomsConsumo.length > 0) {
+                titulo = listaPuntos[i].Nombre + ' ' + listaPuntos[i].calle + ' ' + listaPuntos[i].colonia + ' ' + listaPuntos[i].numero + ' Consumo: $' + listaPuntos[i].consumo + ' Ruta:' + listaPuntos[i].ruta + ' Fecha:' + listaPuntos[i].fecha_surtido;
+            }
+            var marker = new google.maps.Marker({
+                position: { lat: parseFloat(listaPuntos[i].Latitud), lng: parseFloat(listaPuntos[i].Longitud) },
+                map: map,
+                title: titulo,
+                icon: pathIcon,
+                html: id
+            });
+            point = new google.maps.LatLng(parseFloat(listaPuntos[i].Latitud), parseFloat(listaPuntos[i].Longitud));
+            arr_iconInfoApp.push(marker);
+
+
+
+
+            // agregale evento clik
+            var infoWindow = new google.maps.InfoWindow(), marker;
+            // Add info window to marker
+            google.maps.event.addListener(marker, 'click', (function (marker) {
+                return function () {
+                    //infoWindow.setContent(marker.html);
+                    // infoWindow.open(map, marker);
+
+                    // se consulta la informacion del los pedidos del cliente
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/infoPedidosClientes/",
+                        data: { paramString1: marker.html },
+                        datatype: "json",
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                google.setOnLoadCallback(pedidosClientes);
+                                pedidosClientes(data);
+
+                            }
+                            else {
+                                alert("EL cliente no ha realizado pedidos");
+                            }
+                        },
+                        error: function (request, status, error) {
+
+                            alert(request.responseText);
+                        }
+                    });
+
+                }
+            })(marker));
+
+       // }
+        }// fin for
+
+        
+        map.setCenter(point);
+
+    }
+    //mustra la infomacion de los pedidos del cliente consultado
+    function pedidosClientes(data) {
+        document.getElementById('nomCte').innerHTML = 'Cliente: ' + data[0].Nombre;
+        document.getElementById('numCte').innerHTML = 'Numero: ' + data[0].Telefono;
+        // creacion de la tabla
+        var tablaPedidos = new google.visualization.DataTable();
+        tablaPedidos.addColumn('string', 'FECHA PEDIDO');
+        tablaPedidos.addColumn('string', 'ESTADO PEDIDO');
+        tablaPedidos.addColumn('string', 'FECHA SURTIDO');
+        tablaPedidos.addColumn('string', 'RUTA CORRESPONDIENTE');
+        tablaPedidos.addColumn('string', 'TIPO SERVICIO');
+        tablaPedidos.addColumn('string', 'IMPORTE');
+        //se llena la tabla con los datos de la consulta
+        var img = "";
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].ruta.startsWith('M')) {
+                img = ' <center><img src="/Images/Estacionario.png" /> </center>';
+            }
+            else
+            {
+                img = ' <center><img src="/Images/Cilindro.png" /></center>';
+            }
+            tablaPedidos.addRow([
+                data[i].Fecha_Pedido,
+                data[i].Estado_Pedido,
+                data[i].Fecha_Surtido,
+                data[i].ruta,
+                img,
+                data[i].consumo
+            ]);
+        }
+        var formatColor = new google.visualization.ColorFormat();
+        formatColor.addRange('PEDIDO CANCELADO', 'PEDIDO CANCELADO ', 'white', '#f95454');
+        formatColor.addRange('PEDIDO SURTIDO', 'PEDIDO SURTIDO ', 'white', 'green');
+        formatColor.addRange('PEDIDO REPROGRAMADO', 'PEDIDO REPROGRAMADO ', 'white', '#c686f9');
+        formatColor.addRange('PEDIDO ENVIADO', 'PEDIDO ENVIADO ', 'black', 'yellow');
+        formatColor.addRange('CANCELACION PENDIENTE', 'CANCELACION PENDIENTE ', 'white', '#f4b65f');
+        formatColor.addRange('OBSERVACIÓN ACTUALIZADA', 'OBSERVACIÓN ACTUALIZADA ', 'white', '#b3d2f2');
+        formatColor.format(tablaPedidos, 1);
+        //agregar la tabla al div correspondiente de la paguina HTML
+        var contenedor = new google.visualization.Table(tblPedidos);
+        // AGREGAR IMPLEMENTACIONES DE HTML EN LAS CELDAS DE LA TABLA Y PRECENTAR NUMERACION DE REGISTROS
+        contenedor.draw(tablaPedidos, { allowHtml: true, showRowNumber: true });
+        //AGREGAR EVENTO DE CLIC EN EL REGISTRO DE LA TABLA
+        google.visualization.events.addListener(contenedor, 'select', function () {
+
+            //var row = table3.getSelection()[0].row
+
+        });
+
+
+
+        cerrarDialogo();
+        var msg = document.getElementById('resultadosPedidosClientes');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    // quita los dialogos en pantall
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+    //quita los marcadores que se enceuntren en la pantalla
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_iconInfoApp.length; i++) {
+            arr_iconInfoApp[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+    // cambia la forma de gaficacion de los puntos de la app del cliente.
+    $(select_tipo_visualisacion).change(function () {
+        dibujaPuntosApp();
+    });
+    // realiza un resumen general de la presencia de la app
+    function resumenGral() {
+        appsDescargadasDomP = 0; appsDescargadas = 0; descargasAndroid = 0; descargasIOS = 0; sinPedidosA = 0; sinPedidosI = 0; pedidosA = 0; pedidosI = 0;
+        try {
+            document.getElementById('descargasTotales').innerHTML = '0';
+            document.getElementById('descargasDescTot').innerHTML = '0';
+            document.getElementById('descargas').innerHTML = '0';
+            document.getElementById('descargasA').innerHTML = '0';
+            document.getElementById('descargasI').innerHTML = '0';
+            document.getElementById('pedidosA').innerHTML = '0';
+            document.getElementById('pedidosI').innerHTML = '0';
+            document.getElementById('sinPedidosA').innerHTML = '0';
+            document.getElementById('sinPedidosI').innerHTML = '0';
+            document.getElementById('registroWhatsApp').innerHTML = '0';
+
+            for (var i = 0; i < infoApp.length; i++) {
+                if (infoApp[i].principal.trim() == 'True') {
+                    appsDescargadasDomP++;
+                }
+                appsDescargadas++;
+                if (infoApp[i].principal.trim() == 'True') {
+
+                    switch (infoApp[i].Dispositivo.trim()) {
+                        case 'Android':
+                            descargasAndroid++;
+                            break;
+                        case 'IOS':
+                            descargasIOS++;
+                            break;
+                    }
+
+                    if (infoApp[i].Pedidos.trim() != '0') {
+                        switch (infoApp[i].Dispositivo.trim()) {
+                            case 'Android':
+                                pedidosA++;
+                                break;
+                            case 'IOS':
+                                pedidosI++;
+                                break;
+                            default:
+
+                        }
+
+                    } else {
+                        switch (infoApp[i].Dispositivo.trim()) {
+                            case 'Android':
+                                sinPedidosA++;
+                                break;
+                            case 'IOS':
+                                sinPedidosI++;
+                                break;
+                            default:
+
+                        }
+                    }
+                }
+
+
+            }
+            // asignacion de las variables.
+            if (document.getElementById('serv').innerHTML == 'Admin') {
+
+                document.getElementById('descargasTotales').style.display = 'inline';
+            }
+            else {
+                document.getElementById('descargasTotales').style.display = 'none';
+            }
+            document.getElementById('descargasTotales').innerHTML = 'Descargas Totales: ' + infoApp[0].descargas;
+            document.getElementById('descargasDescTot').innerHTML = appsDescargadas;
+            document.getElementById('descargas').innerHTML = appsDescargadasDomP;
+            document.getElementById('descargasA').innerHTML = descargasAndroid;
+            document.getElementById('descargasI').innerHTML = descargasIOS;
+            document.getElementById('pedidosA').innerHTML = pedidosA;
+            document.getElementById('pedidosI').innerHTML = pedidosI;
+            document.getElementById('sinPedidosA').innerHTML = sinPedidosA;
+            document.getElementById('sinPedidosI').innerHTML = sinPedidosI;
+        } catch (e) {
+
+        }
+
+        
+        document.getElementById('registroWhatsApp').innerHTML = listCtesWhatsApp.length;
+        
+
+
+    }
+    // selecciona las descargas que le pertenecen aun solo servidor
+
+    function getInfoPorServidor() {
+            for (var i = 0; i < geocercas.length; i++) {
+                var puntos = geocercas[i].puntos_geo.trim();
+                var coordenadas = puntos.split('),(');
+                var poligon = [];
+                var lonlat;
+
+                // obtener las coredenadas en areglo
+                for (var j = 0; j < coordenadas.length; j++) {
+                    coordenadas[j] = coordenadas[j].replace('(', '');
+                    coordenadas[j] = coordenadas[j].replace(')', '');
+                    lonlat = coordenadas[j].split(",");
+                    poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+                }
+                // Contruccion del la geocerca
+                var geopoligon = new google.maps.Polygon({
+                    paths: poligon,
+                    strokeColor: '#000',
+                    strokeOpacity: 0.6,
+                    strokeWeight: 2,
+                    fillColor: '#000',
+                    //fillColor: geocercas[i].color_geo.trim(),
+                    fillOpacity: 0.6,
+                    title: geocercas[i].nom_geo,
+                    html: 'SERVIDOR:' + geocercas[i].srv_geo + 'PLANTA:' + geocercas[i].pla_geo + ' RUTA: ' + geocercas[i].nom_geo.trim() + '\n' + 'HORARIO: ' + geocercas[i].hraini_geo + 'hrs - ' + geocercas[i].hrafin_geo + 'hrs'
+                });
+                geocercas_usadas.push(geopoligon);
+            }
+
+            // determinar que descargas le corresponden al servidor logeado
+
+            var descargasPorServidor = [];
+            var encontrado = false;
+            for (var i = 0; i < infoApp.length; i++) {
+                var point1 = new google.maps.LatLng(parseFloat(infoApp[i].Latitud), parseFloat(infoApp[i].Longitud));
+                for (var j = 0; j < geocercas_usadas.length; j++) {
+                    if (google.maps.geometry.poly.containsLocation(point1, geocercas_usadas[j]) & !encontrado)
+                    {
+                        descargasPorServidor.push(infoApp[i]);
+                        encontrado = true;
+                    }
+
+
+                }
+                encontrado = false;
+
+
+
+            }
+            infoApp = descargasPorServidor;
+    }
+    // funciones de gaficar poligonos auxiliares 
+    function dialogBuscarColonia() {
+        cerrarDialogo();
+        var msg = document.getElementById('buscarColonina');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+
+    function agregaEstados() {
+        document.getElementById("select_estados").length = 0;
+        for (var i = 0; i < edosIndices.length; i++) {
+            var x = document.getElementById("select_estados");
+            var option = document.createElement("option");
+            option.text = edosIndices[i].edo_geo;
+            x.add(option);
+        }
+    }
+    function buscarColonia() {
+        google.setOnLoadCallback(buscarColonia2);
+        buscarColonia2();
+    }
+    function buscarColonia2() {
+        var edo = $("#select_estados option:selected").text();
+        var indiceI;
+        var indiceS;
+
+        for (var i = 0; i < edosIndices.length; i++) {
+            if (edo == edosIndices[i].edo_geo) {
+                indiceI = edosIndices[i].min_ind;
+                indiceS = edosIndices[i].max_ind;
+                break;
+            }
+        }
+
+
+
+
+        var colonia = document.getElementById('txtcolonia').value.toLocaleUpperCase();
+        $.ajax({
+            type: "POST",
+            url: "/Home/getColonias/",
+            beforeSend: function () {
+                document.getElementById('imgCargando').style.display = "inline";
+            },
+            complete: function () {
+                document.getElementById('imgCargando').style.display = "none";
+            },
+            data: { paramDescrip: colonia, paramEdo: edo, paramString1: indiceI + ',' + indiceS },
+            datatype: "json",
+            success: function (data) {
+
+                if (data != null) {
+                    // creacion de la tabla
+                    var tablaColonias = new google.visualization.DataTable();
+                    tablaColonias.addColumn('string', 'CODIGO POSTAL');
+                    tablaColonias.addColumn('string', 'ESTADO');
+                    tablaColonias.addColumn('string', 'MUNICIPIO');
+                    tablaColonias.addColumn('string', 'NOMBRE');
+                    tablaColonias.addColumn('string', 'TIPO');
+                    tablaColonias.addColumn('string', 'GRAFICAR');
+                    //se llena la tabla con los datos de la consulta
+                    for (var i = 0; i < data.length; i++) {
+                        tablaColonias.addRow([
+                            data[i].postalcode,
+                            data[i].st_name,
+                            data[i].mun_name,
+                            data[i].sett_name,
+                            data[i].sett_type,
+                            '<input type="button" class="btn btn-primary" style="border-color: transparent;" value="GRAFICAR" onclick=\"graficarColonia(\'' + data[i].geometry + '\',\'' + data[i].postalcode + '\',\'' + data[i].sett_name + '\')\" />'
+                        ]);
+                    }
+                    //agregar la tabla al div correspondiente de la paguina HTML
+                    var contenedor = new google.visualization.Table(tblColonias);
+                    // AGREGAR IMPLEMENTACIONES DE HTML EN LAS CELDAS DE LA TABLA Y PRECENTAR NUMERACION DE REGISTROS
+                    contenedor.draw(tablaColonias, { allowHtml: true, showRowNumber: true });
+                    //AGREGAR EVENTO DE CLIC EN EL REGISTRO DE LA TABLA
+                    google.visualization.events.addListener(contenedor, 'select', function () {
+
+                        //var row = table3.getSelection()[0].row
+
+                    });
+
+                    cerrarDialogo();
+                    dialogDibujarColonia()
+
+                }
+                else {
+                    alert("No se encontro la localidad con el criterio buscado");
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+    }
+    function dialogDibujarColonia() {
+        cerrarDialogo();
+        var msg = document.getElementById('resultados_Coloninas');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    function quitarcolonias() {
+        if (arr_colonias.length > 0) {
+            for (var i = 0; i < arr_colonias.length; i++) {
+                arr_colonias[i].setMap(null);
+            }
+        }
+        arr_colonias = [];
+
+
+    }
+    function graficarColonia(puntos, codigo, col) {
+
+        cerrarDialogo();
+        //quitarcolonias();
+       // arr_colonias = [];
+        var puntos_geo = puntos.trim();
+        var coordenadas = puntos_geo.split('),(');
+        var poligon = [];
+        var lonlat;
+        // obtener las coredenadas en areglo
+        for (var j = 0; j < coordenadas.length; j++) {
+            coordenadas[j] = coordenadas[j].replace('(', '');
+            coordenadas[j] = coordenadas[j].replace(')', '');
+            lonlat = coordenadas[j].split(",");
+            poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+            point = new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1]));
+        }
+        map.setCenter(point);
+        // Contruccion del la geocerca
+        var geopoligon = new google.maps.Polygon({
+            paths: poligon,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            //fillColor: geocercas[i].color_geo.trim(),
+            fillOpacity: 0.7,
+            title: 'Codigo Postal' + codigo + ' Colonia:' + col,
+            html: 'Codigo Postal: ' + codigo + ' Colonia: ' + col
+        });
+        geopoligon.setMap(map);
+        arr_colonias.push(geopoligon);
+        infoWindowG = new google.maps.InfoWindow();
+        //google.maps.event.addListener(geopoligon, 'click', MuestraInfoCol);
+
+    }
+    function ctesInPoligons()
+    {
+        var origen = "";
+        limpiarMarcadores();
+        ctesInMap=[];
+        var listaPuntos = [];
+
+        if (listDomsConsumo.length>0) {
+            listaPuntos = listDomsConsumo;
+            origen = "Nieto";
+        }
+        if (infoApp.length > 0) {
+            listaPuntos = infoApp;
+            origen = "Nieto";
+        }
+
+        if (listCtesWhatsApp.length > 0) {
+            listaPuntos = listCtesWhatsApp;
+            origen = "Whats";
+        }
+
+        if (listaPuntos.length<=0) {
+            mensajeSweet("Ooops","No hay posiciones gps graficadas en el mapa", "info")
+        }
+         
+        var point1=null;
+        var encontrado = false;
+        var titulo = "";
+        var gpsCtesWhats
+
+        for (var i = 0; i < listaPuntos.length; i++) {
+            encontrado= false;
+            // buscar en las colonias dibujadas
+
+            switch (origen) {
+                case "Nieto":
+                    for (var c = 0; c < arr_colonias.length; c++) {
+                        point1 = new google.maps.LatLng(parseFloat(listaPuntos[i].Latitud), parseFloat(listaPuntos[i].Longitud));
+                        if (google.maps.geometry.poly.containsLocation(point1, arr_colonias[c])) {
+                            encontrado = true;
+                            break;
+                        }
+
+                    }
+
+                    //buscar en los poligonos libres dibujados
+                    for (var l = 0; l < arr_PoligonosLibres.length && !encontrado; l++) {
+                        point1 = new google.maps.LatLng(parseFloat(listaPuntos[i].Latitud), parseFloat(listaPuntos[i].Longitud));
+                        if (google.maps.geometry.poly.containsLocation(point1, arr_PoligonosLibres[l])) {
+                            encontrado = true;
+                            break;
+                        }
+
+                    }
+                    if (encontrado) {
+                        ctesInMap.push(listaPuntos[i]);
+                        if (listDomsConsumo.length > 0) {
+                            titulo = listaPuntos[i].Nombre + ' ' + listaPuntos[i].calle + ' ' + listaPuntos[i].colonia + ' ' + listaPuntos[i].numero + ' Consumo' + listaPuntos[i].consumo;
+                        }
+                        else {
+                            titulo = listaPuntos[i].Nombre + ' ' + listaPuntos[i].calle + ' ' + listaPuntos[i].colonia + ' ' + listaPuntos[i].numero;
+                        }
+                        var marker = new google.maps.Marker({
+                            position: { lat: parseFloat(listaPuntos[i].Latitud), lng: parseFloat(listaPuntos[i].Longitud) },
+                            map: map,
+                            title: titulo,
+                            icon: "/Images/person.png",
+                            html: listaPuntos[i].Id
+                        });
+                        point = new google.maps.LatLng(parseFloat(listaPuntos[i].Latitud), parseFloat(listaPuntos[i].Longitud));
+                        arr_iconInfoApp.push(marker);
+                        google.maps.event.addListener(marker, 'click', (function (marker) {
+                            return function () {
+                                //infoWindow.setContent(marker.html);
+                                // infoWindow.open(map, marker);
+
+                                // se consulta la informacion del los pedidos del cliente
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Home/infoPedidosClientes/",
+                                    data: { paramString1: marker.html },
+                                    datatype: "json",
+                                    success: function (data) {
+
+                                        if (data.length > 0) {
+                                            google.setOnLoadCallback(pedidosClientes);
+                                            pedidosClientes(data);
+
+                                        }
+                                        else {
+                                            alert("EL cliente no ha realizado pedidos");
+                                        }
+                                    },
+                                    error: function (request, status, error) {
+
+                                        alert(request.responseText);
+                                    }
+                                });
+
+                            }
+                        })(marker));
+
+                    }
+
+                    break;
+                case "Whats":
+                    gpsCtesWhats = listaPuntos[i].gps_ubi.split('-');
+                     if (gpsCtesWhats.length == 2) 
+                     {
+                         point1 = new google.maps.LatLng(parseFloat(gpsCtesWhats[0].trim()), parseFloat("-" + gpsCtesWhats[1].trim()));
+                         // ctesInMapWhatsApp.push(listCtesWhatsApp[i]);
+                             for (var c = 0; c < arr_colonias.length; c++) {
+                                 if (google.maps.geometry.poly.containsLocation(point1, arr_colonias[c])) {
+                                     encontrado = true;
+                                     break;
+                                 }
+
+                             }
+
+                         //buscar en los poligonos libres dibujados
+                         for (var l = 0; l < arr_PoligonosLibres.length && !encontrado; l++) {                            
+                             if (google.maps.geometry.poly.containsLocation(point1, arr_PoligonosLibres[l])) {
+                                 encontrado = true;
+                                 break;
+                             }
+
+                         }
+                         if (encontrado) {
+                             ctesInMapWhatsApp.push(listaPuntos[i]);
+                             /*if (listDomsConsumo.length > 0) {
+                                 //titulo = listaPuntos[i].Nombre + ' ' + listaPuntos[i].calle + ' ' + listaPuntos[i].colonia + ' ' + listaPuntos[i].numero + ' Consumo' + listaPuntos[i].consumo;
+                             }
+                             else {
+                                 titulo = listaPuntos[i].Nombre + ' ' + listaPuntos[i].calle + ' ' + listaPuntos[i].colonia + ' ' + listaPuntos[i].numero;
+                             }*/
+                             var marker = new google.maps.Marker({
+                                 position: { lat: parseFloat(gpsCtesWhats[0].trim()), lng: parseFloat("-" + gpsCtesWhats[1].trim()) },
+                                 map: map,
+                                 title: listaPuntos[i].tel_cte + " " + listaPuntos[i].nom_cte + " " + listaPuntos[i].dom_ubi + " FecSur:" + listaPuntos[i].fecsur_ped,
+                                 icon: "/Images/whatsAppMarker.png",
+                                 //html: listaPuntos[i].Id
+                             });
+                             point = new google.maps.LatLng(parseFloat(gpsCtesWhats[0].trim()), parseFloat("-" + gpsCtesWhats[1].trim()));
+                             arr_iconInfoApp.push(marker);
+                             google.maps.event.addListener(marker, 'click', (function (marker) {
+                                 return function () {
+                                     //infoWindow.setContent(marker.html);
+                                     // infoWindow.open(map, marker);
+
+                                     // se consulta la informacion del los pedidos del cliente
+                                   /*  $.ajax({
+                                         type: "POST",
+                                         url: "/Home/infoPedidosClientes/",
+                                         data: { paramString1: marker.html },
+                                         datatype: "json",
+                                         success: function (data) {
+
+                                             if (data.length > 0) {
+                                                 google.setOnLoadCallback(pedidosClientes);
+                                                 pedidosClientes(data);
+
+                                             }
+                                             else {
+                                                 alert("EL cliente no ha realizado pedidos");
+                                             }
+                                         },
+                                         error: function (request, status, error) {
+
+                                             alert(request.responseText);
+                                         }
+                                     });*/
+
+                                 }
+                             })(marker));
+
+                         }
+                     }
+                    break;
+
+            }
+            
+            //arr_PoligonosLibres
+
+
+            
+
+    
+        }
+       
+    }
+    function CtestoCSV( modo) {
+        //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
+        var listaPuntos = [];
+        var csvRows = [];
+        var NombreArchivo = "";
+        var fechas = "";
+
+        if (listDomsConsumo.length > 0) {
+            listaPuntos = listDomsConsumo; 
+        }
+        if (infoApp.length > 0) {
+            listaPuntos = infoApp;
+        }
+        if (ctesInMap.length > 0) {
+            listaPuntos = ctesInMap;
+            csvRows = [];           
+        }
+
+        if (listaPuntos.length <= 0)
+        {
+            mensajeSweet("Ooops", "No tienes posiciones gps de aplicacion del cliente en el mapa", "info");
+            return;
+        }
+        
+        switch (modo) {
+            case "Notificacion":
+                NombreArchivo = "ClientesNotificacion " + $("#fecIniCons").val() + '--' + $("#fecFinCons").val();
+                csvRows = [['Numero', 'Id Domicilio', 'Nombre', 'Direccion', 'Latidud', 'Longitud']];
+                for (var i = 0; i < listaPuntos.length; ++i) {
+                    csvRows.push([
+                         listaPuntos[i].telefono_principal,
+                         listaPuntos[i].Id_domicilio,
+                         listaPuntos[i].Nombre,
+                         listaPuntos[i].calle.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].numero.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].colonia.replace("#", " ").replace(",", " "),
+                         listaPuntos[i].Latitud,
+                         listaPuntos[i].Longitud
+                    ]);
+                }
+                break;
+            case "Domicilios":
+                NombreArchivo = "Descargas clientes" + $("#fecIniDes").val() + '--' + $("#fecFinDes").val();
+                csvRows = [['Numero', 'Nombre', 'Direccion',  'Latidud', 'Longitud']];
+                for (var i = 0; i < listaPuntos.length; ++i) {
+                    csvRows.push([
+                         listaPuntos[i].telefono_principal,
+                         listaPuntos[i].Nombre,
+                         listaPuntos[i].calle.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].numero.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].colonia.replace("#", " ").replace(",", " "),
+                         listaPuntos[i].Latitud,
+                         listaPuntos[i].Longitud,
+                         
+                    ]);
+                }
+                break;
+            case "Consumos":
+                NombreArchivo = "Consumo de clientes " + $("#fecIniCons").val() + '--' + $("#fecFinCons").val();
+                csvRows = [['Numero', 'Id Domicilio', 'Nombre', 'Direccion', 'Importe', 'Latidud', 'Longitud', 'ruta', 'folio_sicogas','Compañia planta', 'Fecha', 'Asistencia','Metodo de pago']];
+                var metodo_pago = "";
+                for (var i = 0; i < listaPuntos.length; ++i) {
+                    metodo_pago = "";
+                    switch (listaPuntos[i].id_metodo_pago) {
+                        case"1":
+                            metodo_pago = "E";
+                            break;
+                        case "2":
+                            metodo_pago = "T";
+                            break;
+                        default:
+                            metodo_pago = "";
+                            break;
+
+                    }
+                    csvRows.push([
+                         listaPuntos[i].telefono_principal,
+                         listaPuntos[i].Id_domicilio,
+                         listaPuntos[i].Nombre,
+                         listaPuntos[i].calle.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].numero.replace("#", " ").replace(",", " ") + '--' + listaPuntos[i].colonia.replace("#", " ").replace(",", " "),
+                         listaPuntos[i].consumo,
+                         listaPuntos[i].Latitud,
+                         listaPuntos[i].Longitud,
+                         listaPuntos[i].ruta,
+                         listaPuntos[i].folio_sicogas,
+                         listaPuntos[i].compania + " " + listaPuntos[i].planta,
+                         listaPuntos[i].fecha_surtido,
+                         listaPuntos[i].costo_asistencia,
+                          metodo_pago
+                         
+                    ]);
+                }
+                break;
+
+        }
+
+        if (listaPuntos.length<=0) {
+            alert('No hay clientes mostrados en mapa de ningun tipo');
+            return;
+        }
+
+       
+
+        var csvString = csvRows.join("%0A"); //join("%0A")
+
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' + csvString;
+        a.target = '_blank';
+        a.download =  NombreArchivo+'.csv';
+        document.body.appendChild(a);
+        a.click();
+    }
+
+    function CtesWhatstoCSV(modo) {
+        //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
+        var listaPuntos = [];
+        var csvRows = [];
+        var NombreArchivo = "";
+        var fechas = "";
+
+        if (ctesInMapWhatsApp.length > 0) {
+            listaPuntos = ctesInMapWhatsApp;
+        }
+       
+
+        if (listaPuntos.length <= 0) {
+            mensajeSweet("Ooops", "No tienes posiciones gps de registro con Mia en el mapa", "info");
+            return;
+        }
+
+        switch (modo) {
+            case "Clientes":
+                NombreArchivo = "Clientes Whats app";
+                csvRows = [['Numero', 'Nombre', 'Direccion', 'GPS','Compañia Planta']];
+                for (var i = 0; i < listaPuntos.length; ++i) {
+                    csvRows.push([
+                         "(" + listaPuntos[i].tel_cte + ")",
+                         listaPuntos[i].nom_cte,
+                        listaPuntos[i].dir_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_Col: " + listaPuntos[i].col_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_CP:" + listaPuntos[i].cp_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_Ciu:" + listaPuntos[i].ciu_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " "),
+                         listaPuntos[i].gps_ubi,
+                         listaPuntos[i].ciapla_ubi
+                      
+                    ]);
+                }
+                break;
+            case "Consumos":
+                NombreArchivo = "Consumo de clientes Whats app";
+                csvRows = [['Numero', 'Nombre', 'Direccion', 'GPS','Venta','Nota','Pedido','Ruta','Compañia planta','Fecha Surtido','Tipo pago','Asistencia']];
+                var rutaSer = "";
+                
+                for (var i = 0; i < listaPuntos.length; ++i) {
+
+                    switch (listaPuntos[i].tser_ubi) {
+                        case"C":
+                            rutaSer=listaPuntos[i].rutac_ubi;
+                            break;
+                        case"E":
+                            rutaSer=listaPuntos[i].rutap_ubi;
+                            break;
+                        default:
+                            rutaSer="";
+        
+                    }
+                    csvRows.push([
+                       "("+listaPuntos[i].tel_cte+")",
+                         listaPuntos[i].nom_cte,
+                         listaPuntos[i].dir_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_Col: " + listaPuntos[i].col_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_CP:" + listaPuntos[i].cp_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " ") + "_Ciu:" + listaPuntos[i].ciu_ubi.replace(",", "").replace("#", "").replace(" ", "-").replace("\n", " "),
+                         listaPuntos[i].gps_ubi,
+                         listaPuntos[i].vta_ped,
+                         listaPuntos[i].notasico_ped,
+                         listaPuntos[i].pedsico_ped,
+                         rutaSer,
+                         listaPuntos[i].ciapla_ubi,
+                         listaPuntos[i].fecsur_ped,
+                         listaPuntos[i].tpa_ped,
+                         listaPuntos[i].asis_ped
+
+                    ]);
+                }
+                break;
+       
+
+        }
+
+        if (listaPuntos.length <= 0) {
+            alert('No hay clientes mostrados en mapa de ningun tipo');
+            return;
+        }
+
+
+
+        var csvString = csvRows.join("%0A"); //join("%0A")
+
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' + csvString;
+        a.target = '_blank';
+        a.download = NombreArchivo + '.csv';
+        document.body.appendChild(a);
+        a.click();
+    }
+
+    //  funciones y metodos para los clientes de whats app
+    function getInfoCtesWhatsApp() {
+        document.getElementById('imgCargando').style.display = "inline";
+        var srv = "";
+        if (document.getElementById('serv').innerHTML!='Admin') {
+            srv=document.getElementById('serv').innerHTML;
+        }
+        else {
+            srv = $('#select_servidores').val(); 
+        }
+        /*
+         <div style="display:inline-block; width:49%;"><input id="inpCiaWhats" type="text" placeholder="Cia" style="width:100%" class="form-control  is-valid" /></div>
+                                        <div style="display:inline-block; width:49%;"><input id="inpPlaWhats"  t
+        */
+
+        if ($('#inpCiaWhats').val() == '' && $('#inpPlaWhats').val() != '') {
+            mensajeTimer("Ooops", "Introduce la compañia", "warning");
+            document.getElementById('imgCargando').style.display = "none";
+            return;
+
+        }
+        if ($('#inpCiaWhats').val() != '' && $('#inpPlaWhats').val() == '') {
+            mensajeTimer("Ooops", "Introduce la plantas", "warning");
+            document.getElementById('imgCargando').style.display = "none";
+            return;
+
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/getUbiCtesWhatsApp/",
+            data: { paramSrv: srv, fechaI: $("#fecIniDes").val(), fechaF: $("#fecFinDes").val(), paramCia: $('#inpCiaWhats').val(), paramPla: $('#inpPlaWhats').val() },
+            datatype: "json",
+            success: function (data) {
+                document.getElementById('imgCargando').style.display = "none";
+                limpiaMapayArreglos();
+                if (data.length > 0) {
+                    listCtesWhatsApp = data;
+                    dibujaPuntosWhats();
+                    resumenGral();
+                }
+                else {
+                    mensajeTimer("", "No se encontro información de usuarios ", "info");
+                   
+                    document.getElementById('imgCargando').style.display = "none";
+                }
+            },
+            error: function (request, status, error) {
+                document.getElementById('imgCargando').style.display = "none";
+                alert(request.responseText);
+            }
+        });
+
+
+    }
+    function getPedCtesWhatsApp() {
+        document.getElementById('imgCargando').style.display = "inline";
+        var srv = "";
+        var tipoRuta = "'C','M'";
+        if (document.getElementById('serv').innerHTML != 'Admin') {
+            srv = document.getElementById('serv').innerHTML;
+        }
+        else {
+            srv = $('#select_servidores').val();
+        }
+        /*
+         <div style="display:inline-block; width:49%;"><input id="inpCiaWhats" type="text" placeholder="Cia" style="width:100%" class="form-control  is-valid" /></div>
+                                        <div style="display:inline-block; width:49%;"><input id="inpPlaWhats"  t
+        */
+
+        if ($('#inpCiaPed').val() == '' && $('#inpPlaPed').val() != '') {
+            mensajeTimer("Ooops", "Introduce la compañia", "warning");
+            document.getElementById('imgCargando').style.display = "none";
+            return;
+
+        }
+        if ($('#inpCiaPed').val() != '' && $('#inpPlaPed').val() == '') {
+            mensajeTimer("Ooops", "Introduce la plantas", "warning");
+            document.getElementById('imgCargando').style.display = "none";
+            return;
+
+        }
+        if ($('#inpConsCte').val()=='') {
+            mensajeTimer("Ooops", "Introduce consumo minimo", "warning");
+            document.getElementById('imgCargando').style.display = "none";
+            return;
+        }
+
+       
+         if (document.getElementById("chk_ConsCil").checked) 
+             tipoRuta = "'C'";
+         
+         if (document.getElementById("chk_ConsEst").checked)           
+             tipoRuta = "'M'";
+            
+         if (document.getElementById("chk_ConsEst").checked && document.getElementById("chk_ConsCil").checked ) 
+             tipoRuta = "'C','M'";
+        
+        $.ajax({
+            type: "POST",
+            url: "/Home/getPedCtesWhatsApp/",
+            data: { paramSrv: srv, fechaI: $("#fecIniCons").val(), fechaF: $("#fecFinCons").val(), paramCia: $('#inpCiaPed').val(), paramPla: $('#inpPlaPed').val(), paramString1: $("#inpConsCte").val(), paramRuta: tipoRuta },
+            datatype: "json",
+            success: function (data) {
+                document.getElementById('imgCargando').style.display = "none";
+                limpiaMapayArreglos();
+                if (data.length > 0) {
+                    listCtesWhatsApp = data;
+                    dibujaPuntosWhats();
+                    resumenGral();
+                }
+                else {
+                    mensajeTimer("", "No se encontro información de pedidos ", "info");
+
+                    document.getElementById('imgCargando').style.display = "none";
+                }
+            },
+            error: function (request, status, error) {
+                document.getElementById('imgCargando').style.display = "none";
+                alert(request.responseText);
+            }
+        });
+
+
+    }
+    function dibujaPuntosWhats() {
+        limpiarMarcadores();
+        ctesInMapWhatsApp = [];
+        for (var i = 0; i < listCtesWhatsApp.length; i++) {
+            try {
+                var gpsCtesWhats = listCtesWhatsApp[i].gps_ubi.split('-');
+                if (gpsCtesWhats.length == 2) {
+                    ctesInMapWhatsApp.push(listCtesWhatsApp[i]);
+                    var marker = new google.maps.Marker({
+                        position: { lat: parseFloat(gpsCtesWhats[0].trim()), lng: parseFloat("-"+gpsCtesWhats[1].trim()) },
+                        map: map,
+                        title: listCtesWhatsApp[i].tel_cte + " " + listCtesWhatsApp[i].nom_cte + " " + listCtesWhatsApp[i].dom_ubi + " Vta:$" + listCtesWhatsApp[i].vta_ped + " FecSur:" + listCtesWhatsApp[i].fecsur_ped,
+                        icon: "/Images/whatsAppMarker.png",
+                        //html: id
+                    });
+                    point = new google.maps.LatLng(parseFloat(parseFloat(gpsCtesWhats[0].trim()),parseFloat("-"+gpsCtesWhats[1].trim())));
+                    arr_iconInfoApp.push(marker);
+
+
+
+
+                    // agregale evento clik
+                    var infoWindow = new google.maps.InfoWindow(), marker;
+                    // Add info window to marker
+                    google.maps.event.addListener(marker, 'click', (function (marker) {
+                        return function () {
+                          
+
+                        }
+                    })(marker));
+                }
+
+            } catch (e) {
+
+            }
+           
+
+            // }
+        }// fin for
+
+
+        map.setCenter(point);
+
+    }
+    function limpiaMapayArreglos()
+    {
+        limpiarMarcadores();
+
+        listCtesWhatsApp = [];
+        ctesInMapWhatsApp = [];
+
+        infoApp = [];
+        ctesInMap = [];
+        listDomsConsumo = [];
+        listaPuntos = [];
+       
+    }
+
+    function imprimePoligonos() {
+        // geocercasInMap[i].getPath().getArray().toString();
+        if (arr_PoligonosLibres.length<=0) {
+            mensajeTimer("Ooops", "No hay poligonos dibujados", "info");
+            return;
+        }
+       
+        var listaPuntos = [];
+        var csvRows = [];
+        var NombreArchivo = "";
+        var fechas = "";
+        NombreArchivo = "Poligonos";
+        for (var l = 0; l < arr_PoligonosLibres.length; l++)
+        {
+            csvRows.push([ arr_PoligonosLibres[l].getPath().getArray().toString()]);       
+        }
+        var csvString = csvRows.join("%0A"); //join("%0A")
+
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' + csvString;
+        a.target = '_blank';
+        a.download = NombreArchivo + '.csv';
+        document.body.appendChild(a);
+        a.click();
+    }
+</script>
+

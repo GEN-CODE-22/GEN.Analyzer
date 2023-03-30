@@ -1,0 +1,760 @@
+﻿@{
+    ViewBag.Title = "Analizer_app";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+
+</head>
+<body>
+    <div id="map">
+    </div>
+    <div id="controles">
+        SERVIDOR:
+        <label id="serv">@ViewBag.Srv</label>
+        USUARIO:
+        <label id="usr">@ViewBag.Usr</label><br/>
+        <button id="btnNotas" onclick="openDialogNotas()"> notas </button><br/>
+        <button id="btnClientes" onclick="openDialoCtes()" style="display:none">Clientes</button><br /><br />
+        <div id="catCtes" style="display: inline;"></div>
+    </div>
+
+
+    <!-- dialogos -->
+    <dialog id="dlgNotas">
+        <label id="lblservidor">SERVIDOR:</label><br/>
+        <select id="slcservidor"></select><br/><br />
+        FECHA INICIAL:
+        <br />
+        <input type="date" class="field-style field-split align-left" style=" width: 250px" id="fecha_ini">
+        <br />
+        FECHA INICIAL:
+        <br />
+        <input type="date" class="field-style field-split align-left" style=" width: 250px" id="fecha_fin">
+        <br />       
+        <button id="btnInfoServer" onclick="getNotLiq()">Consultar Notas</button>
+        <br />
+        <button onclick="cerrarDialogo()">Cerrar</button>
+    </dialog>
+    <dialog id="dlgClientes">
+        <label>Cliente (s);</label>
+        <br />
+        <input id="inpCtes" type="text" placeholder="000001,000002,000003,...,000010" />
+        <br />
+        <h3> Tipo de nota</h3>
+        <br />
+        <input type="checkbox" name="check_tcrapp" value="donkg" checked onchange="cambioValorCheck(this)">Donacion kg's
+        <input type="checkbox" name="check_tdeapp" value="donlt" checked onchange="cambioValorCheck(this)">Donacion lt´s
+        <br />
+        <input type="checkbox" name="check_cre" value="car" checked onchange="cambioValorCheck(this)">Carburacion
+        <input type="checkbox" name="check_efe" value="cil" checked onchange="cambioValorCheck(this)">Cilindro
+        <br />
+        <input type="checkbox" name="check_flts" value="est" checked onchange="cambioValorCheck(this)">Estacionario
+        <input type="checkbox" name="check_fkgs" value="fuglt" checked onchange="cambioValorCheck(this)">Fugas lt´s
+        <br />
+        <input type="checkbox" name="check_cgs" value="fugkg" checked onchange="cambioValorCheck(this)">Fugas kg´s
+        <input type="checkbox" name="check_tra" value="tran" checked onchange="cambioValorCheck(this)">Trasnferencias
+
+        <br />
+        <h3> Tipo de pago</h3><br/>
+        <input type="checkbox" name="check_tcrapp" value="tcreapp" checked onchange="cambioValorCheck(this)">Tarjeta credito app
+        <input type="checkbox" name="check_tdeapp" value="tdeapp" checked onchange="cambioValorCheck(this)">Tarjeta debito app
+        <br />
+        <input type="checkbox" name="check_cre" value="cre" checked onchange="cambioValorCheck(this)">Credito
+        <input type="checkbox" name="check_efe" value="efe" checked onchange="cambioValorCheck(this)">Efectivo
+        <br />
+        <input type="checkbox" name="check_flts" value="flts" checked onchange="cambioValorCheck(this)">Fugas lts
+        <input type="checkbox" name="check_fkgs" value="fkgs" checked onchange="cambioValorCheck(this)">Fugas kgs
+        <br />
+        <input type="checkbox" name="check_cgs" value="cgs" checked onchange="cambioValorCheck(this)">Credigas
+        <input type="checkbox" name="check_tra" value="tra" checked onchange="cambioValorCheck(this)">Trasnferencias
+        <br />      
+        <button onclick="MostrarCteMap()">Mostrar</button>
+        <button onclick="cerrarDialogo()">Cerrar</button>
+
+
+    </dialog>
+    <!--div´s para imagenes de carga, etc-->
+    <div id="imgload">
+        <img src="~/Images/CARGANDO.gif" style="display:inline" />
+    </div>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables globales
+    var dialogos = [];           // contiene los dialogos en pantalla.
+    var notas = [];              // almacena la notas que resulte de consultar uno o varios servidores en un rango de fechas.
+    var clientes = [];           // almacena los clientes que se mostran en el mapa.
+    var liquidas = [];           // almacena las liquidas de las notas
+    var arr_marcadores = [];    // almacena los marcadores mostrados en el mapa.
+    // varibles del tipo de pago
+    var tca = true, tba = true, cre = true, efe = true, fgl = true, fgk = true, cgs = true, tra = true;
+    // variables de tipo de nota de venta 
+    var donk = true, donl = true, car = true, cil = true, est = true, fgks = true, fgls = true, trans = true;
+
+    
+    $(document).ready(function () {
+        document.getElementById('imgload').style.display = "none";
+        // se muestran los elementos del usuario admin 
+        if (document.getElementById('serv').innerText == 'Admin') 
+        {
+            for (var i = 0; i < servers.length; i++) {
+               
+                   var x = document.getElementById("slcservidor");
+                    var option = document.createElement("option");
+                    option.text = servers[i].trim();
+                    x.add(option);
+                
+    
+            }
+        
+        } else
+
+        {
+            document.getElementById("lblservidor").style.display="none";
+            document.getElementById("slcservidor").style.display="none";
+            
+        }
+
+
+    });   
+    // creacion del mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+    }
+    // funciones para mostrar los dialogs
+    function openDialogNotas() {
+        cerrarDialogo();
+        var msg = document.getElementById('dlgNotas');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+        
+    }
+    function openDialoCtes() {
+        cerrarDialogo();
+        var msg = document.getElementById('dlgClientes');
+        msg.showModal();
+        dialogos.push(msg);
+
+    }
+    // consulta las notas y liquidas de forma simultanea
+    function getNotLiq() {
+        getNotas();
+        getLiquidas();
+    }
+    // obtiene conjunto de notas deacuerdo el servidor o servidores y las fechas.
+    function getNotas() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        document.getElementById('imgload').style.display = "inline";
+        document.getElementById('btnClientes').style.display = "none";
+        var serv = document.getElementById("serv").innerHTML.trim();
+        cerrarDialogo();
+
+            if (serv != 'Admin')
+                servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+            else
+                servidoresNotas ="'"+document.getElementById("slcservidor").value.trim() +"'";
+  
+
+            if (servidoresNotas != '') {
+
+                if (clientes.length > 10) {
+                    alert("El numero maximo de clientes para mostrar es de 10");
+
+                }
+                else {
+                //consultar las notas
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/getNotasCte/",
+                    data: { paramSrv: servidoresNotas.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin /*, paramString1: clientesQuery */},
+                    datatype: "json",
+                    success: function (data) {
+
+                        if (data.length > 0) {
+                            notas = data;
+                            document.getElementById('imgload').style.display = "none";
+                            document.getElementById('btnClientes').style.display = "inline";
+                        
+                        }
+                        else {
+                            alert("No existen notas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                            document.getElementById('imgload').style.display = "none";
+                        }
+                    },
+                    error: function (request, status, error) {
+                        // document.getElementById('imgload').style.display = "none";
+                        alert(request.responseText);
+                    }
+                });
+            }
+        }
+
+
+
+
+
+
+    }
+    // obtiene las liquidas
+    function getLiquidas() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        var serv = document.getElementById("serv").innerHTML.trim();
+        cerrarDialogo();
+        if (serv != 'Admin')
+            servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+        else
+            servidoresNotas = "'" + document.getElementById("slcservidor").value.trim() + "'";
+        
+
+        if (servidoresNotas != '') {
+
+
+            //consultar las liquidas
+            $.ajax({
+                type: "POST",
+                url: "/Home/getLiquidas/",
+                data: { paramSrv: servidoresNotas.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+                datatype: "json",
+                success: function (data) {
+
+                    if (data.length > 0) {
+                        liquidas = data;
+                        
+                    }
+                    else {
+                        alert("No existen liquidas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                      
+                    }
+                },
+                error: function (request, status, error) {
+                    
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+
+
+
+
+    }
+    // muetra los clientes en el mapa deacuerdo a su descarga 
+    function MostrarCteMap() {        
+        limpiarMarcadores();
+        arr_marcadores = [];
+        var ctes = document.getElementById('inpCtes').value.toLocaleUpperCase();
+        var ctesIcon = [];
+        clientes = ctes.trim().split(',');
+        // variables de las liquidas
+        var uni = "", chf = "";
+        var findliq = false;
+        var formpgo = "";
+
+        // obtengo los clientes para la consulta
+        var ctes = document.getElementById('inpCtes').value.toLocaleUpperCase();
+        clientes = ctes.trim().split(',');
+        
+        
+            for (var i = 0; i < clientes.length; i++) {
+                ctesIcon.push({cliente:clientes[i], index: i});
+            }
+        // construyo el catalogo visual de los clientes 
+            document.getElementById("catCtes").style.display = "inline";
+            document.getElementById('catCtes').innerHTML = "";
+            var htmlcode = "";
+            for (var i = 0; i < ctesIcon.length; i++) {
+                htmlcode = '<img src="/Images/CLIENTE_' + ctesIcon[i].index + '.png" /><label>' + ctesIcon[i].cliente + '</label><br/>';
+                $("#catCtes").append(htmlcode);
+                
+            }
+
+            for (var i = 0; i < clientes.length; i++) {
+                var indexIcon = 0;
+                // busco el index de cliente buscado
+                for (var j = 0; j < ctesIcon.length; j++) {
+                    if (ctesIcon[j].cliente.trim() == clientes[i].trim()) {
+                        indexIcon = ctesIcon[j].index;
+
+                    }
+                }
+                
+                    for (var m = 0; m < notas.length; m++) {
+                        var img="";
+                        if (notas[m].ruta_nvta.startsWith('B')) {
+                            img = ' <img src="/Images/Estacionario.png" /> ';
+                        }
+                        else
+                        {
+                            img = '<img src="/Images/Cilindro.png" />';
+                        }
+
+
+                        // se termina la forma de pago
+                        switch (notas[m].tpa_nvta.trim()) {
+                            case "R":
+                                formpgo="Tarjeta (Debito) APP";
+                                break;
+                            case "B":
+                                formpgo="Tarjeta (Credito) APP";
+                                break;
+                            case "C":
+                                formpgo="Credito";
+                                break;
+                            case "E":
+                                formpgo="Efectivo";
+                                break;
+                            case "F":
+                                formpgo="Fuga lts";
+                                break;
+                            case "Q":
+                                formpgo="Fuga kgs";
+                                break;
+                            case "G":
+                                formpgo="Credi Gas";
+                                break;
+                            case "T":
+                                formpgo = "Transferencia";
+                                break;
+                            default:
+                                formpgo = "Desconosido";
+
+                        }
+
+                        if (notas[m].numcte_nvta.trim() == clientes[i].trim() && verificarMuestreoCtePago(notas[m])) {
+                            if (notas[m].gps_nvta != null & notas[m].gps_nvta.trim().length > 2 ) {
+                                var ptosLatLong = notas[m].gps_nvta.split(' ');
+                                if (ptosLatLong.length > 1) {
+
+                                    // busco la informacion  de la liquidacion
+                                    for (var k = 0; k < liquidas.length & !findliq; k++) {
+                                        if( liquidas[k].srv_eru.trim()==notas[m].srv_nvta.trim()  && liquidas[k].cia_eru.trim()==notas[m].cia_nvta.trim() && liquidas[k].pla_eru.trim()==notas[m].pla_nvta.trim() && liquidas[k].fliq_eru.trim()==notas[m].fliq_nvta.trim()){
+                                            uni = liquidas[k].uni_eru.trim();
+                                            chf = liquidas[k].chf_erup.trim();
+                                            findliq = true;
+                                        }
+                                    }
+                                    // agregar el marcador en el mapa 
+                                    var marker = new google.maps.Marker({
+                                        position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
+                                        map: map,
+                                        title: 'CLIENTE: '+notas[m].numcte_nvta.trim(),
+                                        icon: "/Images/CLIENTE_"+indexIcon+".png",
+                                        html: '<label>Cliente: ' + notas[m].numcte_nvta.trim() + '</label></br>'+
+                                              '<label>Fecha/Hora: ' + notas[m].fhs_nvta + '</label></br>'+
+                                              '<table>'+
+                                                      '<tr>'+
+                                                           '<td><label>DATOS DE LA PLANTA</label></td>'+
+                                                      '</tr>'+
+                                                      '<tr>'+
+                                                           '<td><label>Gerencia</label></td>   <td><label>'+notas[m].cia_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                      '<tr>'+
+                                                           '<td><label>Planta</label></td>   <td><label>'+notas[m].pla_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Ruta</label></td>   <td><label>'+notas[m].ruta_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>DATOS DEL PEDIDO</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Litros/kilos</label></td>   <td><label>'+notas[m].tlts_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Importe</label></td>   <td><label>'+notas[m].impt_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Asisencia</label></td>   <td><label>'+notas[m].asiste_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Importe asistencia</label></td>   <td><label>'+notas[m].impasi_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Tipo servicio </label></td>   <td>'+img+'</td>'+
+                                                      '</tr>' +
+                                                       '<tr>' +
+                                                           '<td><label>Folio Nota </label></td>   <td><label>' + notas[m].fol_nvta + '</label></td>' +
+                                                      '</tr>' +
+                                                         '<tr>' +
+                                                           '<td><label>Forma de pago </label></td>   <td><label>' + formpgo+ '</label></td>' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>INFORMACION LIQUIDA</label></td> ' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>Unidad</label></td>   <td><label>' + uni+ '</label></td>' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>Chofer</label></td>   <td><label>' + chf+ '</label></td>' +
+                                                      '</tr>' +
+                                              '</table>'
+
+                                    });
+                                    arr_marcadores.push(marker);
+
+                                    var infoWindow = new google.maps.InfoWindow(), marker;
+                                    // Add info window to marker
+                                    google.maps.event.addListener(marker, 'click', (function (marker) {
+                                        return function () {
+                                            infoWindow.setContent(marker.html);
+                                             infoWindow.open(map, marker);
+
+                                            //se consulta la informacion del los pedidos del cliente
+                                    
+
+                                        }
+                                    })(marker));
+
+                                }
+                            }
+                           
+
+                        }
+
+                    
+                    }
+                    uni = "";
+                    chf = "";
+                    findliq = false;
+
+            }
+
+
+
+
+        
+
+    }
+    //verifica la seleccion de un cambio de valor en los checkbox
+    function cambioValorCheck(checbox) {
+        var valor = checbox.value;
+        switch (valor) {
+            //  var tca = true, tba = true, cre = true, efe = true, fgl = true, fgk = true, cgs = true, tra = true
+            case "tcreapp":
+                if (checbox.checked)
+                    tca = true;
+                else
+                    tca = false;                
+                break;
+            case "tdeapp":
+                if (checbox.checked)
+                    tba = true;
+                else
+                    tba = false;
+                break;
+            case "cre":
+                if (checbox.checked)
+                    cre = true;
+                else
+                    cre = false;
+                break;
+            case "efe":
+                if (checbox.checked)
+                    efe = true;
+                else
+                    efe = false;
+                break;               
+            case "flts":
+                if (checbox.checked)
+                    fgl = true;
+                else
+                    fgl = false;
+                break;
+            case "fkgs":
+                if (checbox.checked)
+                    fgk = true;
+                else
+                    fgk = false;
+                break;
+            case "cgs":
+                if (checbox.checked)
+                    cgs = true;
+                else
+                    cgs = false;
+                break;
+            case "tra":
+                if (checbox.checked)
+                    tra = true;
+                else
+                    tra = false;
+                break;              
+                // tipo de nota de venta 
+                //var donk = true, donl = true, car = true, cil = true, est = true, fgk = true, fgl = true, trans = true;
+            case "donkg":
+                if (checbox.checked)
+                    donk = true;
+                else
+                    donk = false;
+                break;
+            case "donlt":
+                if (checbox.checked)
+                    donl = true;
+                else
+                    donl = false;
+                break;
+            case "car":
+                if (checbox.checked)
+                    car = true;
+                else
+                    car = false;
+                break;
+            case "cil":
+                if (checbox.checked)
+                    cil = true;
+                else
+                    cil = false;
+                break;
+            case "est":
+                if (checbox.checked)
+                    est = true;
+                else
+                    est = false;
+                break;
+            case "fuglt":
+                if (checbox.checked)
+                    fgks = true;
+                else
+                    fgks = false;
+                break;
+            case "fugkg":
+                if (checbox.checked)
+                    fgls = true;
+                else
+                    fgls = false;
+                break;
+            case "tran":
+                if (checbox.checked)
+                    trans = true;
+                else
+                    trans = false;
+                break;
+
+        }
+
+
+
+
+
+    }
+    // valida si un cliente sera mostrada referente a su forma de pago 
+    function verificarMuestreoCtePago(nota) {
+        var tip_nota = false;
+        var tip_pago = false;
+        // tipo de nota 
+        //var donk = true, donl = true, car = true, cil = true, est = true, fgk = true, fgl = true, trans = true;
+        switch (nota.tpa_nvta.trim()) {
+            case "K":
+                if (donk)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "D":
+                if (donl)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "B":
+                if (car)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "C":
+                if (cil)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "E":
+                if (est)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "F":
+                if (fgks)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "Q":
+                if (fgls)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "T":
+                if (trans)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+
+
+
+
+            default:
+                return false;
+
+        }
+        // metodo de pago
+        switch (nota.tpa_nvta.trim()) {
+            case "R":
+                if (tca)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "B":
+                if (tba)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "C":
+                if (cre)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "E":
+                if (efe)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "F":
+                if (fgl)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "Q":
+                if (fgk)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "G":
+                if (cgs)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "T":
+                if (tra)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+           
+
+
+
+            default:
+                return false;
+
+        }
+
+        if (tip_pago && tip_nota) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    //quita los marcadores del mapa 
+    // quita los marcadores actuales
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_marcadores.length; i++) {
+            arr_marcadores[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+   
+</script>
+<style>
+    #map {
+        height: 100%;
+        width: 100%;
+        border-radius: 2%;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #controles {
+        position: relative;
+        top: -95%;
+        float: left;
+        margin: 10px;        
+        color: #000;
+        opacity: 0.2;
+        border-radius: 5%;
+    }
+
+        #controles:hover {
+            opacity: 0.9;
+        }
+     dialog{
+      border-radius: 15px;
+    border: 3px double #716d6d;
+
+  }
+       button{
+    text-decoration: none;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: helvetica;   
+    font-size: 15px;
+    font-style: italic;
+    color: #716d6d;
+    background-color:  #d7d8e6;
+    border-radius: 15px;
+    border: 3px double #716d6d;
+  }
+  button:hover{
+    opacity: 0.6;
+    text-decoration: none;
+  }
+    #imgload{
+            background: #d7d8e6;
+            color: #000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50px);
+            box-sizing: border-box;
+            border-radius: 30%;
+            position: absolute;
+            opacity: 0.9;
+
+        }
+    
+</style>

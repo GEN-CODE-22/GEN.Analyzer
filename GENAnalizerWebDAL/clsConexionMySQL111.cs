@@ -1,0 +1,348 @@
+﻿using GENAnalizerWebETY;
+using GENAnalizerWebETY.MySQL111;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GENAnalizerWebDAL
+{
+   public class clsConexionMySQL111
+    {
+        //Optiene un listado de usuarios de whstas app por compañia y planta
+        /// Metodo utilizado en proyecto ANALYZER
+        /// Hecho por Hector Aleman Pineda
+        /// Fecha: 2020-12-29
+        /// Email: haleman@gasexpressnieto.com.mx
+        /// Fecha de modificaicon: 2020-12-29
+        /// <returns>List<clsQuejasWhatsAppETY> </returns>
+        /// 
+       public List<clsPediosCB> getUbiCtesWhatsApp(clParametros param)
+        {
+            MySqlConnection _connectionObject = null; 
+            MySqlDataAdapter _adapterObject;
+            MySqlCommand _commandObject = null;
+            MySqlDataReader _reader;
+            string _strConnextionString;
+            List<clsPediosCB> ls = new List<clsPediosCB>();
+            try
+            {
+                if (param.paramEmp.Equals("GEN"))
+                {
+                    _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOT"].ToString();
+                    _connectionObject = new MySqlConnection(_strConnextionString);
+                    _connectionObject.Open(); _connectionObject = new MySqlConnection(_strConnextionString);
+                    _connectionObject.Open();
+                    _commandObject = new MySqlCommand("SELECT * FROM chatbot.cliente join chatbot.ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                                                          "where ubicaciones.srv_ubi='" + param.paramSrv + "' and ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+                }
+                else
+                {
+                    _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOTPLUS"].ToString();
+                    _connectionObject = new MySqlConnection(_strConnextionString);
+                    _connectionObject.Open();
+                    _commandObject = new MySqlCommand("SELECT * FROM cliente join ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                                                          "where ubicaciones.srv_ubi='" + param.paramSrv + "' and ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+                }
+               
+                
+                if (_connectionObject.State.ToString().Equals("Open"))
+                {
+
+                    //if (param.paramSrv.Equals("Admin"))
+                    //{
+                    //    if (string.IsNullOrWhiteSpace(param.paramCia) && string.IsNullOrWhiteSpace(param.paramPla))
+                    //        _commandObject = new MySqlCommand("SELECT * FROM chatbot.cliente join chatbot.ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                           "where fecalt_cte >= '" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+                    //    else
+                    //        _commandObject = new MySqlCommand("SELECT * FROM chatbot.cliente join chatbot.ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                      "where  ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+
+                    //}
+                    //else
+                    //{
+                    //    if (string.IsNullOrWhiteSpace(param.paramCia) && string.IsNullOrWhiteSpace(param.paramPla))
+                    //        _commandObject = new MySqlCommand("SELECT * FROM chatbot.cliente join chatbot.ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                           "where ubicaciones.srv_ubi='" + param.paramSrv + "' and fecalt_cte >= '" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+                    //    else
+                    //        _commandObject = new MySqlCommand("SELECT * FROM chatbot.cliente join chatbot.ubicaciones on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                      "where ubicaciones.srv_ubi='" + param.paramSrv + "' and ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' ", _connectionObject);
+
+                    //}
+
+                   
+                    
+
+
+                    _reader = _commandObject.ExecuteReader();
+                    if (_reader.HasRows)
+                    {
+                       
+
+                        DataTable dt = new DataTable();
+                        dt.Columns.Clear();
+                        List<string> encabezados = new List<string>();
+                        List<string> encabezadosAux = new List<string>();
+                        for (int i = 0; i < _reader.FieldCount; i++)
+                        {
+                            encabezadosAux = encabezados.Where(x => x.StartsWith(_reader.GetName(i))).ToList<String>();
+                            if (encabezadosAux.Count<=0)
+                            {
+                                dt.Columns.Add(_reader.GetName(i));  
+                            }
+                            encabezados.Add(_reader.GetName(i)); 
+                            encabezadosAux.Clear();
+                        }
+                        dt.Load(_reader);
+                        string JSONresult = JsonConvert.SerializeObject(dt);
+                        ls = JsonConvert.DeserializeObject<List<clsPediosCB>>(JSONresult);
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                _connectionObject.Dispose();
+                _connectionObject.Close();
+            }
+
+            _connectionObject.Dispose();
+            _connectionObject.Close();
+            return ls;
+
+        }
+
+        //Optiene un listado de Pedidos de origen whats app
+        /// Metodo utilizado en proyecto ANALYZER
+        /// Hecho por Hector Aleman Pineda
+        /// Fecha: 2020-12-29
+        /// Email: haleman@gasexpressnieto.com.mx
+        /// Fecha de modificaicon: 2020-12-29
+        /// <returns>List<clsQuejasWhatsAppETY> </returns>
+        /// 
+        public List<clsPediosCB> getPedCtesWhatsApp(clParametros param)
+        {
+            MySqlConnection _connectionObject = null;
+            MySqlDataAdapter _adapterObject;
+            MySqlCommand _commandObject = null;
+            MySqlDataReader _reader;
+            string _strConnextionString;
+            List<clsPediosCB> ls = new List<clsPediosCB>();
+            try
+            {
+                if (param.paramEmp.Equals("GEN"))               
+                     _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOT"].ToString();           
+                else
+                    _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOTPLUS"].ToString();
+
+               
+                _connectionObject = new MySqlConnection(_strConnextionString);
+                _connectionObject.Open();
+                if (_connectionObject.State.ToString().Equals("Open"))
+                {
+                    _commandObject = new MySqlCommand("SELECT * " +
+                                                      " FROM cliente join ubicaciones  " +
+                                                      "      on cliente.id_cliente=ubicaciones.id_cliente " +
+                                                      "      join pedidos  " +
+                                                      "          on (pedidos.id_ubi= ubicaciones.id_ubi and pedidos.id_cliente=ubicaciones.id_cliente) " +
+                                                      " where  ubicaciones.srv_ubi='" + param.paramSrv + "' and ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecsur_ped >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecsur_ped <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' and tser_ubi in (" + param.paramRuta + ") and  vta_ped>=" + param.paramString1 + " and sts_ped='S'", _connectionObject);
+
+                    
+                    //if (param.paramSrv.Equals("Admin"))
+                    //{
+                    //    if (string.IsNullOrWhiteSpace(param.paramCia) && string.IsNullOrWhiteSpace(param.paramPla))
+                    //        _commandObject = new MySqlCommand("SELECT * " +
+                    //                                          " FROM chatbot.cliente join chatbot.ubicaciones  " +
+                    //                                          "      on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                          "      join chatbot.pedidos  " +
+                    //                                          "          on (chatbot.pedidos.id_ubi= chatbot.ubicaciones.id_ubi and chatbot.pedidos.id_cliente=chatbot.ubicaciones.id_cliente) " +
+                    //                                          " where   fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' and tser_ubi in (" + param.paramRuta + ") and  vta_ped>=" + param.paramString1 + " and sts_ped='S'", _connectionObject);
+                    //    else
+                    //        _commandObject = new MySqlCommand("SELECT * " +
+                    //                                          " FROM chatbot.cliente join chatbot.ubicaciones  " +
+                    //                                          "      on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                          "      join chatbot.pedidos  " +
+                    //                                          "          on (chatbot.pedidos.id_ubi= chatbot.ubicaciones.id_ubi and chatbot.pedidos.id_cliente=chatbot.ubicaciones.id_cliente) " +
+                    //                                          " where   ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' and tser_ubi in (" + param.paramRuta + ") and  vta_ped>=" + param.paramString1 + " and sts_ped='S'", _connectionObject);
+
+                    //}
+                    //else
+                    //{
+                    //    if (string.IsNullOrWhiteSpace(param.paramCia) && string.IsNullOrWhiteSpace(param.paramPla))
+                    //        _commandObject = new MySqlCommand("SELECT * " +
+                    //                                          " FROM chatbot.cliente join chatbot.ubicaciones  " +
+                    //                                          "      on cliente.id_cliente=ubicaciones.id_cliente " +
+                    //                                          "      join chatbot.pedidos  " +
+                    //                                          "          on (chatbot.pedidos.id_ubi= chatbot.ubicaciones.id_ubi and chatbot.pedidos.id_cliente=chatbot.ubicaciones.id_cliente) " +
+                    //                                          " where  ubicaciones.srv_ubi='" + param.paramSrv + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' and tser_ubi in (" + param.paramRuta + ") and  vta_ped>=" + param.paramString1 + " and sts_ped='S'", _connectionObject);
+                    //    else
+                    //        _commandObject = new MySqlCommand("SELECT * "+
+                    //                                          " FROM chatbot.cliente join chatbot.ubicaciones  "+
+                    //                                          "      on cliente.id_cliente=ubicaciones.id_cliente "+ 
+                    //                                          "      join chatbot.pedidos  "+
+                    //                                          "          on (chatbot.pedidos.id_ubi= chatbot.ubicaciones.id_ubi and chatbot.pedidos.id_cliente=chatbot.ubicaciones.id_cliente) " +
+                    //                                          " where  ubicaciones.srv_ubi='" + param.paramSrv + "' and ciapla_ubi='" + param.paramCia + param.paramPla + "' and fecalt_cte >='" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "' and fecalt_cte <= '" + param.fechaF.ToString("yyyy-MM-dd 59:59:00") + "' and tser_ubi in (" + param.paramRuta + ") and  vta_ped>=" + param.paramString1 + " and sts_ped='S'", _connectionObject);
+
+                    //}
+
+
+
+
+
+                    _reader = _commandObject.ExecuteReader();
+                    if (_reader.HasRows)
+                    {
+
+
+                        DataTable dt = new DataTable();
+                        dt.Columns.Clear();
+                        List<string> encabezados = new List<string>();
+                        List<string> encabezadosAux = new List<string>();
+                        for (int i = 0; i < _reader.FieldCount; i++)
+                        {
+                            encabezadosAux = encabezados.Where(x => x.StartsWith(_reader.GetName(i))).ToList<String>();
+                            if (encabezadosAux.Count <= 0)
+                            {
+                                dt.Columns.Add(_reader.GetName(i));
+                            }
+                            encabezados.Add(_reader.GetName(i));
+                            encabezadosAux.Clear();
+                        }
+                        dt.Load(_reader);
+                        string JSONresult = JsonConvert.SerializeObject(dt);
+                        ls = JsonConvert.DeserializeObject<List<clsPediosCB>>(JSONresult);
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                _connectionObject.Dispose();
+                _connectionObject.Close();
+            }
+
+            _connectionObject.Dispose();
+            _connectionObject.Close();
+            return ls;
+
+        }
+
+        //Optiene un listado de pagos qr
+        /// Metodo utilizado en proyecto ANALYZER
+        /// Hecho por Hector Aleman Pineda
+        /// Fecha: 2020-12-29
+        /// Email: haleman@gasexpressnieto.com.mx
+        /// Fecha de modificaicon: 2020-12-29
+        /// <returns>List<clsQuejasWhatsAppETY> </returns>
+        /// 
+        public clsRespuesta getPagosQr(clParametros param)
+        {
+            MySqlConnection _connectionObject = null;
+            MySqlDataAdapter _adapterObject;
+            MySqlCommand _commandObject = null;
+            MySqlDataReader _reader;
+            string _strConnextionString;
+            List<clsPagosQr> ls = new List<clsPagosQr>();
+            String servidor = "";
+            clsRespuesta respuesta = new clsRespuesta();
+            try
+            {
+                //_strConnextionString = ConfigurationManager.ConnectionStrings["MySql31_datos_dashboard"].ToString();
+                //_connectionObject = new MySqlConnection(_strConnextionString);
+                //_connectionObject.Open();
+                //if (_connectionObject.State.ToString().Equals("Open"))
+                //{
+                //    _commandObject = new MySqlCommand("SELECT server_dash FROM datos_dashboard.ciaplasrv where compania_dash like '%" + param.paramCia + "%' and planta_dash ='" + param.paramPla + "'", _connectionObject);
+
+                //    _reader = _commandObject.ExecuteReader();
+                //    if (_reader.HasRows)
+                //    {
+                //        _reader.Read();
+                //        servidor = _reader.GetString(0);
+                //    }
+                //    else
+                //    {
+
+                //        respuesta.iconMessage = "info";
+                //        respuesta.MesajeReturn = "No se pudo identificar el servidor de consulta.";
+                //    }
+                //    _reader.Close();
+                //    _connectionObject.Dispose();
+                //    _connectionObject.Close();
+               // }
+
+                // si la compañia y planta pertenece al servidor se consultan los servicios pagados con qr
+                //if (servidor.Equals(param.paramSrv))
+                //{
+                if (param.paramEmp.Equals("PLUS"))
+                    _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOTPLUS"].ToString();
+                else
+                    _strConnextionString = ConfigurationManager.ConnectionStrings["CHATBOT"].ToString();
+                   
+                    _connectionObject = new MySqlConnection(_strConnextionString);
+                    _connectionObject.Open();
+                    if (_connectionObject.State.ToString().Equals("Open"))
+                    {
+                        _commandObject = new MySqlCommand("SELECT * FROM pagosxqr WHERE cia_qr='" + param.paramCia + "' and pla_qr='" + param.paramPla + "' and creation_date between '" + param.fechaI.ToString("yyyy-MM-dd 00:00:00") + "'  and '" + param.fechaF.ToString("yyyy-MM-dd 23:59:00") + "' and edo_tran=1", _connectionObject);
+
+                        _reader = _commandObject.ExecuteReader();
+                        if (_reader.HasRows)
+                        {
+                            
+                            DataTable dt = new DataTable();
+                            dt.Columns.Clear();
+                            List<string> encabezados = new List<string>();
+                            List<string> encabezadosAux = new List<string>();
+                            for (int i = 0; i < _reader.FieldCount; i++)
+                            {
+                                encabezadosAux = encabezados.Where(x => x.StartsWith(_reader.GetName(i))).ToList<String>();
+                                if (encabezadosAux.Count <= 0)
+                                {
+                                    dt.Columns.Add(_reader.GetName(i));
+                                }
+                                encabezados.Add(_reader.GetName(i));
+                                encabezadosAux.Clear();
+                            }
+                            dt.Load(_reader);
+                            string JSONresult = JsonConvert.SerializeObject(dt);
+                            ls = JsonConvert.DeserializeObject<List<clsPagosQr>>(JSONresult);
+                            respuesta.iconMessage = "success";
+                        }
+                    }
+
+                //}
+                //else
+                //{
+                //    respuesta.iconMessage = "info";
+                //    respuesta.MesajeReturn = "La compañia y planta no concuerda con el servidor logeado.";
+                //}
+
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.iconMessage = "error";
+                respuesta.MesajeReturn = ex.Message;
+                _connectionObject.Dispose();
+                _connectionObject.Close();
+            }
+            respuesta.ObjetReturn = ls;
+
+
+            _connectionObject.Dispose();
+            _connectionObject.Close();
+            return respuesta;
+
+        }
+
+    }
+}

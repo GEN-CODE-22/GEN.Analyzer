@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GENAnalizerWebETY
+{
+   public class clsUsuarios
+    {
+        //Ingreso de sesion: fecha  19/08/2019 12:22:55 p. m.  usuario UsrNieto servidor Queretar
+       public  String id_usr { set; get; }
+       public  String usr_usr { set; get; }
+       public  String pwd_usr { set; get; }
+       public String srv_usr { set; get; }
+       public String fecha_secion { set; get; }
+       public String hora_secion { set; get; }
+       public int logeos { set; get; }
+    }
+}

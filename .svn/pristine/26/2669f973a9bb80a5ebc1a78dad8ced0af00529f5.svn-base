@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using GENAnalizerWebDAL;
+using GENAnalizerWebETY;
+
+
+namespace GENAnalizerWebBLL
+{
+   public class clsConexionUbicoBLL
+    {
+       public List<clsDatosAppCliente> infoAppCliente()
+       {
+           clsConexionAnalizerUbiqo conexion= new clsConexionAnalizerUbiqo();
+           return conexion.infoAppCliente();
+       }
+       public List<clsDatosAppCliente> infoPedidosClienteBLL(String idCliente)
+       {
+           clsConexionAnalizerUbiqo conexion = new clsConexionAnalizerUbiqo();
+           return conexion.infoPedidosCliente(idCliente);
+       }
+
+    }
+}

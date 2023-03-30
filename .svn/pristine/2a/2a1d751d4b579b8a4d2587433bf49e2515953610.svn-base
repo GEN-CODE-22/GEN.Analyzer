@@ -1,0 +1,884 @@
+﻿@{
+    ViewBag.Title = "Analizer_app";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+
+</head>
+<body>
+    <div id="map">
+    </div>
+    <div id="form_map">
+        <div id="turno_geo">
+            SERVIDOR:
+            <label id="serv">@ViewBag.Srv</label>
+            <label id="usr">USUARIO: @ViewBag.Usr</label>
+            <br />
+            <center>
+                <label id="serv">Control de geocercas</label>
+                TURNOS :
+                <input id="chk_mañana" type="checkbox" name="geo_mañana" value="mañana" checked onchange="cambioValorCheck(this)"> Mañana
+                <input  id="chk_tarde" type="checkbox" name="geo_tarde" value="tarde" checked onchange="cambioValorCheck(this)">Tarde<br />
+                RUTAS :
+                <input type="checkbox" name="rut_cil" value="cilindro" checked onchange="cambioValorCheck(this)"> Cilindros
+                <input type="checkbox" name="rut_pip" value="pipa" checked onchange="cambioValorCheck(this)">Pipas
+                <br />
+                Servidores :
+                <select id="select_servidores"></select><br />
+                Plantas :
+                <select id="select_plantas"></select><br />
+               
+                Intencidad: <input type="range" id="inten_geo" name="points" min="1" max="99"><br />
+                Tipo visualizacion:<select id="select_tipo_visualisacion">
+                                    <option>PRESENCIA</option>
+                                    <option>TIPO DISPOSITIVO</option>
+                                    <option>PEDIDOS</option>
+                                    <option>SERVICIO DEFAULT</option>
+                                </select><br />
+
+            </center>
+            <div>
+                <CENTER>
+                    <h3>RESUMEN GENERAL</h3>
+                    <img src="~/Images/APP.png" style="display:inline" /> Descargas generales:<label id="descargas"></label>
+                    <img src="~/Images/android.png" style="display:inline" /> Descargas Android:<label id="descargasA"></label>
+                    <img src="~/Images/apple.png" style="display:inline" /> Descargas IOS:<label id="descargasI"></label>
+                    <img src="~/Images/PEDIDO_Android.png" style="display:inline" /> Descargas con pedidos Android:<label id="pedidosA"></label>
+                    <img src="~/Images/PEDIDO_IOS.png" style="display:inline" /> Descargas con pedidos IOS:<label id="pedidosI"></label>
+                    Descargas sin pedidos Android: <label id="sinPedidosA"></label>
+                    Descargas sin pedidos IOS: <label id="sinPedidosI"></label>
+
+
+                </CENTER>
+            </div>   
+        </div>
+  
+
+    </div>
+    <div id="geoload">
+        <img src="~/Images/loadGeocercas.gif" style="display:inline" />
+    </div>
+    <dialog id="resultadosPedidosClientes">
+        <h3 id="nomCte"></h3>
+        <h3 id="numCte"></h3><br />
+        <center><h3 >Pedidos Realizados</h3><br /></center>
+        <div id="tblPedidos"></div>
+        <br />
+        <button onclick="cerrarDialogo()">cerrar</button>
+       
+    </dialog>
+</body>
+</html>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables globales
+    var geocercas = [];          // contiene las informacion de las geocercas en crudo
+    var geocercas_en_mapa = [];  // contiene las geocercas que estan en el mapa en forma de poligono.
+    var turno_mañana = false;     // controla la visualizacion de las geocercas de turno matutino
+    var turno_tarde = false;      // controla la visualizacion de las geocercas de turno vespertino
+    var ruta_cil = true;         // controla la visualizacion de las geocercas de rutas de cilindro
+    var ruta_pip = true;         // controla la visualizacion de las geocercas de rutas de pipa
+    var intencidad = 30;         // variable que controla la intencidad de color de las geocercas
+    var servidores = [];         // almacena los servidores resultado de consultar las geogercas;
+    var plantas = [];            //almacena de form temporar las plantas de un servidor
+    var infoApp = [];            // guarda la informacion consultada de la aplicacion del cliente;
+    var arr_iconInfoApp = [];    // contiene los iconos mostrados en el mapa
+    var geocercas_usadas = [];   // contiene las geocercas que representa la informacion de un servidor en espesifico
+    var dialogos = [];           // contiene los dialogos en la pantalla
+    // varibles de resumen general
+    var appsDescargadas = 0, descargasAndroid = 0, descargasIOS = 0, sinPedidosA = 0, sinPedidosI = 0, pedidosA = 0, pedidosI = 0;
+
+    // consulta de las geocercas
+    $(document).ready(function () {
+        document.getElementById('geoload').style.display = "none";
+        document.getElementById('geoload').style.display = "inline";
+        document.getElementById("chk_mañana").checked = false;
+        document.getElementById("chk_tarde").checked = false;
+
+        //obtener las geocercas
+        $.ajax({
+            type: "POST",
+            url: "/Home/getGeocercas/",
+            data: { paramSrv: document.getElementById('serv').innerHTML },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    geocercas = data;
+                    document.getElementById('geoload').style.display = "none";
+                    guardaServidores();
+                    dibujaGeocercas();
+                    getInfoApp();
+
+                }
+                else {
+                    alert("No existe información de geocercas en el servidor ingresado");
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+    });
+    //  obtiene informacion de la los usuarios de la aplicacion
+    function getInfoApp() {
+        $.ajax({
+            type: "POST",
+            url: "/Home/infoApp/",
+            data: { paramSrv: document.getElementById('serv').innerHTML },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    infoApp = data;
+                    if (document.getElementById('serv').innerHTML != 'Admin') {
+                        getInfoPorServidor();
+                    }
+                    dibujaPuntosApp();
+                    resumenGral();
+                }
+                else {
+                    alert("No existe información de geocercas en el servidor ingresado");
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+
+    }
+    // creacion del mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+    }
+    //dubuja las geocrecas en el mapa
+    function dibujaGeocercas() {
+        var servidor = "";
+        var color = "";
+        var srvSeleccionado = $("#select_servidores option:selected").text();
+        var plaSeleccionada = $("#select_plantas option:selected").text();
+        var valores_plaSeleccionada = plaSeleccionada.split('-');
+        quitarGeocercas();
+        for (var i = 0; i < geocercas.length; i++) {
+            //dibuja las geocercas del server seleccionado
+            if ( (geocercas[i].srv_geo.trim()== srvSeleccionado) |srvSeleccionado== 'Todos' ) {
+                //dibuja las geocrecas de la planta seleccionada
+                if ((geocercas[i].pla_geo.trim() == valores_plaSeleccionada[0].trim()) |  valores_plaSeleccionada[0].trim() == 'Todas') {
+
+
+                var puntos = geocercas[i].puntos_geo.trim();
+                var coordenadas = puntos.split('),(');
+                var poligon = [];
+                var lonlat;
+                if (servidor!= geocercas[i].srv_geo) {
+                    color = geocercas[i].color_geo;
+                    servidor = geocercas[i].srv_geo;
+                }
+                // obtener las coredenadas en areglo
+                for (var j = 0; j < coordenadas.length; j++) {
+                    coordenadas[j] = coordenadas[j].replace('(', '');
+                    coordenadas[j] = coordenadas[j].replace(')', '');
+                    lonlat = coordenadas[j].split(",");
+                    poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+                    point = new google.maps.LatLng(lonlat[0], lonlat[1]);
+                }
+                //map.setCenter(point);
+                // Contruccion del la geocerca
+                var geopoligon = new google.maps.Polygon({
+                    paths: poligon,
+                    strokeColor: '#000',
+                    strokeOpacity: 0.6,
+                    strokeWeight: 2,
+                    fillColor: color,
+                    //fillColor: geocercas[i].color_geo.trim(),
+                    fillOpacity: intencidad / 100,
+                    title: geocercas[i].nom_geo,
+                    html: 'SERVIDOR:' + geocercas[i].srv_geo + 'PLANTA:' + geocercas[i].pla_geo+ ' RUTA: ' + geocercas[i].nom_geo.trim() + '\n' + 'HORARIO: ' + geocercas[i].hraini_geo + 'hrs - ' + geocercas[i].hrafin_geo + 'hrs'
+                });
+
+                // determinar si mostrar el turno y ruta
+                switch (geocercas[i].turno_geo.trim()) {
+                    case "MAÑANA":
+                        if (turno_mañana) {
+
+                            switch (geocercas[i].tipuni_geo.trim()) {
+                                case "Cilindro":
+                                    if (ruta_cil) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+
+                                    }
+                                    break;
+                                case "Pipa":
+                                    if (ruta_pip) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+                                    }
+                                    break;
+                                default:
+                            }
+                        }
+                        break;
+                    case "TARDE":
+                        if (turno_tarde) {
+                            switch (geocercas[i].tipuni_geo.trim()) {
+                                case "Cilindro":
+                                    if (ruta_cil) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+
+                                    }
+                                    break;
+                                case "Pipa":
+                                    if (ruta_pip) {
+                                        geopoligon.setMap(map);
+                                        geocercas_en_mapa.push(geopoligon);
+                                    }
+                                    break;
+                                default:
+
+                            }
+                        }
+                        break;
+                    default:
+
+                }
+
+                infoWindowG = new google.maps.InfoWindow();
+                google.maps.event.addListener(geopoligon, 'click', MuestraInfo);
+            }
+        }
+
+
+        }
+    }
+    // mestra informacion de las geocercas al darle clic
+    function MuestraInfo(event) {
+        infoWindowG.setContent(this.html);
+        infoWindowG.setPosition(event.latLng);
+        infoWindowG.open(map);
+    }
+    //verifica la seleccion de un cambio de valor en los checkbox
+    function cambioValorCheck(checbox) {
+        var valor = checbox.value;
+        switch (valor) {
+            case "mañana":
+                if (checbox.checked)
+                    turno_mañana = true;
+                else
+                    turno_mañana = false;
+                dibujaGeocercas();
+                break;
+            case "tarde":
+                if (checbox.checked)
+                    turno_tarde = true;
+                else
+                    turno_tarde = false;
+                dibujaGeocercas();
+                break;
+
+            case "cilindro":
+                if (checbox.checked)
+                    ruta_cil = true;
+                else
+                    ruta_cil = false;
+                dibujaGeocercas();
+                break;
+            case "pipa":
+                if (checbox.checked)
+                    ruta_pip = true;
+                else
+                    ruta_pip = false;
+                dibujaGeocercas();
+                break;
+                //forma de pedido
+            case "app":// aplicacion
+                if (checbox.checked)
+                    app = true;
+                else
+                    app = false;
+                muestraIconos();
+                break;
+            case "cll":// calle
+                if (checbox.checked)
+                    cll = true;
+                else
+                    cll = false;
+                muestraIconos();
+                break;
+            case "ccr"://callcenter
+                if (checbox.checked)
+                    ccr = true;
+                else
+                    ccr = false;
+                muestraIconos();
+                break;
+            case "pro"://proactivo
+                if (checbox.checked)
+                    pro = true;
+                else
+                    pro = false;
+                muestraIconos();
+                break;
+            case "pxs"://programado por sistema
+                if (checbox.checked)
+                    pxs = true;
+                else
+                    pxs = false;
+                muestraIconos();
+                break;
+            case "enc"://encuesta
+                if (checbox.checked)
+                    enc = true;
+                else
+                    enc = false;
+                muestraIconos();
+                break;
+            case "web"://web
+                if (checbox.checked)
+                    web = true;
+                else
+                    web = false;
+                muestraIconos();
+                break;
+                // servicios
+            case "est"://web
+                if (checbox.checked)
+                    est = true;
+                else
+                    est = false;
+                muestraIconos();
+                break;
+            case "cil"://web
+                if (checbox.checked)
+                    cil = true;
+                else
+                    cil = false;
+                muestraIconos();
+                break;
+                // uso de nota de venta
+            case "dom":// domestico
+                if (checbox.checked)
+                    dom = true;
+                else
+                    dom = false;
+                muestraIconos();
+                break;
+            case "com"://comercial
+                if (checbox.checked)
+                    com = true;
+                else
+                    com = false;
+                muestraIconos();
+                break;
+            case "ind"://indistrial
+                if (checbox.checked)
+                    ind = true;
+                else
+                    ind = false;
+                muestraIconos();
+                break;
+            case "ser"://servicios
+                if (checbox.checked)
+                    ser = true;
+                else
+                    ser = false;
+                muestraIconos();
+                break;
+            case "car"://carburacion
+                if (checbox.checked)
+                    car = true;
+                else
+                    car = false;
+                muestraIconos();
+                break;
+                // var dom = true, com = true, ind = true, ser = true, car = true, gra = true, tor = true, pan = true, exj = true, pgs = true;
+            case "gra"://granjas
+                if (checbox.checked)
+                    gra = true;
+                else
+                    gra = false;
+                muestraIconos();
+                break;
+            case "tor"://tortillerias
+                if (checbox.checked)
+                    tor = true;
+                else
+                    tor = false;
+                muestraIconos();
+                break;
+            case "pan"://panaderias
+                if (checbox.checked)
+                    pan = true;
+                else
+                    pan = false;
+                muestraIconos();
+                break;
+            case "pgs"://plus gas
+                if (checbox.checked)
+                    pgs = true;
+                else
+                    pgs = false;
+                muestraIconos();
+                break;
+            case "exj"://extrajudicial
+                if (checbox.checked)
+                    exj = true;
+                else
+                    exj = false;
+                muestraIconos();
+                break;
+                //presencia
+            case "pre"://extrajudicial
+                if (checbox.checked)
+                    pre = true;
+                else
+                    pre = false;
+                muestraIconos();
+                break;
+
+        }
+
+
+
+
+
+    }
+    //quita las geocercas actuales en el mapa
+    function quitarGeocercas() {
+        if (geocercas_en_mapa.length > 0) {
+            for (var i = 0; i < geocercas_en_mapa.length; i++) {
+                geocercas_en_mapa[i].setMap(null);
+            }
+        }
+
+
+    }
+    //agrega los servidores a un objeto select
+    function guardaServidores() {
+        var existe = false;
+        for (var i = 0; i < geocercas.length; i++) {
+
+            for (var j = 0; j < servidores.length; j++) {
+                if (geocercas[i].srv_geo.trim() == servidores[j].trim())
+                    existe = true;
+            }
+
+            if (!existe) {
+                servidores.push(geocercas[i].srv_geo.trim());
+
+            }
+            existe = false;
+
+
+        }
+        // agregar los servidores al selec para uausuario admin
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            var x = document.getElementById("select_servidores");
+            var option = document.createElement("option");
+            option.text = 'Todos';
+            x.add(option);
+
+        }
+
+        for (var k = 0; k < servidores.length; k++) {
+             x = document.getElementById("select_servidores");
+             option = document.createElement("option");
+            option.text = servidores[k].trim();
+            x.add(option);
+
+        }
+        guardaPlantas();
+
+    }
+    //guardas las plantas dependiendo el servidor consultado
+    function guardaPlantas() {
+        var x = document.getElementById("select_plantas");
+        x.length = 0;
+        var valores = [];
+        var server_actual=document.getElementById("select_servidores").value.trim();
+        var x = document.getElementById("select_plantas");
+        // agregamos la opcion de todas las plantas
+        option = document.createElement("option");
+        option.text ='Todas';
+        x.add(option);
+        // se agregan las plantas correspondientes al servidor
+        if (server_actual!='Todos') {
+        for (var i = 0; i < arr_plantas.length; i++) {
+            valores = arr_plantas[i].split('|');
+            if (valores[0].trim()==server_actual.trim()) {
+                option = document.createElement("option");
+                option.text = valores[1]+'-'+valores[2];
+                x.add(option);
+            }
+        }
+    }
+    }
+    // diduja las geoercas de dicho servidor
+    $(select_servidores).change(function () {
+        guardaPlantas();
+        dibujaGeocercas();
+    });
+    //dibuja las geocercas de dicha planta
+    $(select_plantas).change(function () {
+        dibujaGeocercas();
+    });
+    $(document).on("change", "#inten_geo", function () {
+        intencidad = document.getElementById("inten_geo").value
+        dibujaGeocercas();
+    });
+    //grafica los iconos de  la app
+    function dibujaPuntosApp() {
+        limpiarMarcadores();
+        var punto;
+        var tipoIcono = document.getElementById("select_tipo_visualisacion").value.trim();
+        var pathIcon = "";
+        var titulo = "";
+        var id = "";
+        for (var i = 0; i < infoApp.length; i++) {
+            id = infoApp[i].Id;
+            switch (tipoIcono) {
+                case "PRESENCIA":
+                    pathIcon = "/Images/APP.png";
+                    titulo = "Dispositivo con app NIETO";
+                    break;
+                case "TIPO DISPOSITIVO":
+
+                    if (infoApp[i].Dispositivo == "Android"){
+                        pathIcon = "/Images/android.png";
+                        titulo = "Dispositivo Android";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/apple.png";
+                        titulo = "Dispositivo IOS";
+                    }
+
+
+                    break;
+                case "PEDIDOS":
+                    if (infoApp[i].Pedidos != '0') {
+                        pathIcon = "/Images/PEDIDO_" + infoApp[i].Dispositivo.trim() + ".png";
+                        titulo = "Cliente con almenos un pedido realizado";
+
+                    } else  if (infoApp[i].Dispositivo == "Android")
+                    {
+                        pathIcon = "/Images/android.png";
+                        titulo =  "Cliente sin un pedido realizado";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/apple.png";
+                        titulo = "Cliente sin un pedido realizado";
+                    }
+
+
+                    break;
+                case "SERVICIO DEFAULT":
+                    if (infoApp[i].ServicioDefault == "Estacionario") {
+                        pathIcon = "/Images/Estacionario.png";
+                        titulo = " Servicio Estacionario";
+                    }
+                    else
+                    {
+                        pathIcon = "/Images/Cilindro.png";
+                        titulo = " Servicio de Cilindro";
+            }
+
+                    break;
+            }
+            var marker = new google.maps.Marker({
+                position: { lat: parseFloat(infoApp[i].Latitud), lng: parseFloat(infoApp[i].Longitud) },
+                map: map,
+                title: titulo,
+                icon: pathIcon,
+                html: id
+            });
+            point = new google.maps.LatLng(parseFloat(infoApp[i].Latitud), parseFloat(infoApp[i].Longitud));
+            arr_iconInfoApp.push(marker);
+
+
+
+
+            // agregale evento clik
+            var infoWindow = new google.maps.InfoWindow(), marker;
+            // Add info window to marker
+            google.maps.event.addListener(marker, 'click', (function (marker) {
+                return function () {
+                    //infoWindow.setContent(marker.html);
+                   // infoWindow.open(map, marker);
+
+                    // se consulta la informacion del los pedidos del cliente
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/infoPedidosClientes/",
+                        data: { paramString1: marker.html },
+                        datatype: "json",
+                        success: function (data) {
+
+                            if (data.length > 0) {
+                                google.setOnLoadCallback(pedidosClientes);
+                                pedidosClientes(data);
+
+                            }
+                            else {
+                                alert("EL cliente no ha realizado pedidos");
+                            }
+                        },
+                        error: function (request, status, error) {
+
+                            alert(request.responseText);
+                        }
+                    });
+
+                }
+            })(marker));
+
+
+        }// fin for
+
+        
+        map.setCenter(point);
+
+    }
+    //mustra la infomacion de los pedidos del cliente consultado
+    function pedidosClientes(data) {
+
+        document.getElementById('nomCte').innerHTML = 'Cliente: ' + data[0].Nombre;
+        document.getElementById('numCte').innerHTML = 'Numero: ' + data[0].Telefono;
+        // creacion de la tabla
+        var tablaPedidos = new google.visualization.DataTable();
+        tablaPedidos.addColumn('string', 'FECHA PEDIDO');
+        tablaPedidos.addColumn('string', 'ESTADO PEDIDO');
+        tablaPedidos.addColumn('string', 'FECHA SURTIDO');
+        tablaPedidos.addColumn('string', 'RUTA CORRESPONDIENTE');
+        tablaPedidos.addColumn('string', 'TIPO SERVICIO');
+
+        //se llena la tabla con los datos de la consulta
+        var img = "";
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].ruta.startsWith('M')) {
+                img = ' <center><img src="/Images/Estacionario.png" /> </center>';
+            }
+            else
+            {
+                img = ' <center><img src="/Images/Cilindro.png" /></center>';
+            }
+            tablaPedidos.addRow([
+                data[i].Fecha_Pedido,
+                data[i].Estado_Pedido,
+                data[i].Fecha_Surtido,
+                data[i].ruta,
+                img
+            ]);
+        }
+        var formatColor = new google.visualization.ColorFormat();
+        formatColor.addRange('PEDIDO CANCELADO', 'PEDIDO CANCELADO ', 'white', '#f95454');
+        formatColor.addRange('PEDIDO SURTIDO', 'PEDIDO SURTIDO ', 'white', 'green');
+        formatColor.addRange('PEDIDO REPROGRAMADO', 'PEDIDO REPROGRAMADO ', 'white', '#c686f9');
+        formatColor.addRange('PEDIDO ENVIADO', 'PEDIDO ENVIADO ', 'black', 'yellow');
+        formatColor.addRange('CANCELACION PENDIENTE', 'CANCELACION PENDIENTE ', 'white', '#f4b65f');
+        formatColor.addRange('OBSERVACIÓN ACTUALIZADA', 'OBSERVACIÓN ACTUALIZADA ', 'white', '#b3d2f2');
+        formatColor.format(tablaPedidos, 1);
+        //agregar la tabla al div correspondiente de la paguina HTML
+        var contenedor = new google.visualization.Table(tblPedidos);
+        // AGREGAR IMPLEMENTACIONES DE HTML EN LAS CELDAS DE LA TABLA Y PRECENTAR NUMERACION DE REGISTROS
+        contenedor.draw(tablaPedidos, { allowHtml: true, showRowNumber: true });
+        //AGREGAR EVENTO DE CLIC EN EL REGISTRO DE LA TABLA
+        google.visualization.events.addListener(contenedor, 'select', function () {
+
+            //var row = table3.getSelection()[0].row
+
+        });
+
+
+
+        cerrarDialogo();
+        var msg = document.getElementById('resultadosPedidosClientes');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    // quita los dialogos en pantall
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+    //quita los marcadores que se enceuntren en la pantalla
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_iconInfoApp.length; i++) {
+            arr_iconInfoApp[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+    // cambia la forma de gaficacion de los puntos de la app del cliente.
+    $(select_tipo_visualisacion).change(function () {
+        dibujaPuntosApp();
+    });
+    // realiza un resumen general de la presencia de la app
+    function resumenGral() {
+
+
+        for (var i = 0; i < infoApp.length; i++) {
+            appsDescargadas++;
+
+            switch (infoApp[i].Dispositivo.trim()) {
+                case 'Android':
+                    descargasAndroid++;
+                    break;
+                case 'IOS':
+                    descargasIOS++;
+                    break;
+
+
+            }
+
+            if (infoApp[i].Pedidos.trim()!='0') {
+                switch (infoApp[i].Dispositivo.trim()) {
+                    case 'Android':
+                        pedidosA++;
+                        break;
+                    case 'IOS':
+                        pedidosI++;
+                        break;
+                    default:
+
+                }
+
+            } else {
+                switch (infoApp[i].Dispositivo.trim()) {
+                    case 'Android':
+                        sinPedidosA++;
+                        break;
+                    case 'IOS':
+                        sinPedidosI++;
+                        break;
+                    default:
+
+                }
+            }
+
+
+        }
+        // asignacion de las variables.
+        document.getElementById('descargas').innerHTML = appsDescargadas;
+        document.getElementById('descargasA').innerHTML = descargasAndroid;
+        document.getElementById('descargasI').innerHTML = descargasIOS;
+        document.getElementById('pedidosA').innerHTML = pedidosA;
+        document.getElementById('pedidosI').innerHTML = pedidosI;
+        document.getElementById('sinPedidosA').innerHTML = sinPedidosA;
+        document.getElementById('sinPedidosI').innerHTML = sinPedidosI;
+
+
+    }
+    // selecciona las descargas que le pertenecen aun solo servidor
+
+    function getInfoPorServidor() {
+            for (var i = 0; i < geocercas.length; i++) {
+                var puntos = geocercas[i].puntos_geo.trim();
+                var coordenadas = puntos.split('),(');
+                var poligon = [];
+                var lonlat;
+
+                // obtener las coredenadas en areglo
+                for (var j = 0; j < coordenadas.length; j++) {
+                    coordenadas[j] = coordenadas[j].replace('(', '');
+                    coordenadas[j] = coordenadas[j].replace(')', '');
+                    lonlat = coordenadas[j].split(",");
+                    poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+                }
+                // Contruccion del la geocerca
+                var geopoligon = new google.maps.Polygon({
+                    paths: poligon,
+                    strokeColor: '#000',
+                    strokeOpacity: 0.6,
+                    strokeWeight: 2,
+                    fillColor: '#000',
+                    //fillColor: geocercas[i].color_geo.trim(),
+                    fillOpacity: 0.6,
+                    title: geocercas[i].nom_geo,
+                    html: 'SERVIDOR:' + geocercas[i].srv_geo + 'PLANTA:' + geocercas[i].pla_geo + ' RUTA: ' + geocercas[i].nom_geo.trim() + '\n' + 'HORARIO: ' + geocercas[i].hraini_geo + 'hrs - ' + geocercas[i].hrafin_geo + 'hrs'
+                });
+                geocercas_usadas.push(geopoligon);
+            }
+
+            // determinar que descargas le corresponden al servidor logeado
+
+            var descargasPorServidor = [];
+            var encontrado = false;
+            for (var i = 0; i < infoApp.length; i++) {
+                var point1 = new google.maps.LatLng(parseFloat(infoApp[i].Latitud), parseFloat(infoApp[i].Longitud));
+                for (var j = 0; j < geocercas_usadas.length; j++) {
+                    if (google.maps.geometry.poly.containsLocation(point1, geocercas_usadas[j]) & !encontrado)
+                    {
+                        descargasPorServidor.push(infoApp[i]);
+                        encontrado = true;
+                    }
+
+
+                }
+                encontrado = false;
+
+
+
+            }
+            infoApp = descargasPorServidor;
+    }
+</script>
+<style>
+      #map {
+        height: 100%;
+        width: 100%;
+        border-radius: 2%;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+         #form_map {           
+        position: relative;
+        top: -95%;
+        float: left;      
+        margin: 10px;
+        width: 320px;
+        height: 800px;
+        background: #d7d8e6;
+        color: #000;
+        opacity: 0.2;
+        border-radius: 5%;
+        }
+        #form_map:hover {
+     opacity: 0.9;
+    }
+         #geoload{
+       
+        
+        background: #d7d8e6;
+        color: #000;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50px);
+        box-sizing: border-box;
+        border-radius: 30%;
+        position: absolute;
+        opacity: 0.9;
+
+    }
+
+</style>

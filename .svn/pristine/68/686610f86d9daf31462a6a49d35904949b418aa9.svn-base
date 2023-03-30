@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Gas Express Nieto</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+
+    
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<body>
+    <header>
+        <a href="@Url.Action("Index")"><img src="@Url.Content("~/Images/logo.png")" /></a>
+         <!--<img src="~/Images/logo.png" />
+        <div class="content-wrapper">
+            
+            <label>GAS EXPRESS NIETO</label>
+
+            <div class="float-left">
+                
+               <p class="site-title">
+                    <label>GAS EXPRESS NIETO</label></p>
+            </div>
+            <div class="float-right">
+                <nav>
+                    <ul id="menu">
+                        <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                    </ul>
+                </nav>
+            </div>
+        </div>-->
+    </header>
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+<style>
+    .float-left{
+         right: 0 ; 
+    
+    }
+      button{
+    text-decoration: none;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: helvetica;
+   
+    font-size: 15px;
+    font-style: italic;
+    color: #716d6d;
+    background-color:  #d7d8e6;
+    border-radius: 15px;
+    border: 3px double #716d6d;
+  }
+       body {
+        margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100vh;
+    }
+     
+</style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
+<script>
+    var arr_plantas =
+        [
+    'Aguascalientes|29|GEN AGUASCALIENTES',
+    'Arandas|19|GEN ARANDAS',
+    'Celaya|01|GEN CELAYA',
+    'Celaya|93|PLG CELAYA',
+    'Culiacan|24|GEN CULIACAN',
+    'Culiacan|58|GEN CULIACAN',
+    'Culiacan|59|GEN CULIACAN',
+    'Dolores|07|GEN DOLORES',
+    'Dolores|89|PLG  DOLORES',
+    'Dolores|90|PLG  SAN FELIPE ',
+    'Guamuchi|26|GEN GUAMUCHIL ',
+    'Irapuato|04|HGS IRAPUATO ',
+    'Irapuato|05|GEN VALLE DE SANTIAGO',
+    'Irapuato|81|GEN PENJAMO ',
+    'Irapuato|82|GEN SILAO-GTO  ',
+    'Leon|20|GEN LEON, GUANAJUATO',
+    'Leon|95|GEN LAGOS DE MORENO ',
+    'Mazatlan|25|GEN MAZATLAN ',
+    'Mazatlan|46|GEN ESCUINAPA ',
+    'Mochis|27|GEN LOS MOCHIS',
+    'Mochis|48|GEN LOS MOCHIS ',
+    'Mochis|49|GEN GUASAVE ',
+    'Queretar|02|GEN QUERERETARO  ',
+    'Queretar|32|PLG QUERETARO  ',
+    'Queretar|33|GEN GALERAS ',
+    'SanJoseI|13|GEN SAN JOSE ITURBIDE ',
+    'SanJoseI|79|PLG  SAN LUIS DE LA PAZ ',
+    'SanJuan|06|GEN SAN JUAN DEL RIO ',
+    'SanJuan|88|PLG  CAZADERO',
+    'SanLuis|23|GEN SAN LUIS POTOSI ',
+    'SanLuis|76|GEN RIO VERDE ',
+    'SnMiguel|03|GEN SAN MIGUEL',
+    'Mazatlan|03|GAS NE MAZATLAN ',
+    'Tula|28|GEN ATITALAQUIA',
+    'Veracruz|10|GEN VERACRUZ ',
+    'Veracruz|34|GEN LA MANCHA ',
+    'Veracruz|50|GEN CORDOBA',
+    'Veracruz|53|GEN ALVARADO ',
+    'Veracruz|54|GEN COSAMALOAPAN',
+    'Xalapa|08|XALAPA',
+    'Xalapa|36|MARTINEZ',
+    'Xalapa|34|XALAPA',
+    'Xalapa|35|XALAPA',   
+    'Acambaro|12|GEN ACAMBARO',
+    'Acambaro|84|GEN ZITACUARO',
+    'Acambaro|87|PLG ZINAPECUARO',
+    'LazaroCardenas|14|GEN',
+    'LazaroCardenas|45|GEN',
+    'Moroleon|18|GEN',
+    'Moroleon|91|PLG URIANGATO',
+    'Moroleon|37|PLG PURUANDIRO',
+    'Moroleon|38|GEN',
+    'Moroleon|39|GEN',    
+    'Salvatierra|17|GEN SALVATIERRA'
+
+        ];
+
+    var servers =
+        [
+        'acambaro',       
+        'aguascalientes', 
+        'arandas',        
+        'celaya',         
+        'culiacan',       
+        'dolores',       
+        'guamuchi',       
+        'irapuato',       
+        'lazarocardenas', 
+        'leon',           
+        'mazatlan',       
+        'mochis',         
+        'moroleon',       
+        'queretar',       
+        'salvatierra',    
+        'sanjosei',       
+        'sanjuan',        
+        'sanluis',       
+        'snmiguel',       
+        'tula',           
+        'veracruz',       
+        'xalapa',
+        'admin'
+        ];
+</script>

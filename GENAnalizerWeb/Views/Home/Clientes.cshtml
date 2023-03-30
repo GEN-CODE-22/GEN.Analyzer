@@ -1,0 +1,893 @@
+﻿@{
+    ViewBag.Title = "Analizer_app";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+
+</head>
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+            <div id="controles" style="width:100%">
+                <br />
+                <button class="btn btn-outline-light" style="width:100%" data-toggle="modal" data-target="#dlgGetPed">Consultar Notas</button><br />
+                <br />
+                <button id="btnClientes" class="btn btn-outline-light" style="width: 100%; display: none" data-toggle="modal" data-target="#dlgClientes">Clientes</button><br />
+                <br />
+                @*<button id="btnClientes" class="btn btn-outline-light" onclick="openDialoCtes()" >Clientes</button><br /><br />*@
+                <div id="catCtes" class="card card-body"  style="background:#ffffff; width:100%;"></div>
+            </div>
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
+                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                @*<a class="dropdown-item" href="#">
+                                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Profile
+                                    </a>*@
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <div id="map" style="width:100%; height:850px;"></div>
+
+                </div>
+                <!-- End of Content Wrapper -->
+            </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro de Salir?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Te saldras de todo modulo</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-danger" type="button" onclick="exitAnalizer()">Salir</button>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+</body>
+  <!-- dialogos -->
+
+
+<div class="modal fade" id="dlgGetPed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Consulta de servicios</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label id="lblservidor">SERVIDOR:</label>
+                <select id="slcservidor" class="form-control"></select>              
+                FECHA INICIAL:
+                <br />
+                <input type="date" class="form-control" id="fecha_ini">
+                <br />
+                FECHA INICIAL:
+                <br />
+                <input type="date" class="form-control"   id="fecha_fin">
+                <br />
+                <button id="btnInfoServer" class="btn btn-secondary" onclick="getNotLiq()">Consultar Notas</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                @*<a class="btn btn-primary" href="login.html">Logout</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dlgClientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Consulta de servicios</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Cliente (s);</label>
+                <br />
+                <input id="inpCtes" type="text" class="form-control" placeholder="000001,000002,000003,...,000010" />
+                <br />
+                <h3> Tipo de nota</h3>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="donkg" type="checkbox" name="check_tcrapp" value="donkg" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="donkg">Donacion kg's</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="donlt" type="checkbox" name="check_tdeapp" value="donlt" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="donlt">Donacion lt´s</label>
+                </div>
+                @*<input type="checkbox" name="check_tcrapp" value="donkg" checked onchange="cambioValorCheck(this)">Donacion kg's
+                <input type="checkbox" name="check_tdeapp" value="donlt" checked onchange="cambioValorCheck(this)">Donacion lt´s*@               
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="car" type="checkbox" name="check_cre" value="car" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="car">Carburacion</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="cil" type="checkbox" name="check_efe" value="cil" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="cil">Cilindro</label>
+                </div>
+                @*<input type="checkbox" name="check_cre" value="car" checked onchange="cambioValorCheck(this)">Carburacion
+                <input type="checkbox" name="check_efe" value="cil" checked onchange="cambioValorCheck(this)">Cilindro*@
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="est" type="checkbox" name="check_flts" value="est" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="est">Estacionario</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="fuglt" type="checkbox" name="check_fkgs" value="fuglt" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="fuglt">Fugas lt´s</label>
+                </div>
+                @*<input type="checkbox" name="check_flts" value="est" checked onchange="cambioValorCheck(this)">Estacionario
+                <input type="checkbox" name="check_fkgs" value="fuglt" checked onchange="cambioValorCheck(this)">Fugas lt´s*@
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="fugkg" type="checkbox" name="check_cgs" value="fugkg" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="fugkg">Fugas kg´s</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="tran" type="checkbox" name="check_tra" value="tran" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="tran">Trasnferencias</label>
+                </div>
+                
+                @*<input type="checkbox" name="check_cgs" value="fugkg" checked onchange="cambioValorCheck(this)">Fugas kg´s
+                <input type="checkbox" name="check_tra" value="tran" checked onchange="cambioValorCheck(this)">Trasnferencias*@
+
+                <br />
+                <h3> Tipo de pago</h3>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="tcreapp" type="checkbox" name="check_tcrapp" value="tcreapp" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="tcreapp">Tarjeta credito app</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="tdeapp" type="checkbox" name="check_tdeapp" value="tdeapp" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="tdeapp">Tarjeta debito app</label>
+                </div>
+                @*<input type="checkbox" name="check_tcrapp" value="tcreapp" checked onchange="cambioValorCheck(this)">Tarjeta credito app
+                <input type="checkbox" name="check_tdeapp" value="tdeapp" checked onchange="cambioValorCheck(this)">Tarjeta debito app
+                <br />*@
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="efe" type="checkbox" name="check_efe" value="efe" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="efe">Efectivo</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="cre" type="checkbox" name="check_cre" value="cre" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="cre">Credito</label>
+                </div>
+                @*<input type="checkbox" name="check_cre" value="cre" checked onchange="cambioValorCheck(this)">Credito
+                <input type="checkbox" name="check_efe" value="efe" checked onchange="cambioValorCheck(this)">Efectivo
+                <br />*@
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="fkgs" type="checkbox" name="check_fkgs" value="fkgs" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="fkgs">Fugas kgs</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="flts" type="checkbox" name="check_flts" value="flts" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="flts">Fugas lts</label>
+                </div>
+                @*<input type="checkbox" name="check_flts" value="flts" checked onchange="cambioValorCheck(this)">Fugas lts
+                <input type="checkbox" name="check_fkgs" value="fkgs" checked onchange="cambioValorCheck(this)">Fugas kgs
+                <br />*@
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="tra" type="checkbox" name="check_tra" value="tra" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="tra">Trasnferencias</label>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" id="cgs" type="checkbox" name="check_cgs" value="cgs" checked onchange="cambioValorCheck(this)">
+                    <label class="custom-control-label" for="cgs">Credigas</label>
+                </div>
+                @*<input type="checkbox" name="check_cgs" value="cgs" checked onchange="cambioValorCheck(this)">Credigas
+                <input type="checkbox" name="check_tra" value="tra" checked onchange="cambioValorCheck(this)">Trasnferencias
+                <br />*@
+                <button class="btn btn-outline-primary" onclick="MostrarCteMap()">Mostrar</button>
+                @*<button class="btn btn-secondary" onclick="cerrarDialogo()">Cerrar</button>*@
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                @*<a class="btn btn-primary" href="login.html">Logout</a>*@
+            </div>
+        </div>
+    </div>
+</div>
+<dialog id="cargando">
+    <img id="imgCargando" src="~/Images/CARGANDO.gif"  />
+
+</dialog>
+  
+
+
+
+</html>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables globales
+    var dialogos = [];           // contiene los dialogos en pantalla.
+    var notas = [];              // almacena la notas que resulte de consultar uno o varios servidores en un rango de fechas.
+    var clientes = [];           // almacena los clientes que se mostran en el mapa.
+    var liquidas = [];           // almacena las liquidas de las notas
+    var arr_marcadores = [];    // almacena los marcadores mostrados en el mapa.
+    // varibles del tipo de pago
+    var tca = true, tba = true, cre = true, efe = true, fgl = true, fgk = true, cgs = true, tra = true;
+    // variables de tipo de nota de venta 
+    var donk = true, donl = true, car = true, cil = true, est = true, fgks = true, fgls = true, trans = true;
+
+    
+    $(document).ready(function ()
+    {
+        //document.getElementById('imgload').style.display = "none";
+        // se muestran los elementos del usuario admin 
+        if (document.getElementById('serv').innerText == 'Admin') 
+        {
+            for (var i = 0; i < servers.length; i++) {
+               
+                   var x = document.getElementById("slcservidor");
+                    var option = document.createElement("option");
+                    option.text = servers[i].trim();
+                    x.add(option);
+                
+    
+            }
+        
+        } else
+
+        {
+            document.getElementById("lblservidor").style.display="none";
+            document.getElementById("slcservidor").style.display="none";
+            
+        }
+        setFechas();
+
+    });   
+    // creacion del mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+    }
+    // funciones para mostrar los dialogs
+    function openDialogNotas() {
+        cierraDialog();
+        muestraDialog('dlgNotas')       
+    }
+ 
+    function openDialoCtes()
+    {
+        cierraDialog();
+        muestraDialog('dlgClientes');
+    }
+    // consulta las notas y liquidas de forma simultanea
+    function getNotLiq() {
+        getNotas();
+        getLiquidas();
+    }
+    // obtiene conjunto de notas deacuerdo el servidor o servidores y las fechas.
+    function getNotas() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        //document.getElementById('imgload').style.display = "inline";
+        document.getElementById('btnClientes').style.display = "none";
+        var serv = document.getElementById("serv").innerHTML.trim();
+       
+
+            if (serv != 'Admin')
+                servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+            else
+                servidoresNotas ="'"+document.getElementById("slcservidor").value.trim() +"'";
+  
+
+            if (servidoresNotas != '') {
+
+                if (clientes.length > 10) {
+                    alert("El numero maximo de clientes para mostrar es de 10");
+
+                }
+                else {
+                //consultar las notas
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/getNotasCte/",
+                    beforeSend: function () {
+
+                        muestraDialog('cargando');
+                    },
+                    complete: function () {
+                        cierraDialog();
+                    },
+                    data: { paramSrv: servidoresNotas.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin, paramCia: $('#hiddenCia').val(), paramPla: $('#hiddenPla').val() /*, paramString1: clientesQuery */ },
+                    datatype: "json",
+                    success: function (data) {
+
+                        if (data.length > 0) {
+                            notas = data;
+                            //document.getElementById('imgload').style.display = "none";
+                            document.getElementById('btnClientes').style.display = "inline";
+                        
+                        }
+                        else {
+                            alert("No existen notas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                            //document.getElementById('imgload').style.display = "none";
+                        }
+                    },
+                    error: function (request, status, error) {
+                        // document.getElementById('imgload').style.display = "none";
+                        alert(request.responseText);
+                    }
+                });
+            }
+        }
+
+
+
+
+
+
+    }
+    // obtiene las liquidas
+    function getLiquidas() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+        var serv = document.getElementById("serv").innerHTML.trim();
+       
+        if (serv != 'Admin')
+            servidoresNotas = "'" + document.getElementById("serv").innerHTML + "'";
+        else
+            servidoresNotas = "'" + document.getElementById("slcservidor").value.trim() + "'";
+        
+
+        if (servidoresNotas != '') {
+
+
+            //consultar las liquidas
+            $.ajax({
+                type: "POST",
+                url: "/Home/getLiquidas/",
+                data: { paramSrv: servidoresNotas.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
+                datatype: "json",
+                success: function (data) {
+
+                    if (data.length > 0) {
+                        liquidas = data;
+                        
+                    }
+                    else {
+                        alert("No existen liquidas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
+                      
+                    }
+                },
+                error: function (request, status, error) {
+                    
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+
+
+
+
+    }
+    // muetra los clientes en el mapa deacuerdo a su descarga 
+    function MostrarCteMap() {        
+        limpiarMarcadores();
+        arr_marcadores = [];
+        var ctes = document.getElementById('inpCtes').value.toLocaleUpperCase();
+        var ctesIcon = [];
+        clientes = ctes.trim().split(',');
+        // variables de las liquidas
+        var uni = "", chf = "";
+        var findliq = false;
+        var formpgo = "";
+
+        // obtengo los clientes para la consulta
+        var ctes = document.getElementById('inpCtes').value.toLocaleUpperCase();
+        clientes = ctes.trim().split(',');
+        
+        
+            for (var i = 0; i < clientes.length; i++) {
+                ctesIcon.push({cliente:clientes[i], index: i});
+            }
+        // construyo el catalogo visual de los clientes 
+            document.getElementById("catCtes").style.display = "inline";
+            document.getElementById('catCtes').innerHTML = "";
+            var htmlcode = "";
+            for (var i = 0; i < ctesIcon.length; i++) {
+                htmlcode = '<br/><img src="/Images/CLIENTE_' + ctesIcon[i].index + '.png" /><label>' + ctesIcon[i].cliente + '</label><br/>';
+                //$("#catCtes").html += (htmlcode);
+                document.getElementById("catCtes").innerHTML += htmlcode;
+                
+            }
+
+            for (var i = 0; i < clientes.length; i++) {
+                var indexIcon = 0;
+                // busco el index de cliente buscado
+                for (var j = 0; j < ctesIcon.length; j++) {
+                    if (ctesIcon[j].cliente.trim() == clientes[i].trim()) {
+                        indexIcon = ctesIcon[j].index;
+
+                    }
+                }
+                
+                    for (var m = 0; m < notas.length; m++) {
+                        var img="";
+                        if (notas[m].ruta_nvta.startsWith('B')) {
+                            img = ' <img src="/Images/Estacionario.png" /> ';
+                        }
+                        else
+                        {
+                            img = '<img src="/Images/Cilindro.png" />';
+                        }
+
+
+                        // se termina la forma de pago
+                        switch (notas[m].tpa_nvta.trim()) {
+                            case "R":
+                                formpgo="Tarjeta (Debito) APP";
+                                break;
+                            case "B":
+                                formpgo="Tarjeta (Credito) APP";
+                                break;
+                            case "C":
+                                formpgo="Credito";
+                                break;
+                            case "E":
+                                formpgo="Efectivo";
+                                break;
+                            case "F":
+                                formpgo="Fuga lts";
+                                break;
+                            case "Q":
+                                formpgo="Fuga kgs";
+                                break;
+                            case "G":
+                                formpgo="Credi Gas";
+                                break;
+                            case "T":
+                                formpgo = "Transferencia";
+                                break;
+                            default:
+                                formpgo = "Desconosido";
+
+                        }
+
+                        if (notas[m].numcte_nvta.trim() == clientes[i].trim() && verificarMuestreoCtePago(notas[m])) {
+                            if (notas[m].gps_nvta != null & notas[m].gps_nvta.trim().length > 2 ) {
+                                var ptosLatLong = notas[m].gps_nvta.split(' ');
+                                if (ptosLatLong.length > 1) {
+
+                                    // busco la informacion  de la liquidacion
+                                    for (var k = 0; k < liquidas.length & !findliq; k++) {
+                                        if( liquidas[k].srv_eru.trim()==notas[m].srv_nvta.trim()  && liquidas[k].cia_eru.trim()==notas[m].cia_nvta.trim() && liquidas[k].pla_eru.trim()==notas[m].pla_nvta.trim() && liquidas[k].fliq_eru.trim()==notas[m].fliq_nvta.trim()){
+                                            uni = liquidas[k].uni_eru.trim();
+                                            chf = liquidas[k].chf_erup.trim();
+                                            findliq = true;
+                                        }
+                                    }
+                                    // agregar el marcador en el mapa 
+                                    var marker = new google.maps.Marker({
+                                        position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
+                                        map: map,
+                                        title: 'CLIENTE: '+notas[m].numcte_nvta.trim(),
+                                        icon: "/Images/CLIENTE_"+indexIcon+".png",
+                                        html: '<label>Cliente: ' + notas[m].numcte_nvta.trim() + '</label></br>'+
+                                              '<label>Fecha/Hora: ' + notas[m].fhs_nvta + '</label></br>'+
+                                              '<table>'+
+                                                      '<tr>'+
+                                                           '<td><label>DATOS DE LA PLANTA</label></td>'+
+                                                      '</tr>'+
+                                                      '<tr>'+
+                                                           '<td><label>Gerencia</label></td>   <td><label>'+notas[m].cia_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                      '<tr>'+
+                                                           '<td><label>Planta</label></td>   <td><label>'+notas[m].pla_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Ruta</label></td>   <td><label>'+notas[m].ruta_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>DATOS DEL PEDIDO</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Litros/kilos</label></td>   <td><label>'+notas[m].tlts_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Importe</label></td>   <td><label>'+notas[m].impt_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Asisencia</label></td>   <td><label>'+notas[m].asiste_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Importe asistencia</label></td>   <td><label>'+notas[m].impasi_nvta+'</label></td>'+
+                                                      '</tr>'+
+                                                           '<tr>'+
+                                                           '<td><label>Tipo servicio </label></td>   <td>'+img+'</td>'+
+                                                      '</tr>' +
+                                                       '<tr>' +
+                                                           '<td><label>Folio Nota </label></td>   <td><label>' + notas[m].fol_nvta + '</label></td>' +
+                                                      '</tr>' +
+                                                         '<tr>' +
+                                                           '<td><label>Forma de pago </label></td>   <td><label>' + formpgo+ '</label></td>' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>INFORMACION LIQUIDA</label></td> ' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>Unidad</label></td>   <td><label>' + uni+ '</label></td>' +
+                                                      '</tr>' +
+                                                      '<tr>' +
+                                                           '<td><label>Chofer</label></td>   <td><label>' + chf+ '</label></td>' +
+                                                      '</tr>' +
+                                              '</table>'
+
+                                    });
+                                    arr_marcadores.push(marker);
+
+                                    var infoWindow = new google.maps.InfoWindow(), marker;
+                                    // Add info window to marker
+                                    google.maps.event.addListener(marker, 'click', (function (marker) {
+                                        return function () {
+                                            infoWindow.setContent(marker.html);
+                                             infoWindow.open(map, marker);
+
+                                            //se consulta la informacion del los pedidos del cliente
+                                    
+
+                                        }
+                                    })(marker));
+
+                                }
+                            }
+                           
+
+                        }
+
+                    
+                    }
+                    uni = "";
+                    chf = "";
+                    findliq = false;
+
+            }
+
+
+
+
+        
+
+    }
+    //verifica la seleccion de un cambio de valor en los checkbox
+    function cambioValorCheck(checbox) {
+        var valor = checbox.value;
+        switch (valor) {
+            //  var tca = true, tba = true, cre = true, efe = true, fgl = true, fgk = true, cgs = true, tra = true
+            case "tcreapp":
+                if (checbox.checked)
+                    tca = true;
+                else
+                    tca = false;                
+                break;
+            case "tdeapp":
+                if (checbox.checked)
+                    tba = true;
+                else
+                    tba = false;
+                break;
+            case "cre":
+                if (checbox.checked)
+                    cre = true;
+                else
+                    cre = false;
+                break;
+            case "efe":
+                if (checbox.checked)
+                    efe = true;
+                else
+                    efe = false;
+                break;               
+            case "flts":
+                if (checbox.checked)
+                    fgl = true;
+                else
+                    fgl = false;
+                break;
+            case "fkgs":
+                if (checbox.checked)
+                    fgk = true;
+                else
+                    fgk = false;
+                break;
+            case "cgs":
+                if (checbox.checked)
+                    cgs = true;
+                else
+                    cgs = false;
+                break;
+            case "tra":
+                if (checbox.checked)
+                    tra = true;
+                else
+                    tra = false;
+                break;              
+                // tipo de nota de venta 
+                //var donk = true, donl = true, car = true, cil = true, est = true, fgk = true, fgl = true, trans = true;
+            case "donkg":
+                if (checbox.checked)
+                    donk = true;
+                else
+                    donk = false;
+                break;
+            case "donlt":
+                if (checbox.checked)
+                    donl = true;
+                else
+                    donl = false;
+                break;
+            case "car":
+                if (checbox.checked)
+                    car = true;
+                else
+                    car = false;
+                break;
+            case "cil":
+                if (checbox.checked)
+                    cil = true;
+                else
+                    cil = false;
+                break;
+            case "est":
+                if (checbox.checked)
+                    est = true;
+                else
+                    est = false;
+                break;
+            case "fuglt":
+                if (checbox.checked)
+                    fgks = true;
+                else
+                    fgks = false;
+                break;
+            case "fugkg":
+                if (checbox.checked)
+                    fgls = true;
+                else
+                    fgls = false;
+                break;
+            case "tran":
+                if (checbox.checked)
+                    trans = true;
+                else
+                    trans = false;
+                break;
+
+        }
+
+
+
+
+
+    }
+    // valida si un cliente sera mostrada referente a su forma de pago 
+    function verificarMuestreoCtePago(nota) {
+        var tip_nota = false;
+        var tip_pago = false;
+        // tipo de nota 
+        //var donk = true, donl = true, car = true, cil = true, est = true, fgk = true, fgl = true, trans = true;
+        switch (nota.tpa_nvta.trim()) {
+            case "K":
+                if (donk)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "D":
+                if (donl)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "B":
+                if (car)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "C":
+                if (cil)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "E":
+                if (est)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "F":
+                if (fgks)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "Q":
+                if (fgls)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+            case "T":
+                if (trans)
+                    tip_nota = true;
+                else
+                    tip_nota = false;
+                break;
+
+
+
+
+            default:
+                return false;
+
+        }
+        // metodo de pago
+        switch (nota.tpa_nvta.trim()) {
+            case "R":
+                if (tca)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "B":
+                if (tba)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "C":
+                if (cre)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "E":
+                if (efe)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "F":
+                if (fgl)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "Q":
+                if (fgk)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "G":
+                if (cgs)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+            case "T":
+                if (tra)
+                    tip_pago = true;
+                else
+                    tip_pago = false;
+                break;
+           
+
+
+
+            default:
+                return false;
+
+        }
+
+        if (tip_pago && tip_nota) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    //quita los marcadores del mapa 
+    // quita los marcadores actuales
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_marcadores.length; i++) {
+            arr_marcadores[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+   
+</script>

@@ -1,0 +1,505 @@
+﻿@{
+    ViewBag.Title = "Negocios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <title>Analyzer APP</title>
+</head>
+
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading"><img src="@Url.Content("~/Images/logo.png")" style="width:200px;" /></div>
+            <div class="list-group list-group-flush">
+                <div id="turno_geo">
+                    
+                    <center>
+                        <div id="seccAdmin">
+                            Servidores :
+                            <select id="select_servidores" onchange="llenaSlcRutas()" class="form-control"></select><br />
+                        </div>
+                        Rutas Autotanques :
+                        <select id="selectRutasAut" name="M" onchange="dibujaGeocercas(this)" class="form-control"></select><br />
+                        Rutas Cilindros :
+                        <select id="selectRutasCil" name="C" onchange="dibujaGeocercas(this)" class="form-control"></select><br />
+
+                    </center>
+
+                </div>
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="menu-toggle">Ocultar/Mostrar Menu</button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item active" style="margin:10px;">
+                            <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:60px;" />
+                        </li>
+                        <li>
+                            SERVIDOR:
+                            <label id="serv">@ViewBag.Srv</label>
+                           
+                            <br />
+                        </li>
+                        <li>
+                            <label id="usr">USUARIO: @ViewBag.Usr</label>
+                        </li>
+                       
+                      
+                    </ul>
+                </div>
+            </nav>
+            <div class="container-fluid" style="width:100%; height:100%;">
+                <div id="map">
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!--codigo viiejo-->
+
+
+    <div id="geoload">
+        <img src="~/Images/loadGeocercas.gif" style="display:inline" />
+    </div>
+   
+</body>
+</html>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables globales
+    var geocercas = [];          // contiene las informacion de las geocercas en crudo
+    var geocercas_en_mapa = [];  // contiene las geocercas que estan en el mapa en forma de poligono.
+   
+   
+    var servidores = [];         // almacena los servidores resultado de consultar las geogercas;
+  
+   
+    var arr_iconInfoApp = [];    // contiene los iconos mostrados en el mapa
+    var geocercas_usadas = [];   // contiene las geocercas que representa la informacion de un servidor en espesifico
+    var dialogos = [];           // contiene los dialogos en la pantalla
+    
+   
+    // consulta de las geocercas
+    $(document).ready(function () {
+       
+        document.getElementById('header_layout').style.display = "none";
+
+        //obtener las geocercas
+        $.ajax({
+            type: "POST",
+            url: "/Home/getGeocercas/",
+            data: { paramSrv: document.getElementById('serv').innerHTML },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    geocercas = data;
+                    document.getElementById('geoload').style.display = "none";
+                    guardaServidores();
+                    //dibujaGeocercas();
+                  
+                }
+                else {
+                    alert("No existe información de geocercas en el servidor ingresado");
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
+
+    });  
+    // creacion del mapa
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 20.6122835, lng: -100.4802576 },
+            zoom: 10,
+        });
+        var infoWindow = new google.maps.InfoWindow();
+        map.addListener('click', function (mapsMouseEvent) {
+            // 3 seconds after the center of the map has changed, pan back to the
+            // marker.
+            
+            infoWindow.close();
+
+            // Create a new InfoWindow.
+            infoWindow = new google.maps.InfoWindow({ position: mapsMouseEvent.latLng });
+            infoWindow.setContent(mapsMouseEvent.latLng.toString());
+            infoWindow.open(map);
+        });
+    }
+    //llena los select con las rutas del servidor actual o seleccionado
+    function llenaSlcRutas()
+    {
+        geocercas_usadas = [];
+        var srv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            srv = $('#select_servidores').val();
+        }
+        else
+        {
+            srv = document.getElementById('serv').innerHTML;
+        }
+
+
+       
+        var x = document.getElementById("selectRutasAut");
+        x.innerHTML = "";
+        var option = document.createElement("option");
+        option.text = 'Todos';
+        x.add(option);
+        var y = document.getElementById("selectRutasCil");
+        y.innerHTML = "";
+        var option = document.createElement("option");
+        option.text = 'Todos';
+        y.add(option);
+
+        for (var i = 0; i < geocercas.length; i++) {
+            if (geocercas[i].srv_geo.trim() == srv.trim()) {
+
+                if (geocercas[i].nom_geo.trim().substring(0, 1) == 'M') {
+                     var option = document.createElement("option");
+                     option.text = geocercas[i].nom_geo.trim();
+                     x.add(option);
+                     geocercas_usadas.push(geocercas[i]);
+                }
+                if (geocercas[i].nom_geo.trim().substring(0, 1) == 'C') {
+                   var  option = document.createElement("option");
+                   option.text = geocercas[i].nom_geo.trim();
+                   y.add(option);
+                   geocercas_usadas.push(geocercas[i]);
+                }
+               
+
+            }
+
+        }
+
+     
+
+
+    }
+    //dubuja las geocrecas en el mapa
+    function dibujaGeocercas(slc) {
+
+        var servidor = "";      
+        quitarGeocercas();
+        var geocercasAux = [];
+        if ($('#' + slc.id).val().trim() == 'Todos') {
+            for (var i = 0; i < geocercas_usadas.length; i++) {
+                if (geocercas_usadas[i].nom_geo.trim().substring(0, 1) == slc.name.trim())
+                {
+                    geocercasAux.push(geocercas_usadas[i]);
+                }
+            }
+
+        } else {
+            for (var i = 0; i < geocercas_usadas.length; i++) {
+                if (geocercas_usadas[i].nom_geo.trim() == $('#' + slc.id).val().trim()) {
+                    geocercasAux.push(geocercas_usadas[i]);
+                    break;
+                }
+            }
+
+        }
+
+
+        for (var i = 0; i < geocercasAux.length; i++) {
+
+
+            var puntos = geocercasAux[i].puntos_geo.trim();
+            var coordenadas = puntos.split('),(');
+            var poligon = [];
+            var lonlat;
+            if (servidor != geocercasAux[i].srv_geo) {
+                color = geocercasAux[i].color_geo;
+                servidor = geocercasAux[i].srv_geo;
+            }
+            // obtener las coredenadas en areglo
+            for (var j = 0; j < coordenadas.length; j++) {
+                coordenadas[j] = coordenadas[j].replace('(', '');
+                coordenadas[j] = coordenadas[j].replace(')', '');
+                lonlat = coordenadas[j].split(",");
+                poligon.push(new google.maps.LatLng(parseFloat(lonlat[0]), parseFloat(lonlat[1])));
+                point = new google.maps.LatLng(lonlat[0], lonlat[1]);
+            }
+
+            var geopoligon = new google.maps.Polygon({
+                paths: poligon,
+                strokeColor: '#000',
+                strokeOpacity: 0.6,
+                strokeWeight: 2,
+                //fillColor: color,
+                fillColor: geocercasAux[i].color_geo.trim(),
+                fillOpacity: 0.4,
+                title: geocercasAux[i].nom_geo,
+                html: 'SERVIDOR:' + geocercasAux[i].srv_geo + 'PLANTA:' + geocercasAux[i].pla_geo + ' RUTA: ' + geocercasAux[i].nom_geo.trim() + '\n' + 'HORARIO: ' + geocercasAux[i].hraini_geo + 'hrs - ' + geocercasAux[i].hrafin_geo + 'hrs'
+            });
+            geopoligon.setMap(map);
+            geocercas_en_mapa.push(geopoligon);
+            infoWindowG = new google.maps.InfoWindow();
+           // google.maps.event.addListener(geopoligon, 'click', MuestraInfo);
+              google.maps.event.addListener(geopoligon, 'mouseover', MuestraInfo);
+              google.maps.event.addListener(geopoligon, 'mouseout', quitaInfoGeocerca);
+              google.maps.event.addListener(geopoligon, 'click',  ClickInfo);
+
+
+
+            function MuestraInfo(event) {
+                infoWindowG.setContent(this.html);
+                infoWindowG.setPosition(event.latLng);
+                infoWindowG.open(map);
+            }
+            function quitaInfoGeocerca(event) {
+                infoWindowG.setContent(this.html);
+                infoWindowG.setPosition(event.latLng);
+                infoWindowG.close(map);
+            }
+            function ClickInfo(event) {
+
+                
+                //infoWindow = new google.maps.InfoWindow({ position: event.latLng });
+                infoWindowG.setPosition(event.latLng);
+                infoWindow.setContent(event.latLng.toString());
+                infoWindow.open(map);
+                /*
+                infoWindowG.setContent(this.html);
+                infoWindowG.setPosition(event.latLng);
+                infoWindowG.open(map);*/
+            }
+
+        }
+
+
+        
+    }
+    // mestra informacion de las geocercas al darle clic
+   
+    //quita las geocercas actuales en el mapa
+    function quitarGeocercas() {
+        if (geocercas_en_mapa.length > 0) {
+            for (var i = 0; i < geocercas_en_mapa.length; i++) {
+                geocercas_en_mapa[i].setMap(null);
+            }
+        }
+
+
+    }
+    //agrega los servidores a un objeto select
+    function guardaServidores() {
+        var existe = false;
+        for (var i = 0; i < geocercas.length; i++) {
+
+            for (var j = 0; j < servidores.length; j++) {
+                if (geocercas[i].srv_geo.trim() == servidores[j].trim())
+                    existe = true;
+            }
+
+            if (!existe) {
+                servidores.push(geocercas[i].srv_geo.trim());
+
+            }
+            existe = false;
+
+
+        }
+        // agregar los servidores al selec para uausuario admin
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            var x = document.getElementById("select_servidores");
+           // var option = document.createElement("option");
+           // option.text = 'Todos';
+           // x.add(option);
+
+        }
+
+        for (var k = 0; k < servidores.length; k++) {
+            x = document.getElementById("select_servidores");
+            option = document.createElement("option");
+            option.text = servidores[k].trim();
+            x.add(option);
+
+        }
+        llenaSlcRutas();
+
+    } 
+    // diduja las geoercas de dicho servidor
+    $(select_servidores).change(function () {
+        guardaPlantas();
+        dibujaGeocercas();
+    });
+    //dibuja las geocercas de dicha planta
+   
+    $(document).on("change", "#inten_geo", function () {
+        intencidad = document.getElementById("inten_geo").value
+        dibujaGeocercas();
+    });
+    //grafica los iconos de  la app
+    function dibujaPuntosApp() {
+        limpiarMarcadores();
+        var punto;
+        var tipoIcono = document.getElementById("select_tipo_visualisacion").value.trim();
+        var pathIcon = "";
+        var titulo = "";
+        var id = "";
+        for (var i = 0; i < infoApp.length; i++) {
+            if (infoApp[i].principal.trim() == 'True') {
+
+
+                id = infoApp[i].Id;
+                switch (tipoIcono) {
+                    case "PRESENCIA":
+                        pathIcon = "/Images/APP.png";
+                        titulo = "Dispositivo con app NIETO";
+                        break;
+                    case "TIPO DISPOSITIVO":
+
+                        if (infoApp[i].Dispositivo == "Android") {
+                            pathIcon = "/Images/android.png";
+                            titulo = "Dispositivo Android";
+                        }
+                        else {
+                            pathIcon = "/Images/apple.png";
+                            titulo = "Dispositivo IOS";
+                        }
+
+
+                        break;
+                    case "PEDIDOS":
+                        if (infoApp[i].Pedidos != '0') {
+                            pathIcon = "/Images/PEDIDO_" + infoApp[i].Dispositivo.trim() + ".png";
+                            titulo = "Cliente con almenos un pedido realizado";
+
+                        } else if (infoApp[i].Dispositivo == "Android") {
+                            pathIcon = "/Images/android.png";
+                            titulo = "Cliente sin un pedido realizado";
+                        }
+                        else {
+                            pathIcon = "/Images/apple.png";
+                            titulo = "Cliente sin un pedido realizado";
+                        }
+                        break;
+                    case "SERVICIO DEFAULT":
+                        if (infoApp[i].ServicioDefault == "Estacionario") {
+                            pathIcon = "/Images/Estacionario.png";
+                            titulo = " Servicio Estacionario";
+                        }
+                        else {
+                            pathIcon = "/Images/Cilindro.png";
+                            titulo = " Servicio de Cilindro";
+                        }
+                        break;
+                }
+                var marker = new google.maps.Marker({
+                    position: { lat: parseFloat(infoApp[i].Latitud), lng: parseFloat(infoApp[i].Longitud) },
+                    map: map,
+                    title: titulo,
+                    icon: pathIcon,
+                    html: id
+                });
+                point = new google.maps.LatLng(parseFloat(infoApp[i].Latitud), parseFloat(infoApp[i].Longitud));
+                arr_iconInfoApp.push(marker);
+
+
+
+
+                // agregale evento clik
+                var infoWindow = new google.maps.InfoWindow(), marker;
+                // Add info window to marker
+                google.maps.event.addListener(marker, 'click', (function (marker) {
+                    return function () {
+                        //infoWindow.setContent(marker.html);
+                        // infoWindow.open(map, marker);
+
+                        // se consulta la informacion del los pedidos del cliente
+                        $.ajax({
+                            type: "POST",
+                            url: "/Home/infoPedidosClientes/",
+                            data: { paramString1: marker.html },
+                            datatype: "json",
+                            success: function (data) {
+
+                                if (data.length > 0) {
+                                    google.setOnLoadCallback(pedidosClientes);
+                                    pedidosClientes(data);
+
+                                }
+                                else {
+                                    alert("EL cliente no ha realizado pedidos");
+                                }
+                            },
+                            error: function (request, status, error) {
+
+                                alert(request.responseText);
+                            }
+                        });
+
+                    }
+                })(marker));
+
+            }
+        }// fin for
+
+
+        map.setCenter(point);
+
+    }
+  
+    // quita los dialogos en pantall
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+    }
+    //quita los marcadores que se enceuntren en la pantalla
+    function limpiarMarcadores() {
+        for (var i = 0; i < arr_iconInfoApp.length; i++) {
+            arr_iconInfoApp[i].setMap(null);
+
+        };
+
+        arr_marcadores = [];
+
+    }
+   
+  
+</script>
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+<style>
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+
+
+    #form_map:hover {
+        opacity: 0.9;
+    }
+
+    #geoload {
+        color: #000;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50px);
+        box-sizing: border-box;
+        position: absolute;
+    }
+</style>

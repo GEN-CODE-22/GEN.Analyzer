@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GENAnalizerWebETY
+{
+    public class clsPedidos: ICloneable
+    {
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        public String srv_ped { set; get; }
+        public String num_ped { set; get; }
+        public String fhr_ped { set; get; }
+        public String tipo_ped { set; get; }
+        public String numcte_ped { set; get; }
+        public String lada_ped { set; get; }
+        public String tel_ped { set; get; }
+        public String numtqe_ped { set; get; }
+        public String ruta_ped { set; get; }
+        public String observ_ped { set; get; }
+        public String fecsur_ped { set; get; }
+        public String edo_ped { set; get; }
+        public String usr_ped { set; get; }
+        public String edotx_ped { set; get; }
+        public String fhtx_ped { set; get; }
+        public String usrtx_ped { set; get; }
+        public String fecrsur_ped { set; get; }
+        public String usrcan_ped { set; get; }
+        public String motcan_ped { set; get; }
+        public String nmod_ped { set; get; }
+        public String fhrp_ped { set; get; }
+        public String usrrp_ped { set; get; }
+        public String nmtx_ped { set; get; }
+        public String fhptx_ped { set; get; }
+        public String usrtp_ped { set; get; }
+        public String tmcan_ped { set; get; }
+        public String horrsur_ped { set; get; }
+        public String tpdo_ped { set; get; }
+        public String kgsu_ped { set; get; }
+        public String c20k_ped { set; get; }
+        public String c30k_ped { set; get; }
+        public String c45k_ped { set; get; }
+
+        // propiedades calculadas
+
+        public String dia_sur_can { set; get; }
+        public String dia_ped { set; get; }
+        public String dias_ate { set; get; }
+        public String hrs_ate { set; get; }
+        public String min_ate { set; get; }
+    }
+}

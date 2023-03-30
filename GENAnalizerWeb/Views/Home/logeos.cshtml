@@ -1,0 +1,645 @@
+﻿@{
+    ViewBag.Title = "logeos";
+}
+<html>
+
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Analyzer</span>
+                </a>
+            </li>
+           
+
+            <li id="AltaUsuario" onclick="muestraSeccion(this)"  class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Alta usuarios</span>
+                </a>
+
+            </li>
+
+            <li id="Tablausuarios" onclick="muestraSeccion(this)"  class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Tabla de usuarios</span>
+                </a>
+
+            </li>
+
+            <li id="Tabladelogeos" onclick="muestraSeccion(this)"  class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-tools"></i>
+                    <span>Logeos</span>
+                </a>
+
+            </li>
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>-->
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
+                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content <div class="container-fluid">-->
+                <div class="container-fluid">
+                    <div>
+                        <center>
+                            <!-- div alta usuarios-->
+                            <div id="divUsrAlta">
+                                <br />
+                                <label for="username">Usuario</label>
+                                <input type="text" class="form-control" placeholder="Ingresa usuario" id="usr" style=" width: 250px" />
+                                <!--contraseña-->
+                                <label for="password">Contraseña</label>
+                                <input type="text" class="form-control" placeholder="Ingresa contraseña" id="pwd" style=" width: 250px" />
+                                <label for="password">Servidor</label>
+                                <select id="slectservidor" class="form-control" style=" width: 250px; height: 30px;"></select>
+                                <label for="password">Rol</label>
+                                <select id="slectRol" class="form-control" style=" width: 250px; height: 30px;">
+                                    <option value="Personal">Personal</option>
+                                    <option value="Gerente">Gerente</option>
+                                    <option value="CredCob">Credito y Cobranza</option>
+                                </select>
+                                <br />
+                                <button id="btnEntrar" onclick="Altalogin()" class="btn btn-primary" style=" width: 250px">ALTA</button>
+                            </div>
+                            <!-- div tabla de usuarios-->
+                            <div id="divUsrTbl">
+                              
+                                <div id="tblUsr"></div>
+                            </div>
+                            <!-- div grafrica  de accesos-->
+                            <div id="divGrfUsr">
+                                <br />
+                                <center>
+                                    FECHA INICIAL:
+                                    <input type="date" class="field-style field-split align-left" style=" width: 250px" id="fecha_ini">
+                                    FECHA FINAL:
+                                    <input type="date" class="field-style field-split align-left" style=" width: 250px" id="fecha_fin">
+                                    <button id="btnGraficar" class="btn btn-primary" onclick="graficarSesiones()">Mostrar</button><br />
+                                    <br />
+                                    <div>
+                                        <button class="btn" style="background:#278FF7 ; width:10%; display:inline-block">1 dia</button>
+                                        <button class="btn" style="background:#21A607 ; width:10%;display:inline-block">Ult 5 dias</button>
+                                        <button class="btn" style="background:#5FF840 ; width:10%;display:inline-block">Ult 10 dias</button>
+                                        <button class="btn" style="background:#F4FB07 ; width:10%;display:inline-block">Ult 15 dias</button>
+                                        <button class="btn" style="background:#FB8807 ; width:10%;display:inline-block">Ult 30 dias</button>
+                                        <button class="btn" style="background:#FF0400 ; width:20%;display:inline-block">Mas 30 dias o fuera de intervalo de consulta</button>
+                                    </div>
+                                </center>
+                                <div id="grfLogeos"></div>
+
+                            </div>
+
+                        </center>
+                    </div>
+                    </div>
+                    <!-- End of Content Wrapper -->
+                </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <dialog id="dlgHistorial">
+                <div id="hisLogin"></div>
+                <button class="btn btn-danger" onclick="cerrarDialogo()">cerrar</button>
+
+
+            </dialog>
+</body>
+</html>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    var dialogos = [] // contiene los dialogos mostrados en  la pantalla 
+    var usuarios = [];
+    $(document).ready(function () {
+        document.getElementById('header_layout').style.display = "none";
+        document.getElementById('divUsrAlta').style.display = "none";
+        document.getElementById('divUsrTbl').style.display = "none";
+        document.getElementById('divGrfUsr').style.display = "none";
+        var now = new Date();
+        var day = ("0" + now.getDate()).slice(-2);
+        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+        $("#fecha_ini").val(today);
+        $("#fecha_fin").val(today);
+
+        muestraUsuarios();
+
+        // agrega los servidores a el select de los servidores 
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slectservidor");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+
+    });
+    //obtiene los usuarios de la base de datos
+    function muestraUsuarios()
+    {
+        
+        $.ajax({
+            type: "POST",
+            url: "/Home/getUsrs/",
+            data: { id: "" },
+            datatype: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    usuarios = data;
+                    //google.setOnLoadCallback(agregaUsuarios);
+                    agregaUsuarios(data);
+
+
+                }
+                else {
+                    alert("No se consultaron los usuarios en la base");
+                }
+
+
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+            }
+        });
+    }
+    function muestraSeccion(seccion){
+        
+        //ViewBag.Srv
+        //confirm('has cambiado de opcion ')
+        document.getElementById('divUsrAlta').style.display = "none";
+        document.getElementById('divUsrTbl').style.display = "none";
+        document.getElementById('divUsrTbl').style.display = "none";
+
+        switch (seccion.id) {
+          
+            case "AltaUsuario":
+                document.getElementById('divUsrAlta').style.display = "inline";               
+                break;
+            case "Tablausuarios":
+                document.getElementById('divUsrTbl').style.display = "inline";
+                muestraUsuarios();
+                break;
+            case "Tabladelogeos":
+                document.getElementById('divGrfUsr').style.display = "inline";
+
+                break;
+
+        }
+
+    }
+    //coloca los usuarios en una tabla
+    function agregaUsuarios(usuarios) {
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn('string', 'Id');
+        tablausonvta.addColumn('string', 'Usuario');
+        tablausonvta.addColumn('string', 'Contraseña');
+        tablausonvta.addColumn('string', 'Servidor');
+        tablausonvta.addColumn('string', 'Rol');
+        tablausonvta.addColumn('string', 'Actualizar');
+        tablausonvta.addColumn('string', 'Baja');
+        //tablausonvta.addColumn('string', 'Historial logeos');        
+        for (var i = 0; i < usuarios.length; i++) {
+            tablausonvta.addRow([usuarios[i].id_usr,
+                                 '<input class="form-control" type="text" placeholder="Ingresa usuario" id="'+(i + 'user')+'" style="width: 250px" value="'+ usuarios[i].usr_usr +'"/>',
+                                 '<input class="form-control" type="text" placeholder="Ingresa usuario" id="' + (i + 'pwd') + '" style="width: 250px" value="' + usuarios[i].pwd_usr + '"/>',
+                                 usuarios[i].srv_usr,
+                                 '<select id="' + (i + 'rol') + '" class="form-control" style=" width: 250px; height: 30px;">' +
+                                 '<option value="'+usuarios[i].rol_usr+'">'+usuarios[i].rol_usr+'</option>'+
+                                '<option value="Personal">Personal</option>'+
+                                '<option value="Gerente">Gerente</option>'+
+                                '<option value="CredCob">CredCob</option>'+
+                                '</select> ',
+                                 '<button class="btn btn-primary" onclick=\"Actualizar_Baja(\'' + "Actualizar/" + usuarios[i].id_usr + '/' + (i + 'user') + '/' + (i + 'pwd') +'/'+ (i + 'rol')+ '\')\">Actualizar</button>',
+                                 '<button class="btn btn-danger" onclick=\"Actualizar_Baja(\'' + "Baja/" + +usuarios[i].id_usr + '\')\">Baja</button>'//,
+                               /*  '<button  onclick=\"historialUsuario(\''+usuarios[i].usr_usr.trim() +'\')\">Historial</button>'*/]);
+        }
+        var contenedor5 = new google.visualization.Table(tblUsr);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+    }
+    // obtiene el historial de logeos del usuario
+    function historialUsuario(usuario) {
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/getUsrsLogin/",
+            data: { paramUsr: usuario.trim() },
+            datatype: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    google.setOnLoadCallback(muestraHistorial);
+                     muestraHistorial(data);
+
+
+                }
+                else {
+                    alert("No se encontraron registos de inicio de sesion.");
+                }
+
+
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+            }
+        });
+
+    }
+    // muestra el historial de sesiones de un usuario
+    function muestraHistorial(datos)
+    {
+       
+
+        var tblHistorial= new google.visualization.DataTable();
+        tblHistorial.addColumn('string', 'Fecha');
+        tblHistorial.addColumn('string', 'Hora');
+        
+        for (var i = 0; i < datos.length; i++) {
+            tblHistorial.addRow([datos[i].fecha_secion, datos[i].hora_secion]);
+        }
+        var contenedor5 = new google.visualization.Table(hisLogin);
+        contenedor5.draw(tblHistorial, { allowHtml: true, showRowNumber: false });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            //var row = table3.getSelection()[0].row
+        });
+
+
+
+
+        var msg = document.getElementById('dlgHistorial');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    // obtiene los inicios de sesion dentro de un rango de fechas para graficarlos 
+    function graficarSesiones() {
+        var fecha_ini = document.getElementById("fecha_ini").value;
+        var fecha_fin = document.getElementById("fecha_fin").value;
+
+ 
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/getIngrMod/",
+            data: { fechaI: fecha_ini , fechaF:fecha_fin},
+            datatype: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    google.setOnLoadCallback(graficaNoLogeos);
+                    graficaNoLogeos(data);
+
+
+                }
+                else {
+                    alert("No se encontraron registos de inicio de sesion.");
+                }
+
+
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+            }
+        });
+    }
+    // grafica el numero de logeos de los usuarios 
+    function graficaNoLogeos(modulosLogeados) {
+        var usuariosModLog = [];
+        for (var i = 0; i < usuarios.length; i++) {
+            usuariosModLog.push({ usr: usuarios[i].usr_usr, srv: usuarios[i].srv_usr, Login: 0, Tiempos: 0, Actividad_Pedidos: 0, Actividad_APP: 0, Actividad_Estaciones: 0, Clientes: 0, Logeos: 0 , utlLogeo:0, Gerentes:0, CredyCobr:0});
+        }
+
+        var modulo = "";
+        var dferencia = 0;
+        var FecHra;
+        var Fec;
+        var Hra;
+        var d;
+        for (var i = 0; i < usuariosModLog.length; i++) {
+           
+
+           
+
+            for (var j = 0; j < modulosLogeados.length; j++) {
+                if (usuariosModLog[i].usr.trim() == modulosLogeados[j].usr_anr.trim()) {
+                    modulo = modulosLogeados[j].mod_anr.trim();
+                    switch (modulo) {
+                        case "Login":
+                            FecHra = modulosLogeados[j].fh_anr.split(' ');
+                            Fec = FecHra[0].split('/');
+                            Hra = FecHra[1].split(':');
+                            d = new Date(parseInt(Fec[2]), parseInt(Fec[1] - 1), parseInt(Fec[0]), 0, 0, 0, 0)
+
+                            if ( Math.abs(new Date(d)) > usuariosModLog[i].utlLogeo ) 
+                            {
+                                usuariosModLog[i].utlLogeo = Math.abs(new Date(d));
+                            }
+                            //tiemUltLog
+                            usuariosModLog[i].Login++;
+                            break;
+                        case "Tiempos":
+                            usuariosModLog[i].Tiempos++;
+                            break;
+                        case "Actividad Pedidos":
+                            usuariosModLog[i].Actividad_Pedidos++;
+                            break;
+                        case "Actividad APP":
+                            usuariosModLog[i].Actividad_APP++;
+                            break;
+                        case "Actividad Estaciones":
+                            usuariosModLog[i].Actividad_Estaciones++;
+                            break;
+                        case "Clientes":
+                            usuariosModLog[i].Clientes++;
+                            break;
+                        case "Logeos":
+                            usuariosModLog[i].Logeos++;
+                            break;
+                        case "Gerentes":
+                            usuariosModLog[i].Gerentes++;
+                            break;
+                        case "CreditoCobranza":
+                            usuariosModLog[i].CredyCobr++;
+                            break;
+                            
+                    }
+
+                }
+            }
+        }
+
+        // api google para mostrar los resultados
+         var tablalogeos = new google.visualization.DataTable();
+         tablalogeos.addColumn('string', 'Usuario');
+         tablalogeos.addColumn('string', 'servidor');
+         tablalogeos.addColumn('string', 'Login plataforma');
+         tablalogeos.addColumn('string', 'Tiempos');
+         tablalogeos.addColumn('string', 'Act Pedidos');
+         tablalogeos.addColumn('string', 'Act App');
+         tablalogeos.addColumn('string', 'Act Est');
+         tablalogeos.addColumn('string', 'Clientes');         
+         tablalogeos.addColumn('string', 'Gerentes');
+         tablalogeos.addColumn('string', 'Credito y cobranza');
+         tablalogeos.addColumn('string', 'Logeos');
+         tablalogeos.addColumn('number', 'UltimoLogeo');
+
+
+         for (var n = 0; n < usuariosModLog.length; n++) {
+
+             if (usuariosModLog[n].usr.trim() !='UsrNieto') {
+                 tablalogeos.addRow(['' + usuariosModLog[n].usr,
+                             '' + usuariosModLog[n].srv,
+                             '' + usuariosModLog[n].Login,
+                             '' + usuariosModLog[n].Tiempos,
+                             '' + usuariosModLog[n].Actividad_Pedidos,
+                             '' + usuariosModLog[n].Actividad_APP,
+                             '' + usuariosModLog[n].Actividad_Estaciones,
+                             '' + usuariosModLog[n].Clientes,
+                             '' + usuariosModLog[n].Gerentes,
+                             '' + usuariosModLog[n].CredyCobr,
+                             '' + usuariosModLog[n].Logeos,
+                             Math.abs(new Date()) - usuariosModLog[n].utlLogeo
+             
+         
+                 ])
+             }
+         }
+        //86,400,000‬
+         var formatter = new google.visualization.ColorFormat();
+        // formatter.addRange(1, 86400000‬, 'black', '#278FF7');
+         formatter.addRange(0, 86400000, 'black', '#278FF7');
+         formatter.addRange(86400001, 432000000, 'black', '#21A607');
+         formatter.addRange(432000001, 864000000, 'black', '#5FF840');
+         formatter.addRange(864000001, 1296000000, 'black', '#F4FB07');
+         formatter.addRange(1296000001, 2592000000, 'black', '#FB8807');
+         formatter.addRange(2592000000, 100000000000000000000000000000, 'black', '#FF0400');
+         formatter.format(tablalogeos, 11);
+
+
+         var contenedor2 = new google.visualization.Table(grfLogeos);
+         contenedor2.draw(tablalogeos, { allowHtml: true, showRowNumber: true });
+
+         google.visualization.events.addListener(contenedor2, 'select', function () {
+
+             var row = contenedor2.getSelection()[0].row;           
+             var tblHistorial = new google.visualization.DataTable();
+             tblHistorial.addColumn('string', 'Fecha/hora');
+             tblHistorial.addColumn('string', 'Modulo');
+
+             for (var i = 0; i < modulosLogeados.length; i++) {
+                 if (modulosLogeados[i].usr_anr.trim() == tablalogeos.getValue(row, 0).trim()) {
+                     tblHistorial.addRow([modulosLogeados[i].fh_anr, modulosLogeados[i].mod_anr]);
+                 }
+                 
+             }
+             var contenedor5 = new google.visualization.Table(hisLogin);
+             contenedor5.draw(tblHistorial, { allowHtml: true, showRowNumber: false });
+             google.visualization.events.addListener(contenedor5, 'select', function () {
+                 
+             });
+
+
+
+
+             var msg = document.getElementById('dlgHistorial');
+             msg.showModal();
+             dialogos.push(msg);
+
+             
+
+           
+
+         });
+
+
+/*
+        google.visualization.events.addListener(tablalogeos, 'select', function () {
+            var row = tablalogeos.getSelection()[0].row;
+            alert(tablalogeos.getValue(row, 0));
+        });
+        */
+        // 1dia  = 86,400,000 milisegundos 
+      
+    }
+    // da de alta un nuevo usuario 
+    function Altalogin() {
+        var user = document.getElementById('usr').value
+        var pwd = document.getElementById('pwd').value
+        var userServer = document.getElementById('slectservidor').value
+        
+        if ((user == '' || user == null) || (pwd == '' || pwd == null)) {
+            alert("Se requieren todos los datos llenos...");
+        }
+        else{       
+        $.ajax({
+            type: "POST",
+            url: "/Home/userLoginAlta/",
+            data: { paramUsr: user, paramPwd: pwd, paramSrv: userServer, paramString1: $("#slectRol").val() },
+            datatype: "json",
+            success: function (data) {
+                if (data.length > 0) {
+                    alert(data);
+                    muestraUsuarios();
+                }                
+            },
+            error: function (request, status, error) {
+                alert(request.responseText);
+            }
+        });
+    }
+
+    }
+    // actualiza o da de baja un registro de los usuarios
+    function Actualizar_Baja(datos) {
+       
+        var valores = datos.split("/");
+        var datos="";
+        if (valores[0].trim()=="Actualizar") {
+            dato = valores[0].trim() + "/" + valores[1].trim() + "/" + document.getElementById(valores[2].trim()).value.trim() + "/" + document.getElementById(valores[3].trim()).value.trim() + "/" + document.getElementById(valores[4].trim()).value.trim();
+        }
+        else
+        {
+            dato = valores[0].trim() + "/" + valores[1].trim();
+        }
+
+        if (confirm("¿Estas seguro(a) de Actualizar/Eliminar el registro?")) {
+            $.ajax({
+                type: "POST",
+                url: "/Home/actualizarBajaUser/",
+                data: { paramString1:dato},
+                datatype: "json",
+                success: function (data) {
+                    alert(data);
+                    muestraUsuarios();
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+        }
+
+
+
+    }
+    ///////////////////////////////////////////////////////////////// metodos de uso general /////////////////////////////////////////////////////////
+    function cerrarDialogo() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+        
+    }
+</script>
+
+<style>
+    body {
+        margin:0;
+        padding:0;
+        font-family:sans-serif;
+        height:100vh;
+    }
+    #tblUsr {         
+            height: 800px;            
+            overflow: scroll;
+        }
+     #hisLogin {
+          
+            height: 600px;
+            
+            overflow: scroll;
+        }
+
+
+        
+</style>

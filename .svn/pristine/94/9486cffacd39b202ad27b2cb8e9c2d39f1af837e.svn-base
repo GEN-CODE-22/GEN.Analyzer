@@ -1,0 +1,3569 @@
+﻿@{
+    ViewBag.Title = "Credito y cobranza";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>Credito y cobranza</title>
+
+</head>
+
+
+
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
+                <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
+                <!--<div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+            </a>
+
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Analyzer</span>
+                </a>
+            </li>
+
+
+
+
+
+            <!--<li id="Lecturas" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Lectura de almacenes</span>
+                </a>
+
+            </li>-->
+
+            <li id="Cuentas" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Cuentas por cobrar</span>
+                </a>
+
+            </li>
+
+            <!--<li id="Pedidos" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>Pedidos Actuales</span>
+                </a>
+
+            </li>-->
+
+           <!-- <li id="PedidosVsMes" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Pedidos vs mes Anterior</span>
+                </a>
+
+            </li>-->
+
+            <li id="Cobranza" onclick="mostrarSecmento(this)" class="nav-item">
+                <hr class="sidebar-divider">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <i class="fas fa-coins"></i>
+                    <span>Dashboard cobranza</span>
+                </a>
+
+            </li>
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <div id="div_calendario_mes" style=" float:left; margin:20px; display:none;">
+
+                        <input id="fm" type="month" class="form-control" style="margin:10px; float:left; " />
+                    </div>
+                    <div id="div_calendarios" style="width:50%; float:left; margin:20px; display:none;">
+                        <h5 style="width:15%; float:left; "> Fecha Inicial </h5>
+                        <input id="fi" type="date" class="form-control" style="width:30%; margin:10px; float:left; " />
+                        <h5 style="width:15%; float:left; "> Fecha Final </h5>
+                        <input id="ff" type="date" class="form-control" style="width:30%; margin:10px; float:left; " />
+                    </div>
+                    <li id="dropdown-menu" style="display:none;" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Reportes
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            <a id="Reporteador" class="dropdown-item" href="#" onclick="GoToReporteador()">Ir a Repoteador</a>
+
+                        </div>
+                    </li>
+                    <!-- Topbar Search -->
+                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+
+
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
+
+                                    <li class="nav-item active" style="margin:10px;">
+                                        <select class="form-control" id="slcservidor"></select>
+                                    </li>
+                                    <li class="nav-item active" style="margin:10px;">
+
+                                        <label id="pwd" style="display:none;">@ViewBag.Pwd</label>
+                                    </li>
+                                    <li class="nav-item active" style="margin:10px;">
+                                        <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:40px;" />
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </nav>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
+
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><label id="serv">@ViewBag.Srv</label></span>
+                                <i class="far fa-user" style="margin-left:15px"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"><label id="usr">@ViewBag.Usr</label></span>
+                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content <div class="container-fluid">-->
+                <div class="container-fluid">
+                    <div id="divLecAlm" style="display:none; overflow:scroll; height:500px;"> </div>
+                    <div id="cxc" style="display:none; ">
+
+
+                        <br />
+                        <br />
+
+                        <div style="width:100%;">
+
+                            <center>
+                                <div class=" card bg-primary text-white shadow" style="height:50px;">
+                                    <div class="card-body">
+                                        Ingreso de Crédito en Cuentas por Cobrar
+                                        <!--<div class="text-white-50 small">#4e73df</div>-->
+                                    </div>
+                                </div>
+                                <table style="width:100%;">
+                                    <tr style="width:100%;">
+                                        <td style="width:24%;">
+                                            <!--VENTA NOTA DE VENTA-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ventaNotaVenta')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/ventanota.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>VENTA NOTA DE VENTA</h4></center>
+
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--CHEQUE DEVUELTO-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevuelto')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cheques.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>CHEQUES DEVUELTOS</h4></center>
+
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--ANTISIPOS INGRESADOS-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('AntisiposIngresados')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/anticipos.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>ANTISIPOS INGRESADOS</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--VALES DE ACCORD-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ValesdeAccord')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/vales.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>VALES DE ACCORD</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+
+
+
+                            </center>
+                        </div>
+                        <br />
+                        <div style="width:100%;">
+                            <center>
+                                <div class=" card bg-danger text-white shadow" style="height:50px;">
+                                    <div class="card-body">
+                                        Cobranza de Crédito en Cuentas por Cobrar
+                                    </div>
+                                </div>
+                                <table style="width:100%;">
+                                    <tr style="width:100%;">
+                                        <td style="width:24%;">
+                                            <!--COBRANZA-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('Cobrnzacrédito')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cobranza.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center> <h4>COBRANZA</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--NOTAS DE CREDITO-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('NotasCreditoCredito')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/notascredito.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>NOTAS DE CREDITO</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--CHEQUES DEVUELTOS-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevueltoCobrados')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/chequesdevueltos.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>CHEQUES DEVUELTOS</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--COBRANZA COMISIONES-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>COBRANZA COMISIONES</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr style="width:100%;">
+                                        <td style="width:24%;">
+                                            <!--COBRANZA COMISIONES-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center> <h4>COBRANZA COMISIONES</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--CobranzaPagoBienes-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaPagoBienes')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cobranzabienes.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>COBRANZA PAGOS DE BIENES</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;">
+                                            <!--CobranzaPagoBienes-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaDonaciones')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/cobranzadonaciones.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>COBRANZA DONACIONES</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width:24%;"></td>
+                                    </tr>
+                                </table>
+                            </center>
+                        </div>
+
+                        <div style="width:100%;">
+                            <center>
+                                <div class=" card bg-info text-white shadow" style="height:50px;">
+                                    <div class="card-body">
+                                        Movimientos en Anticipo
+                                    </div>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <!--AnticiposIngresados-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposIngresados')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/anticiposingresados.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>ANTISIPOS INGRESADOS</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!--AnticiposIngresados-->
+                                            <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposAplicados')">
+                                                <div class="card-body" style="height:100%; width:100%;">
+
+                                                    <div style="display:inline-block; width:30%; float:left;">
+                                                        <img src="@Url.Content("~/Images/anticipadosaplicados.jpg")" style="width: 100px" />
+                                                    </div>
+                                                    <div style="display:inline-block; width:69%;">
+                                                        <center><h4>ANTISIPOS APLICADOS</h4></center>
+                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </center>
+                        </div>
+                    </div>
+                    <div id="divRepPed" style="display:none; overflow:scroll; height:500px;">
+                        <table style="width:100%">
+
+                            <tr style="width:100%">
+                                <td style="width:50%">
+                                    <div class="card shadow" style=" width:100%; margin:20px;">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                            <h6 class=" m-0 font-weight-bold text-primary">Pendientes Generales</h6>
+
+                                        </div>
+                                        <div style="" class="card-body">
+
+                                            <center><div id="PendGral"></div></center>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:50%">
+                                    <div class="card shadow" style=" width:100%; margin:20px;">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                            <h6 class=" m-0 font-weight-bold text-primary">Cancelados Generales</h6>
+                                        </div>
+                                        <div style="" class="card-body">
+                                            <center><div id="CanGral"></div></center>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr style="width:100%">
+                                <td style="width:50%;">
+                                    <div class="card shadow" style=" width:100%; margin:20px;">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                            <h6 class=" m-0 font-weight-bold text-primary">Pendientes por ruta</h6>
+                                        </div>
+                                        <div style="" class="card-body">
+                                            <center> <div id="PenRut" style=" height: 600px; overflow: scroll;"></div></center>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:50%;">
+                                    <div class="card shadow" style=" width:100%; margin:20px;">
+                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                            <h6 class=" m-0 font-weight-bold text-primary">Cancelados por ruta</h6>
+                                        </div>
+                                        <div style="" class="card-body">
+                                            <center> <div id="CanRut" style=" height: 600px; overflow: scroll;"></div></center>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="divPedVsMes" style="display:none; overflow:scroll; height:500px;">
+                        <center>
+                            <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="consultarNotas()">Cargar/Refrescar</button>
+                            <h3>PLANTAS</h3>
+                            <select id="slcPlaVsMes" class="form-control" style="width:100%; margin-top:10px;" onchange="drawData()"></select>
+                            <h3>NOTAS POR USO</h3>
+                            <div id="tblUsoNota"></div>
+                            <h3>NOTAS POR RUTA</h3>
+                            <div id="tblRutaNota"></div>
+                            <h3>NOTAS POR DIA</h3>
+                            <div id="grfkilosdia"></div>
+                        </center>
+                    </div>
+                    <div id="cobranza" style="display:none;">
+
+                        <div id="grfCob" style="width:100%; overflow: auto; float:left;">
+
+                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                    <h6 class=" m-0 font-weight-bold text-primary">Dias rotacion cartera</h6>
+
+                                </div>
+
+                                <div style="width:100%;" class="card-body">
+
+                                    <center>
+                                        <h1 class=" m-0 font-weight-bold text-primary">Dias rotacion cartera</h1>
+                                        <h1 id="lbldiarot" class=" m-0 font-weight-bold text-danger"> </h1>
+                                        <h1 class=" m-0 font-weight-bold text-primary">Dias promedio cartera</h1>
+                                        <h1 id="lbldiaprom" class=" m-0 font-weight-bold text-danger"> </h1>
+
+                                    </center>
+
+                                </div>
+
+                            </div>
+
+                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                    <h6 class=" m-0 font-weight-bold text-primary">Balance cartera / flujo caja</h6>
+
+                                </div>
+
+                                <div style="width:100%;" class="card-body">
+
+                                    <div id="flujCar" style="height:300px; ">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                    <h6 class=" m-0 font-weight-bold text-primary">Cartera general</h6>
+
+                                </div>
+
+                                <div style="width:100%;" class="card-body">
+                                    <div id="GrfCarGral" style="width:100%; height:300px; "></div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                        <div id="grfCob" style="width:100%; overflow: auto; ">
+
+                            <div id="GrfCarUsoDiv" class="card shadow" style="width:50%; display:inline-block;">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                    <h6 class=" m-0 font-weight-bold text-primary">Cartera por uso</h6>
+                                    <div style="float:right; ">
+                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="chbxMas60" value="MAS60" onchange="switchUsoChange(this)">
+                                            <label class="custom-control-label" for="chbxMas60">+ 60 Dias</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="chbxVen" value="VENCIDA" onchange="switchUsoChange(this)">
+                                            <label class="custom-control-label" for="chbxVen">Vencida</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="chbxSven" value="SINVENCER" onchange="switchUsoChange(this)">
+                                            <label class="custom-control-label" for="chbxSven">Sin vencer</label>
+                                        </div>
+                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
+                                            <input type="checkbox" class="custom-control-input" id="chbxTot" value="TOTAL" checked="checked" onchange="switchUsoChange(this)">
+                                            <label class="custom-control-label" for="chbxTot">Total</label>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+                                <div style="width:100%;" class="card-body">
+                                    <div id="GrfCarUso" style="width:100%;  height:300px;"></div>
+
+                                </div>
+
+                            </div>
+                            <div id="GrfCarMovDiv" class="card shadow" style="width:50%; display:inline-block; ">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                    <h6 class=" m-0 font-weight-bold text-primary">Deuda sin movimiento</h6>
+
+                                </div>
+
+                                <div style="width:100%;" class="card-body">
+                                    <div id="GrfCarMov" style="width:100%;  height:300px;"></div>
+
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                        <br />
+
+                        <div id="tblCob" style="width:100%; overflow: auto;">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                <h6 class=" m-0 font-weight-bold text-primary">Clientes con incremento de credito</h6>
+
+                                <a class="btn btn-success btn-icon-split" onclick="IncCredtoExcel()">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-clipboard-check"></i>
+                                    </span>
+                                    <span class="text" style="color:white;">Reporte Excel</span>
+                                </a>
+                            </div>
+
+                            <div style="width:100%;" class="card-body">
+                                <div id="tblIncrCred" style="height: 500px; "></div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <!-- End of Content Wrapper -->
+            </div>
+            <!-- End of Page Wrapper -->
+            <!-- Scroll to Top Button-->
+            <a class="scroll-to-top rounded" href="#page-top">
+                <i class="fas fa-angle-up"></i>
+            </a>
+            <!-- Logout Modal-->
+            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <dialog id="dlgCXC" style="height:800px; overflow:scroll">
+                <center>
+                    <h1 id="lab_res"></h1>
+                    <button id="ver_detalle" class="btn btn-primary" onclick="showDetalle()">VER DETALLE</button>
+                    <button style="display: none;" type="button" id="CxCExcel" class="btn btn-success" onclick="CxCToExcel()">EXCEL..</button>
+                    <button style="display: none;" type="button" id="movAntExcel" class="btn btn-success" onclick=" movAntToExcel()">EXCEL..</button>
+                    <br />
+                    <div id="tblCXC" style="height:750px; overflow:scroll; display:none;"></div>
+                </center>
+            </dialog>
+
+            <dialog id="dlgUsoSinMov" style="height:800px; overflow:scroll">
+                <div class="card shadow" style="width:100%; overflow: auto;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                        <h6 id="lblUsoSinMov" class=" m-0 font-weight-bold text-primary"></h6>
+                        <div style="float:right">
+                            <a class="btn btn-success btn-icon-split" onclick="DeudaUsoSinMovExcel()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </span>
+                                <span class="text" style="color:white;">Reporte Excel</span>
+                            </a>
+                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-times-circle"></i>
+                                </span>
+                                <span class="text" style="color:white;">Cerrar</span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div style="width:100%;" class="card-body">
+                        <div id="divUsoSinMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+
+                    </div>
+
+
+                </div>
+                <!--
+        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cerrarDialog()"> Cerrar </button>
+        <button class="btn btn-success" style="float:right; margin:10px;" onclick="DeudaUsoSinMovExcel()"> Excel </button>
+
+        <center>
+            <label id="lblUsoSinMov"></label>
+            <br />
+            <div id="divUsoSinMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+        </center>-->
+            </dialog>
+            <dialog id="dlgUsoMov" style="height:800px; overflow:scroll">
+                <div class="card shadow" style="width:100%; overflow: auto;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                        <h6 id="lblUsoMov" class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+
+
+                        <div style="float:right">
+                            <a class="btn btn-success btn-icon-split" onclick="DeudaUsoMovExcel()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </span>
+                                <span class="text" style="color:white;">Reporte Excel</span>
+                            </a>
+                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-times-circle"></i>
+                                </span>
+                                <span class="text" style="color:white;">Cerrar</span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div style="width:100%;" class="card-body">
+                        <div id="divUsoMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+
+                    </div>
+
+
+                </div>
+
+                <!--
+        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cerrarDialog()"> Cerrar </button>
+        <button class="btn btn-success" style="float:right; margin:10px;" onclick="DeudaUsoMovExcel()"> Excel </button>
+
+        <center>
+            <label id="lblUsoMov"></label>
+            <br />
+            <div id="divUsoMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+        </center>-->
+            </dialog>
+
+            <dialog id="mas60Dias" style="height:800px; overflow:scroll">
+                <div id="tblCob" class="card shadow" style="width:100%; overflow: auto;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                        <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+
+
+                        <div style="float:right">
+                            <a class="btn btn-success btn-icon-split" onclick="mas60DiasExcel()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </span>
+                                <span class="text" style="color:white;">Reporte Excel</span>
+                            </a>
+                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-times-circle"></i>
+                                </span>
+                                <span class="text" style="color:white;">Cerrar</span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div style="width:100%;" class="card-body">
+                        <div id="divMas60dias" style="height:750px; overflow:scroll; display:inline;"></div>
+
+                    </div>
+
+
+                </div>
+
+
+            </dialog>
+
+            <dialog id="dlgPedPenXRut" style=" overflow:scroll">
+                <div class="card shadow" style="width:100%; overflow: auto;">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                        <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+
+
+                        <div style="float:right">
+
+                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-times-circle"></i>
+                                </span>
+                                <span class="text" style="color:white;">Cerrar</span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div style="width:100%;" class="card-body">
+                        <div id="divPedPenXRut" style="height:750px; overflow:scroll; display:inline;"></div>
+
+                    </div>
+
+
+                </div>
+
+            </dialog>
+</body>
+
+</html>
+
+<link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
+<link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
+<link href="~/Styles/Template/all.min.css" rel="stylesheet" type="text/css">
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+<script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
+<script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
+<script>
+    google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
+    // variables de uso general
+    var Lecturas = []; // Arreglo que contiene las lecturas
+    var Cuentas = []; // Arreglo que guarda informacion de cuentas por cobrar
+    var MovAnt = [];
+    var pedidos;
+    var nombre_pestaña = "";
+    var NotasMesAñoAct = [];
+    var NotasMesAñoAnt = [];
+    var dialogos = [];
+    // variables para credito y cobranza
+    var notasCredito = 0;
+    $("#grfCob").scrollLeft(300);
+    $("#tblCob").scrollLeft(300);
+    var cartera_;
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+    var descuentoDir = 0;
+    $(document).ready(function () {
+        document.getElementById('header_layout').style.display = "none";
+        // se colocan fechas por default
+        
+        $("#ff").val(today);
+        $("#fi").val(today);
+        $("#fm").val(now.getFullYear() + "-" + (month));
+        document.getElementById("fm").setAttribute("max", now.getFullYear() + "-" + (month));
+        /// se llena el listado se servidres para el usuario admin
+        for (var k = 0; k < servers.length; k++) {
+            var x = document.getElementById("slcservidor");
+            var option = document.createElement("option");
+            option.text = servers[k].trim();
+            x.add(option);
+        }
+
+        // si es usuario admin se oculata la etiqueda del servidor
+
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+
+            document.getElementById('slcservidor').style.display = "inline";
+            document.getElementById('serv').style.display = "none";
+        }
+        else {
+            document.getElementById('slcservidor').style.display = "none";
+            document.getElementById('serv').style.display = "inline";
+        }
+    });
+    // muestra el segmento correspendiente a la seleccion del usuario
+    function mostrarSecmento(ref) {
+        document.getElementById('divLecAlm').style.display = 'none';
+        document.getElementById('cxc').style.display = 'none';
+        document.getElementById('div_calendarios').style.display = 'none';
+        document.getElementById('divRepPed').style.display = 'none';
+        document.getElementById('divPedVsMes').style.display = 'none';
+        document.getElementById('div_calendario_mes').style.display = 'none';
+        document.getElementById('cobranza').style.display = 'none';
+        document.getElementById('Reporteador').style.display = 'none';
+        document.getElementById('dropdown-menu').style.display = 'none';
+
+        switch (ref.id) {
+            case "Lecturas":
+                document.getElementById('divLecAlm').style.display = 'inline';
+                getLecturas();
+                break;
+
+            case "Cuentas":
+                document.getElementById('cxc').style.display = 'inline';
+                document.getElementById('div_calendarios').style.display = 'inline';
+                break;
+            case "Pedidos":
+                document.getElementById('divRepPed').style.display = 'inline';
+                getRepPed();
+                break;
+
+
+            case "PedidosVsMes":
+                document.getElementById('divPedVsMes').style.display = 'inline';
+                document.getElementById('div_calendario_mes').style.display = 'inline';
+                break;
+
+            case "Cobranza":
+                document.getElementById('div_calendario_mes').style.display = 'inline';
+                document.getElementById('cobranza').style.display = 'inline';
+                document.getElementById('Reporteador').style.display = 'inline';
+                document.getElementById('dropdown-menu').style.display = 'inline';
+                getCartera();
+                break;
+        }
+    }
+    //////////////////////////////////////////////////SECCION DE ALMACENES/////////////////////////////////////////////////
+    function getLecturas() {
+
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/getLecturas/",
+            data: { paramSrv: serv },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    Lecturas = data;
+                    graficaLecturas(data);
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+                else {
+
+                    alert("No se encontraron las lecturas");
+                    document.getElementById('divLecAlm').innerHTML = '';
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+
+
+    }
+    function refreshLecturas() {
+        Lecturas = [];
+        getLecturas();
+    }
+    function graficaLecturas(lecturas) {
+        document.getElementById('divLecAlm').innerHTML = '';
+        document.getElementById('divLecAlm').innerHTML += '<center><button class="btn btn-primary" style="width:90%; margin:20px;" OnClick="refreshLecturas()">REFRESCAR</button></center>'
+        var id_porc = [];
+        var tipo = "";
+        var uso = "";
+        for (var i = 0; i < lecturas.length; i++) {
+
+
+            switch (lecturas[i].uso_alm.trim()) {
+                case "A":
+                    uso = "ALMACEN";
+                    break;
+
+
+                case "E":
+                    uso = "ESTACION";
+                    break;
+
+            }
+            switch (lecturas[i].tipo_alm.trim()) {
+                case "F":
+                    tipo = "FISICO";
+                    break;
+
+
+                case "V":
+                    tipo = "VIRTUAL";
+                    break;
+
+            }
+
+
+
+            if (parseFloat(lecturas[i].cap_lts) > 20000) {
+                document.getElementById('divLecAlm').innerHTML +=
+          '<div style="width:100%;background:#ffffff; margin:5px;"> ' +
+           '<div style="width:100%;">  ' +
+            '<h5 style="margin:10px; float:left;"> Clave: ' + lecturas[i].descr_alm.toUpperCase() + '</h5>  ' +
+            '<p style="margin:10px; float:left;">Almacen: ' + lecturas[i].sec_almd.toUpperCase() + '</p>  ' +
+            '<p style="margin:10px; float:left;">Lts: ' + lecturas[i].inv_fis_lts + '</p>  ' +
+            '<p style="margin:10px; float:left;">Cap Lts: ' + lecturas[i].cap_lts + '</p>  ' +
+            '<p style="margin:10px; float:left;">Tipo: ' + tipo + '</p>  ' +
+            '<p style="margin:10px; float:left;">Uso: ' + uso + '</p>  ' +
+
+           '<div> ' +
+
+           '<div class="progress" style="width:100%; height:35px;background:#ffffff;">   ' +
+            '   <progress id="progress' + i + '" max="100" value="' + Math.round(parseFloat(lecturas[i].porc_inv_fis)) + '" style="width:90%; height:30px; margin:5px; background-color:#06416D;"></progress> ' +
+             '  <h2>' + lecturas[i].porc_inv_fis + '%</h2> ' +
+           ' </div> ' +
+           ' </div> <br/>';
+            }
+
+
+
+
+
+        }
+
+    }
+    // crea una animacion  para las barras de progreso
+    function animateprogress(id, val) {
+
+
+        var getRequestAnimationFrame = function () {  /* <------- Declaro getRequestAnimationFrame intentando obtener la máxima compatibilidad con todos los navegadores */
+            return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function (callback) {
+                window.setTimeout(enroute, 1 / 60 * 1000);
+            };
+
+        };
+
+        var fpAnimationFrame = getRequestAnimationFrame();   /* <--- Declaro una instancia de getRequestAnimationFrame para llamar a la función animación */
+        var i = 0;
+        var animacion = function () {
+
+            if (i <= val) {
+                document.querySelector(id).setAttribute("value", i);      /* <----  Incremento el valor de la barra de progreso */
+                document.querySelector(id + "+ h2").innerHTML = i + "%";     /* <---- Incremento el porcentaje y lo muestro en la etiqueta span */
+                i++;
+                fpAnimationFrame(animacion);          /* <------------------ Mientras que el contador no llega al porcentaje fijado la función vuelve a llamarse con fpAnimationFrame     */
+            }
+
+        }
+
+        fpAnimationFrame(animacion);   /*  <---- Llamo la función animación por primera vez usando fpAnimationFrame para que se ejecute a 60fps  */
+
+    }
+    ////////////////////////////////////////////////// SECCION DE CUENTAS POR COBRAR//////////////////////////////////
+    // consulta informacion de cuentas por cobrar
+    function getCxC(consulta) {
+        nombre_pestaña = consulta.name;
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/CxC/",
+            data: { paramSrv: serv, paramString1: consulta, fechaI: $('#fi').val(), fechaF: $('#ff').val() },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    Cuentas = data;
+
+
+                    google.setOnLoadCallback(mostrarCxc);
+                    mostrarCxc(Cuentas)
+                    //graficaLecturas(data);
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+                else {
+
+                    alert("No se encontraron Registros");
+                    //document.getElementById('divLecAlm').innerHTML = '';
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+
+    }
+    function mostrarCxc(Cuenta) {
+        document.getElementById('ver_detalle').style.display = 'inline';
+        document.getElementById('tblCXC').style.display = 'none';
+        var sumImp = 0;
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn('string', 'RAZON');
+        tablausonvta.addColumn('string', 'CLIENTE');
+        tablausonvta.addColumn('string', 'tpm');
+        tablausonvta.addColumn('string', 'tip');
+        tablausonvta.addColumn('string', 'doc');
+        tablausonvta.addColumn('string', 'ffis');
+        tablausonvta.addColumn('string', 'SERVIDOR');
+        tablausonvta.addColumn('string', 'COMPAÑIA');
+        tablausonvta.addColumn('string', 'PLANTA');
+        tablausonvta.addColumn('string', 'ffac');
+        tablausonvta.addColumn('string', 'sfac');
+        tablausonvta.addColumn('string', 'num');
+        tablausonvta.addColumn('string', 'sta');
+        tablausonvta.addColumn('string', 'tpa');
+        tablausonvta.addColumn('string', 'uso');
+        tablausonvta.addColumn('string', 'IMPORTE');
+        tablausonvta.addColumn('string', 'fec');
+        tablausonvta.addColumn('string', 'fer');
+        tablausonvta.addColumn('string', 'fven');
+        tablausonvta.addColumn('string', 'desc');
+        tablausonvta.addColumn('string', 'usr');
+        tablausonvta.addColumn('string', 'fliq');
+
+        var tpm_mcxc = "";
+        for (var i = 0; i < Cuenta.length; i++) {
+            //'50'=Efectivo,'51'=Cheque,55=Pago Anticipo,56=Cheque posfechado,58=Deposito en banco}
+            tpm_mcxc = "";
+            if (Cuenta[i].tpm_mcxc != null) {
+                switch (Cuenta[i].tpm_mcxc.trim()) {
+                    case "50":
+                        tpm_mcxc = "EFECTIVO";
+                        break;
+                    case "51":
+                        tpm_mcxc = "CHEQUE";
+                        break;
+                    case "55":
+                        tpm_mcxc = "PAGO ANTICIPADO";
+                        break;
+                    case "56":
+                        tpm_mcxc = "CHEQUE POSFECHADO";
+                        break;
+                    case "58":
+                        tpm_mcxc = "DEPOSITO EN BANCO";
+                        break;
+                    default:
+                        tpm_mcxc = "";
+                        break;
+                }
+            }
+
+
+
+            tablausonvta.addRow([
+                                Cuenta[i].razsoc_cte,
+                                Cuenta[i].cte_mcxc,
+                                tpm_mcxc,
+                                Cuenta[i].tip_mcxc,
+                                Cuenta[i].doc_mcxc,
+                                Cuenta[i].ffis_mcxc,
+                                 Cuenta[i].ser_mcxc,
+                                 Cuenta[i].cia_mcxc,
+                                 Cuenta[i].pla_mcxc,
+                                 Cuenta[i].ffac_mcxc,
+                                 Cuenta[i].sfac_mcxc,
+                                 Cuenta[i].num_mcxc,
+                                 Cuenta[i].sta_mcxc,
+                                 Cuenta[i].tpa_mcxc,
+                                 Cuenta[i].uso_mcxc,
+                                 Cuenta[i].imp_mcxc,
+                                 Cuenta[i].fec_mcxc,
+                                 Cuenta[i].fer_mcxc,
+                                 Cuenta[i].fven_mcxc,
+                                 Cuenta[i].desc_mcxc,
+                                 Cuenta[i].usr_mcxc,
+                                 Cuenta[i].fliq_mcxc
+            ]);
+
+            sumImp += parseFloat(Cuenta[i].imp_mcxc);
+        }
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+        //* agregar el formato  al numero de columna correspondiente
+        /*
+        formatter.format(tablausonvta, 0);
+        formatter.format(tablausonvta, 1);
+        formatter.format(tablausonvta, 2);
+        formatter.format(tablausonvta, 3);
+        formatter.format(tablausonvta, 4);
+        formatter.format(tablausonvta, 5);
+        formatter.format(tablausonvta, 6);
+        formatter.format(tablausonvta, 7);
+        formatter.format(tablausonvta, 8);
+        formatter.format(tablausonvta, 9);
+        formatter.format(tablausonvta, 10);
+        formatter.format(tablausonvta, 11);
+        formatter.format(tablausonvta, 12);
+        formatter.format(tablausonvta, 13);
+        formatter.format(tablausonvta, 14);
+        formatter.format(tablausonvta, 15);
+        formatter.format(tablausonvta, 16);
+        formatter.format(tablausonvta, 17);
+        formatter.format(tablausonvta, 18);
+        formatter.format(tablausonvta, 19);
+        formatter.format(tablausonvta, 20);*/
+
+        var contenedor5 = new google.visualization.Table(tblCXC);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+
+        document.getElementById('lab_res').innerHTML = 'IMPORTE TOTAL: ' + new Intl.NumberFormat('es-MX').format(sumImp.toFixed(2));
+        var msg = document.getElementById('dlgCXC');
+        msg.showModal();
+
+
+
+
+    }
+    function showDetalle() {
+        document.getElementById('tblCXC').style.display = 'inline';
+        document.getElementById('ver_detalle').style.display = 'none';
+
+
+        if (nombre_pestaña == 'AnticiposIngresados' || nombre_pestaña == 'AnticiposAplicados') {
+
+            document.getElementById('movAntExcel').style.display = 'inline';
+        } else {
+            document.getElementById('CxCExcel').style.display = 'inline';
+        }
+
+    }
+    ////////////////////////////////////////////////// SECCION DE MOVIMIENTO DE ANTISIPO//////////////////////////////////
+    // consulta informacion de movimientos de anticipo
+    function getMovAnt(consulta) {
+        nombre_pestaña = consulta.name.trim();
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/MovAnt/",
+            data: { paramSrv: serv, paramString1: consulta, fechaI: $('#fi').val(), fechaF: $('#ff').val() },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    MovAnt = data;
+
+
+                    google.setOnLoadCallback(mostrarMovAnt);
+                    mostrarMovAnt(Cuentas)
+                    //graficaLecturas(data);
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+                else {
+
+                    alert("No se encontraron Registros");
+                    //document.getElementById('divLecAlm').innerHTML = '';
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+
+    }
+    function mostrarMovAnt(Cuenta) {
+        var sumImp = 0;
+        document.getElementById('ver_detalle').style.display = 'inline';
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", "razsoc_cte ");
+        tablausonvta.addColumn("string", "cte_mant ");
+        tablausonvta.addColumn("string", "tpm_mant");
+        tablausonvta.addColumn("string", "tip_mant ");
+        tablausonvta.addColumn("string", "doc_mant ");
+        tablausonvta.addColumn("string", "ffis_mant ");
+        tablausonvta.addColumn("string", "ser_mant ");
+        tablausonvta.addColumn("string", "cia_mant ");
+        tablausonvta.addColumn("string", "pla_mant ");
+        tablausonvta.addColumn("string", "ffac_mant ");
+        tablausonvta.addColumn("string", "sfac_mant ");
+        tablausonvta.addColumn("string", "num_mant ");
+        tablausonvta.addColumn("string", "sta_mant ");
+        tablausonvta.addColumn("string", "tpa_mant ");
+        tablausonvta.addColumn("string", "uso_mant ");
+        tablausonvta.addColumn("string", "imp_mant ");
+        tablausonvta.addColumn("string", "fec_mant ");
+        tablausonvta.addColumn("string", "fer_mant ");
+        tablausonvta.addColumn("string", "fven_mant ");
+        tablausonvta.addColumn("string", "desc_mant ");
+        tablausonvta.addColumn("string", "usr_mant ");
+        tablausonvta.addColumn("string", "fliq_mant ");
+
+
+        for (var i = 0; i < Cuenta.length; i++) {
+
+
+
+
+            tablausonvta.addRow([
+                                Cuenta[i].razsoc_cte,
+                                Cuenta[i].cte_mant,
+                                Cuenta[i].tpm_mant,
+                                Cuenta[i].tip_mant,
+                                Cuenta[i].doc_mant,
+                                Cuenta[i].ffis_mant,
+                                Cuenta[i].ser_mant,
+                                Cuenta[i].cia_mant,
+                                Cuenta[i].pla_mant,
+                                Cuenta[i].ffac_mant,
+                                Cuenta[i].sfac_mant,
+                                Cuenta[i].num_mant,
+                                Cuenta[i].sta_mant,
+                                Cuenta[i].tpa_mant,
+                                Cuenta[i].uso_mant,
+                                Cuenta[i].imp_mant,
+                                Cuenta[i].fec_mant,
+                                Cuenta[i].fer_mant,
+                                Cuenta[i].fven_mant,
+                                Cuenta[i].desc_mant,
+                                Cuenta[i].usr_mant,
+                                Cuenta[i].fliq_mant
+            ]);
+            sumImp += parseFloat(Cuenta[i].imp_mant);
+        }
+        document.getElementById('lab_res').innerHTML = 'IMPORTE TOTAL: ' + new Intl.NumberFormat('es-MX').format(sumImp.toFixed(2));
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+        //* agregar el formato  al numero de columna correspondiente
+        /*
+        formatter.format(tablausonvta, 0);
+        formatter.format(tablausonvta, 1);
+        formatter.format(tablausonvta, 2);
+        formatter.format(tablausonvta, 3);
+        formatter.format(tablausonvta, 4);
+        formatter.format(tablausonvta, 5);
+        formatter.format(tablausonvta, 6);
+        formatter.format(tablausonvta, 7);
+        formatter.format(tablausonvta, 8);
+        formatter.format(tablausonvta, 9);
+        formatter.format(tablausonvta, 10);
+        formatter.format(tablausonvta, 11);
+        formatter.format(tablausonvta, 12);
+        formatter.format(tablausonvta, 13);
+        formatter.format(tablausonvta, 14);
+        formatter.format(tablausonvta, 15);
+        formatter.format(tablausonvta, 16);
+        formatter.format(tablausonvta, 17);
+        formatter.format(tablausonvta, 18);
+        formatter.format(tablausonvta, 19);
+        formatter.format(tablausonvta, 20);*/
+
+        var contenedor5 = new google.visualization.Table(tblCXC);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+        var msg = document.getElementById('dlgCXC');
+        msg.showModal();
+
+    }
+    /////////////////////////////////////////////////// REPORTES EXCEL ///////////////////////////////////////////////////
+    function CxCToExcel() {
+        //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
+
+        var ws_data = [['FECHAS',
+                           'DE :' + $("#ff").val(),
+                         'A :' + $("#fi").val()]];
+        ws_data.push(['RAZON',
+                        'CLIENTE',
+                        'IMPORTE']);
+
+        for (var i = 0; i < Cuentas.length; i++) {
+            if (Cuentas[i].razsoc_cte == null) {
+                Cuentas[i].razsoc_cte = "";
+            }
+
+        }
+
+        for (var i = 0; i < Cuentas.length; ++i) {
+            ws_data.push([Cuentas[i].razsoc_cte.replace(',', ' '),
+                          Cuentas[i].cte_mcxc,
+                          Cuentas[i].imp_mcxc.replace(',', ' ')]
+            );
+        }
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "SheetJS Tutorial",
+            Subject: "Test",
+            Author: "Red Stapler",
+            CreatedDate: new Date(2017, 12, 19)
+        };
+
+        wb.SheetNames.push("Test Sheet");
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["Test Sheet"] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+    function movAntToExcel() {
+        //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
+
+        var ws_data = [['RAZON',
+                        'CLIENTE',
+                        'IMPORTE']];
+        ws_data.push(['FECHAS',
+                            'DE :' + $("#ff").val(),
+                          'A :' + $("#fi").val()]);
+
+        for (var i = 0; i < MovAnt.length; i++) {
+            if (MovAnt[i].razsoc_cte == null) {
+                MovAnt[i].razsoc_cte = "";
+            }
+
+        }
+
+        for (var i = 0; i < Cuentas.length; ++i) {
+            ws_data.push([MovAnt[i].razsoc_cte.replace(',', ' '),
+                          MovAnt[i].cte_mant,
+                          MovAnt[i].imp_mant.replace(',', ' ')]
+            );
+        }
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "SheetJS Tutorial",
+            Subject: "Test",
+            Author: "Red Stapler",
+            CreatedDate: new Date(2017, 12, 19)
+        };
+
+        wb.SheetNames.push("Test Sheet");
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["Test Sheet"] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+    //incremento credito
+    function IncCredtoExcel() {
+
+        var ws_data = [];
+        ws_data.push(['CLIENTE', 'NO CLIENTE', 'RFC', "USO", "SIN VENCER", "VENCIDO", "DIF MES ANT", "% INCREMENTO", "DIF VENCIDO VS MES ANT ", "% INCR VS MES ANT", "DIAS PROM ANTI DOC", "DIAS CREDITO"]);
+
+
+
+        for (var i = 0; i < cartera_.carteraCtesConMovimiento.length; ++i) {
+            ws_data.push([cartera_.carteraCtesConMovimiento[i].Nomcte_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Numcte_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Rfc_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].GetUSO + '',
+                                cartera_.carteraCtesConMovimiento[i].Svencer_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Vencido_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Dmesant_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Pmesant_cmcmov + '',
+                                cartera_.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
+                                cartera_.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
+                                cartera_.carteraCtesConMovimiento[i].Diapro_cmcmov,
+                                cartera_.carteraCtesConMovimiento[i].Dcred_cmcmov]);
+        }
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "Incremento credito",
+            Subject: "Incremento credito",
+            Author: "GEN",
+            CreatedDate: new Date(2017, 12, 19)
+        };
+
+        wb.SheetNames.push("Incremento credito");
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["Incremento credito"] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+    // detalle de deuda por usos sin movimeinto
+    function DeudaUsoSinMovExcel() {
+        var usodet = document.getElementById('lblUsoSinMov').innerHTML;
+        var ws_data = [];
+        ws_data.push(['CLIENTE', 'NO CLIENTE', 'RFC', "USO", "PROM DIA ANTI DOC", "DIAS CREDITO", "SIN VENCER", "VENCIDO", "TOTAL"]);
+
+
+        var sinVencer = 0;
+        var vencido = 0;
+        for (var i = 0; i < cartera_.carteraCtesSinMovimiento.length; ++i) {
+            if (cartera_.carteraCtesSinMovimiento[i].GetUSO == usodet) {
+                sinVencer += cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov;
+                vencido += cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov;
+                ws_data.push([cartera_.carteraCtesSinMovimiento[i].Nomcte_cmcsmov + '',
+                                    cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov + '',
+                                    cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov + '',
+                                    cartera_.carteraCtesSinMovimiento[i].GetUSO + '',
+                                     cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov + '',
+                                      cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov + '',
+                                    cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov + '',
+
+                                    cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
+            }
+        }
+        ws_data.push(['TOTAL', '', '', '', '', '', sinVencer + '', vencido + '', (sinVencer + vencido) + '']);
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "DetUsoSinMov" + usodet,
+            Subject: "DetUsoSinMov" + usodet,
+            Author: "GEN",
+            CreatedDate: new Date()
+        };
+
+        wb.SheetNames.push("DetUsoSinMov" + usodet);
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["DetUsoSinMov" + usodet] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+
+    function DeudaUsoMovExcel() {
+        var usodet = document.getElementById('lblUsoMov').innerHTML;
+        var ws_data = [];
+        ws_data.push(['CLIENTE', 'NO CLIENTE', 'RFC', "USO", "DIAS PROM", "DIAS CRED", "SIN VENCER", "VENCIDO", "TOTAL", "TOTAL MAS DE 60 DIAs"]);
+
+
+        var sinVencer = 0;
+        var vencido = 0;
+        var mas60DiasTot = 0;
+        for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
+            if (cartera_.carteraMesCte[i].GetUSO.substring(0, 3).trim() == usodet.substring(0, 3).trim()) {
+                sinVencer += cartera_.carteraMesCte[i].Ssvencer_cmcte;
+                vencido += cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte;
+
+                ws_data.push([cartera_.carteraMesCte[i].Nomcte_cmcte,
+                                cartera_.carteraMesCte[i].Numcte_cmcte,
+                                cartera_.carteraMesCte[i].Rfc_cmcte,
+                                cartera_.carteraMesCte[i].GetUSO,
+                                cartera_.carteraMesCte[i].Diapro_cmcte,
+                                cartera_.carteraMesCte[i].Diacre_cmcte,
+                                cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                                cartera_.carteraMesCte[i].Stotal_cmcte + '', (cartera_.carteraMesCte[i].S060_090_cmcte +
+                                cartera_.carteraMesCte[i].S090_120_cmcte +
+                                cartera_.carteraMesCte[i].S120_150_cmcte +
+                                cartera_.carteraMesCte[i].S150_180_cmcte +
+                                cartera_.carteraMesCte[i].S180_210_cmcte +
+                                cartera_.carteraMesCte[i].S210_240_cmcte +
+                                cartera_.carteraMesCte[i].S240_270_cmcte +
+                                cartera_.carteraMesCte[i].Smas_270_cmcte)]);
+
+                mas60DiasTot += (cartera_.carteraMesCte[i].S060_090_cmcte +
+                                cartera_.carteraMesCte[i].S090_120_cmcte +
+                                cartera_.carteraMesCte[i].S120_150_cmcte +
+                                cartera_.carteraMesCte[i].S150_180_cmcte +
+                                cartera_.carteraMesCte[i].S180_210_cmcte +
+                                cartera_.carteraMesCte[i].S210_240_cmcte +
+                                cartera_.carteraMesCte[i].S240_270_cmcte +
+                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+            }
+
+        }
+
+        ws_data.push(['TOTAL', '', '', '', '', '', sinVencer, vencido, (sinVencer + vencido) + '', mas60DiasTot]);
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "DetUso" + usodet,
+            Subject: "DetUso" + usodet,
+            Author: "GEN",
+            CreatedDate: new Date()
+        };
+
+        wb.SheetNames.push("DetUso" + usodet);
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["DetUso" + usodet] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+    function mas60DiasExcel() {
+
+        var ws_data = [];
+
+        ws_data.push(['NO CLIENTE', 'CLIENTE', 'RFC', "USO", "60-90", "90-120", "120-150", "150-180", "180-210", "210-240", "240-270", "+270", "TOTAL"]);
+        var sumaMas60 = 0;
+        var totalMas60 = 0;
+        for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
+
+            sumaMas60 = cartera_.carteraMesCte[i].S060_090_cmcte +
+                      cartera_.carteraMesCte[i].S090_120_cmcte +
+                      cartera_.carteraMesCte[i].S120_150_cmcte +
+                      cartera_.carteraMesCte[i].S150_180_cmcte +
+                      cartera_.carteraMesCte[i].S180_210_cmcte +
+                      cartera_.carteraMesCte[i].S210_240_cmcte +
+                      cartera_.carteraMesCte[i].S240_270_cmcte +
+                      cartera_.carteraMesCte[i].Smas_270_cmcte;
+
+            if (sumaMas60 > 0) {
+
+                ws_data.push([cartera_.carteraMesCte[i].Numcte_cmcte,
+                                     cartera_.carteraMesCte[i].Nomcte_cmcte,
+                                     cartera_.carteraMesCte[i].Rfc_cmcte,
+                                     cartera_.carteraMesCte[i].GetUSO,
+                                     cartera_.carteraMesCte[i].S060_090_cmcte,
+                                     cartera_.carteraMesCte[i].S090_120_cmcte,
+                                     cartera_.carteraMesCte[i].S120_150_cmcte,
+                                     cartera_.carteraMesCte[i].S150_180_cmcte,
+                                     cartera_.carteraMesCte[i].S180_210_cmcte,
+                                     cartera_.carteraMesCte[i].S210_240_cmcte,
+                                     cartera_.carteraMesCte[i].S240_270_cmcte,
+                                     cartera_.carteraMesCte[i].Smas_270_cmcte,
+                                     sumaMas60]);
+            }
+            totalMas60 += sumaMas60;
+            sumaMas60 = 0;
+        }
+
+
+        ws_data.push(['TOTAL', '', '', '', '', '', '', '', '', '', '', '', totalMas60]);
+
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "Mas60Dias",
+            Subject: "Mas60Dias",
+            Author: "GEN",
+            CreatedDate: new Date()
+        };
+
+        wb.SheetNames.push("Mas60Dias");
+        // var ws_data = [['hello', 'world']];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        wb.Sheets["Mas60Dias"] = ws;
+        var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        function s2ab(s) {
+
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+
+        }
+
+        saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), 'test.xlsx');
+
+    }
+    ////////////////////////////////////////////////////SECCION REPORTES DE PEDIDOS///////////////////////////////////////
+    function getRepPed() // obtiene el reporte del dia de los pedidos al momento
+    {
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/tblPed/",
+            data: { paramSrv: serv },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    Pedidos = data;
+                    //graficaLecturas(data);
+                    showPenGral(data[1]);
+                    showCanGral(data[3]);
+                    showPenRut(data[5]);
+                    showCanRut(data[7]);
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+                else {
+
+                    alert("No se encontraron las lecturas");
+                    document.getElementById('divLecAlm').innerHTML = '';
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+
+    } // obtiene la coleccion de pedidos del servidor
+    function showPenGral(data) {
+
+        var arrPenGral = [];
+        arrPenGral.push({ TipoPed: "CALLE", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "CALLE", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "CALLE", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "CALLCENTER", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "CALLCENTER", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "CALLCENTER", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "APLICACION", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "APLICACION", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "APLICACION", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROACTIVA", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROACTIVA", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "PROACTIVA", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "WHATSAPP", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "WHATSAPP", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrPenGral.push({ TipoPed: "WHATSAPP", TipoServ: "CARBURACION", Cantidad: 0 });
+
+
+
+        var sum = 0;
+        document.getElementById('ver_detalle').style.display = 'inline';
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", "SERVICIO");
+        tablausonvta.addColumn("string", "PEDIDO");
+        tablausonvta.addColumn("number", "CANTIDAD");
+
+
+        for (var i = 0; i < data.length; i++) {
+
+            for (var j = 0; j < arrPenGral.length; j++) {
+                if (data[i].TipPed.trim() == arrPenGral[j].TipoPed.trim() && data[i].TipServ.trim() == arrPenGral[j].TipoServ.trim()) {
+                    arrPenGral[j].Cantidad += parseInt(data[i].Cantidad);
+                    sum += parseInt(data[i].Cantidad);
+                    break;
+                }
+            }
+        }
+
+
+
+        for (var i = 0; i < arrPenGral.length; i++) {
+
+
+            if (arrPenGral[i].Cantidad > 0) {
+                tablausonvta.addRow([
+                                                    arrPenGral[i].TipoServ,
+                                                    arrPenGral[i].TipoPed,
+                                                   arrPenGral[i].Cantidad
+
+                ]);
+            }
+
+        }
+        tablausonvta.addRow([
+                                                        "Total",
+                                                        "",
+                                                       sum
+
+        ]);
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+
+
+        var contenedor5 = new google.visualization.Table(PendGral);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+    } // muestra los pendientes de forma general
+    function showCanGral(data) {
+
+        var arrCanGral = [];
+        arrCanGral.push({ TipoPed: "CALLE", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "CALLE", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "CALLE", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "CALLCENTER", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "CALLCENTER", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "CALLCENTER", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "APLICACION", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "APLICACION", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "APLICACION", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROG_X_SIS", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROACTIVA", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROACTIVA", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "PROACTIVA", TipoServ: "CARBURACION", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "WHATSAPP", TipoServ: "CILINDRO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "WHATSAPP", TipoServ: "ESTACIONARIO", Cantidad: 0 });
+        arrCanGral.push({ TipoPed: "WHATSAPP", TipoServ: "CARBURACION", Cantidad: 0 });
+
+
+
+        var sum = 0;
+        document.getElementById('ver_detalle').style.display = 'inline';
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", "SERVICIO");
+        tablausonvta.addColumn("string", "PEDIDO");
+        tablausonvta.addColumn("number", "CANTIDAD");
+
+        for (var i = 0; i < data.length; i++) {
+
+            for (var j = 0; j < arrCanGral.length; j++) {
+                if (data[i].TipPed.trim() == arrCanGral[j].TipoPed.trim() && data[i].TipServ.trim() == arrCanGral[j].TipoServ.trim()) {
+                    arrCanGral[j].Cantidad += parseInt(data[i].Cantidad);
+                    sum += parseInt(data[i].Cantidad);
+                    break;
+                }
+            }
+        }
+
+
+
+        for (var i = 0; i < arrCanGral.length; i++) {
+
+
+            if (arrCanGral[i].Cantidad > 0) {
+                tablausonvta.addRow([
+                                                    arrCanGral[i].TipoServ,
+                                                    arrCanGral[i].TipoPed,
+                                                   arrCanGral[i].Cantidad
+
+                ]);
+            }
+
+
+
+        }
+        tablausonvta.addRow([
+                                                       "Total",
+                                                       "",
+                                                      sum
+
+        ]);
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+
+
+        var contenedor5 = new google.visualization.Table(CanGral);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+    } // muestra los cancelados de forma general
+    // muestra los pendientes por ruta
+    function showPenRut(data) {
+        var sum = 0;
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn("string", "RUTA");
+        tablausonvta.addColumn("number", "#PEDIDOS");
+
+
+        for (var i = 0; i < data.length; i++) {
+
+            tablausonvta.addRow([
+                                data[i].Ruta_rep,
+                                data[i].Cantidad
+            ]);
+            sum += parseInt(data[i].Cantidad);
+        }
+        tablausonvta.addRow([
+                                                     "Total",
+                                                    sum
+
+        ]);
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+
+
+        var contenedor5 = new google.visualization.Table(PenRut);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+            var ruta = tablausonvta.getValue(row, 0);
+            getPenDet(ruta);
+        });
+    }
+    //Optienen el detallde pedidos pendientes por ruta
+    function getPenDet(ruta) {
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/pedPenXRut/",
+            data: { paramSrv: serv, paramRuta: ruta.trim() },
+            datatype: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    showPedPenXRut(data);
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+                else {
+
+                    alert("No se encontraron los pedidos pendientes");
+
+                    document.getElementById('imgCargando').style.display = 'none';
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+    }
+    function showPedPenXRut(data) {
+        var tablaPenXRut = new google.visualization.DataTable();
+
+        tablaPenXRut.addColumn("string", "Pedido");
+        tablaPenXRut.addColumn("string", "Fech/Hr pedido");
+        tablaPenXRut.addColumn("string", "Fecha Surtido");
+        tablaPenXRut.addColumn("string", "Observaciones");
+
+
+        for (var i = 0; i < data.length; i++) {
+
+            tablaPenXRut.addRow([
+                                data[i].num_ped + '',
+                                data[i].fhr_ped,
+                                data[i].fecsur_ped,
+                                data[i].observ_ped,
+            ]);
+
+
+        }
+
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+
+
+        var contenedor6 = new google.visualization.Table(divPedPenXRut);
+        contenedor6.draw(tablaPenXRut, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor6, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+
+
+        var msg = document.getElementById('dlgPedPenXRut');
+        msg.showModal();
+        dialogos.push(msg)
+    }
+
+    function showCanRut(data) {
+
+        var sum = 0;
+
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", "RUTA");
+        tablausonvta.addColumn("string", "FECHA");
+        tablausonvta.addColumn("number", "#PEDIDOS");
+
+
+        for (var i = 0; i < data.length; i++) {
+
+            tablausonvta.addRow([
+                                data[i].Ruta_rep,
+                                data[i].Fecha_rep,
+                                data[i].Cantidad
+            ]);
+            sum += parseInt(data[i].Cantidad);
+
+        }
+        tablausonvta.addRow([
+                                                    "Total", "",
+                                                   sum
+
+        ]);
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange('', '', 'black', '#CDE8FC');
+
+
+
+        var contenedor5 = new google.visualization.Table(CanRut);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+
+
+
+    }
+    ////////////////////////////////////////////////////SECCION REPORTE DE PEDIDOS MES ACTUAL VS MES ANTERIOR//////////////
+    // CONSULTA LOS PEDIDOS DEL MES SELECCIONADO Y DE DEL MES ANTERIOR
+    function consultarNotas() {
+
+        document.getElementById('tblUsoNota').innerHTML = '';
+        document.getElementById('tblRutaNota').innerHTML = '';
+        document.getElementById('grfkilosdia').innerHTML = '';
+
+        NotasMesAñoAct = [];
+        NotasMesAñoAnt = [];
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+        var fec = new Date();
+        var fechaC = document.getElementById("fm").value;
+        //validar que se selecciono una fecha.
+        if (fechaC != "") {
+            var valores_fecha = fechaC.split('-');
+            if ((parseInt(valores_fecha[0].trim()) == fec.getFullYear()) || (fec.getMonth() + 1 == 1 && parseInt(valores_fecha[0].trim()) == fec.getFullYear() - 1)) {
+
+                if ((parseInt(valores_fecha[1].trim()) <= fec.getMonth() + 1) || (fec.getMonth() + 1 == 1 && parseInt(valores_fecha[0].trim()) == fec.getFullYear() - 1)) {
+
+
+                    // obtner la informacion del año mes actual
+                    document.getElementById('imgCargando').style.display = "inline";
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/getNotasHistograma/",
+                        data: { fecha: fechaC, paramString1: "actual", paramSrv: serv },
+                        datatype: "json",
+                        //  timeout: (30000),
+                        // async: false,
+
+                        success: function (data) {
+                            if (data.length > 0) {
+                                NotasMesAñoAct = data;
+                                document.getElementById('imgCargando').style.display = "none";
+                                notasMesAñoAnt();
+                            }
+                            else {
+                                alert("Sin resultados del mes seleccionado");
+                                document.getElementById('imgCargando').style.display = "none";
+
+                            }
+                            verificarAmbasCargas();
+
+                        },
+                        error: function (request, status, error) {
+                            alert(error + " a consultar mes año actual");
+                            document.getElementById('imgCargando').style.display = "none";
+                        }
+                    });
+
+
+
+                }
+                else
+                    alert("SELECCION DEL MES POSTERIOR AL CORRIENTE...");
+
+            }
+            else
+                alert("SOLO ES PERMITIDO SELECCIONAR MESES DEL AÑO CORRIENTE, O DICIEMBRE DEL AÑO PASADO EN CASO DE ESTAR EN ENERO DEL AÑO CORRIENTE");
+
+        }
+        else
+            alert("NO HAS SELECCIONADO UNA FECHA..!!!");
+
+        function verificarAmbasCargas() {
+            if (NotasMesAñoAct.length > 0 && NotasMesAñoAnt.length > 0) {
+                setPlantas();
+
+            }
+        }
+    }
+    function notasMesAñoAnt() {
+
+
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+        var fec = new Date();
+        var fechaC = document.getElementById("fm").value;
+        //validar que se selecciono una fecha.
+        if (fechaC != "") {
+            var valores_fecha = fechaC.split('-');
+            if ((parseInt(valores_fecha[0].trim()) == fec.getFullYear()) || (fec.getMonth() + 1 == 1 && parseInt(valores_fecha[0].trim()) == fec.getFullYear() - 1)) {
+
+                if ((parseInt(valores_fecha[1].trim()) <= fec.getMonth() + 1) || (fec.getMonth() + 1 == 1 && parseInt(valores_fecha[0].trim()) == fec.getFullYear() - 1)) {
+
+                    // informacion de año mes anterior
+                    document.getElementById('imgCargando').style.display = "inline";
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/getNotasHistograma/",
+                        data: { fecha: fechaC, paramString1: "anterior", paramSrv: serv },
+                        datatype: "json",
+                        // timeout: (30000),
+                        // async: false,
+
+                        success: function (data) {
+                            if (data.length > 0) {
+                                NotasMesAñoAnt = data;
+                                document.getElementById('imgCargando').style.display = "none";
+                            }
+                            else {
+                                alert("Sin resultados de año mes anterior");
+                                document.getElementById('imgCargando').style.display = "none";
+                            }
+                            verificarAmbasCargas();
+                        },
+                        error: function (request, status, error) {
+                            alert(error + " a consultar mes año anterior");
+                            document.getElementById('imgCargando').style.display = "none";
+                            alert(request.responseText);
+
+                        }
+                    });
+
+
+
+                }
+                else
+                    alert("SELECCION DEL MES POSTERIOR AL CORRIENTE...");
+
+            }
+            else
+                alert("SOLO ES PERMITIDO SELECCIONAR MESES DEL AÑO CORRIENTE, O DICIEMBRE DEL AÑO PASADO EN CASO DE ESTAR EN ENERO DEL AÑO CORRIENTE");
+        }
+        else
+            alert("NO HAS SELECCIONADO UNA FECHA..!!!");
+
+        function verificarAmbasCargas() {
+            if (NotasMesAñoAct.length > 0 && NotasMesAñoAnt.length > 0) {
+                setPlantas();
+            }
+        }
+    }
+    // coloca en el elemento select las plantas que integran la consulta.
+    function setPlantas() {
+        //se coloca las plantas en el objeto list para determinar la infomacion correspondiente a la planta en cuestion
+        var plantas = [];
+        document.getElementById('slcPlaVsMes').innerHTML = '';
+        var encontrado = false;
+        for (var i = 0; i < NotasMesAñoAct.length; i++) {
+
+            for (var j = 0; j < plantas.length; j++) {
+
+                if (plantas[j].trim() == NotasMesAñoAct[i].pla_nvta.trim()) {
+                    encontrado = true;
+                }
+
+            }
+            if (!encontrado) {
+                plantas.push(NotasMesAñoAct[i].pla_nvta.trim());
+            }
+            encontrado = false;
+        }
+        for (var i = 0; i < NotasMesAñoAnt.length; i++) {
+
+            for (var j = 0; j < plantas.length; j++) {
+
+                if (plantas[j].trim() == NotasMesAñoAnt[i].pla_nvta.trim()) {
+                    encontrado = true;
+                }
+            }
+            if (!encontrado) {
+                plantas.push(NotasMesAñoAct[i].trim());
+            }
+            encontrado = false;
+        }
+        document.getElementById('slcPlaVsMes').innerHTML += '<option value="TODAS">TODAS</option>';
+        for (var i = 0; i < plantas.length; i++) {
+            document.getElementById('slcPlaVsMes').innerHTML += '<option value="' + plantas[i] + '">' + plantas[i] + '</option>';
+        }
+        drawData();
+    }
+    // graica en forma de tabla y graficas correspondientes  la informacion comparada  del mes actual con el mes anterior
+    function drawData() {
+        var planta = $('#slcPlaVsMes').val();
+        // comparativas por uso de nota de venta
+        var arrys_notas = [];
+        arrys_notas.push(NotasMesAñoAct);
+        arrys_notas.push(NotasMesAñoAnt);
+
+        var usos = [];
+        /*0*/usos.push({ uso: "1", desc: "DOMESTICO", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*1*/usos.push({ uso: "2", desc: "COMERCIAL", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*2*/usos.push({ uso: "3", desc: "INDUSTRIAL", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*3*/usos.push({ uso: "4", desc: "SERVICIOS", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*4*/usos.push({ uso: "5", desc: "CARBURACION", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*5*/usos.push({ uso: "6", desc: "GRANJAS", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*6*/usos.push({ uso: "7", desc: "TORTILLERIA", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*7*/usos.push({ uso: "8", desc: "PANADERIA", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*8*/usos.push({ uso: "9", desc: "LITIJIO", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*9*/ usos.push({ uso: "10", desc: "PLUS GAS", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        /*10*/usos.push({ uso: "", desc: "TOTAL", notas: 0, importe: 0, kilos: 0, notasAnt: 0, importeAnt: 0, kilosAnt: 0 });
+        var uso = "";
+        for (var m = 0; m < arrys_notas.length; m++) {
+            for (var i = 0; i < arrys_notas[m].length; i++) {
+                if ((planta == arrys_notas[m][i].pla_nvta || planta == 'TODAS')) {
+                    if (arrys_notas[m][i].uso_nvta == null) {
+                        uso = "1";
+                    }
+                    else {
+                        uso = arrys_notas[m][i].uso_nvta.trim();
+                    }
+                    for (var j = 0; j < usos.length; j++) {
+                        if (usos[j].uso == uso && arrys_notas[m][i].tip_nvta != null) {
+                            switch (m) {
+                                case 0:
+                                    if (arrys_notas[m][i].tlts_nvta != null) {
+                                        switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                            case "B":
+                                                usos[j].kilos += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[10].kilos += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[j].notas++;
+                                                usos[10].notas++;
+                                                break;
+                                            case "C":
+                                                usos[j].kilos += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[10].kilos += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[j].notas++;
+                                                usos[10].notas++;
+                                                break;
+                                            case "E":
+                                                usos[j].kilos += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[10].kilos += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[j].notas++;
+                                                usos[10].notas++;
+                                                break;
+                                            case "D":
+                                                usos[j].kilos += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[10].kilos += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[j].notas++;
+                                                usos[10].notas++;
+                                                break;
+                                        }
+                                    }
+
+
+
+                                    break;
+                                case 1:
+                                    if (arrys_notas[m][i].tlts_nvta != null) {
+
+
+                                        switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                            case "B":
+                                                usos[j].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[10].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[j].notasAnt++;
+                                                usos[10].notasAnt++;
+                                                break;
+                                            case "C":
+                                                usos[j].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[10].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[j].notasAnt++;
+                                                usos[10].notasAnt++;
+                                                break;
+                                            case "E":
+                                                usos[j].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[10].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54;
+                                                usos[j].notasAnt++;
+                                                usos[10].notasAnt++;
+                                                break;
+                                            case "D":
+                                                usos[j].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[10].kilosAnt += parseFloat(arrys_notas[m][i].tlts_nvta);
+                                                usos[j].notasAnt++;
+                                                usos[10].notasAnt++;
+                                                break;
+                                        }
+                                    }
+
+                            }
+                            break;
+
+                        }
+
+                    }
+                }
+            }
+        } // fin de ciclo de arreglos;
+
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", " USO");
+        tablausonvta.addColumn("string", "NOTAS MES SELECCIONADO");
+        tablausonvta.addColumn("string", "KGS MES SELECCIONADO");
+        tablausonvta.addColumn("string", "NOTAS MES AÑO ANT");
+        tablausonvta.addColumn("string", "KGS MES AÑO ANT");
+        tablausonvta.addColumn("string", "DIF EN NOTAS");
+        tablausonvta.addColumn("string", "DIF KILOS");
+        var colorvsnotas = "";
+        var colorvsks = "";
+        for (var i = 0; i < usos.length; i++) {
+            if (usos[i].notas != 0 || usos[i].notasAnt != 0) {
+                colorvsnotas = "#000000";
+                colorvsks = "#000000";
+                if ((usos[i].notas - usos[i].notasAnt) > 0) {
+                    colorvsnotas = "#66C902 ";
+                }
+                if ((usos[i].notas - usos[i].notasAnt) < 0) {
+                    colorvsnotas = "#FA1919";
+                }
+                if ((usos[i].kilos - usos[i].kilosAnt) > 0) {
+                    colorvsks = "#66C902 ";
+                }
+                if ((usos[i].kilos - usos[i].kilosAnt) < 0) {
+                    colorvsks = "#FA1919";
+                }
+                tablausonvta.addRow([
+                                                       usos[i].desc,
+                                                        new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notas).toFixed(2)) + '',
+                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilos).toFixed(2)) + '',
+                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notasAnt).toFixed(2)) + '',
+                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilosAnt).toFixed(2)) + '',
+                                                      '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].notas - usos[i].notasAnt)).toFixed(2)) + '<label>',
+                                                      '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].kilos - usos[i].kilosAnt)).toFixed(2)) + '<label>'
+                ]);
+            }
+        }
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange(1, 10000000000000, 'black', 'green');
+        formatter.addRange(-10000000000000, -1, 'black', 'red');
+
+        formatter.format(tablausonvta, 5);
+        formatter.format(tablausonvta, 6);
+
+        var contenedor5 = new google.visualization.Table(tblUsoNota);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+        // VENTA POR RUTA
+
+        //Se crea un arreglo con las rutas incluidas en la consulta
+
+        var rutas = [];
+        var ruta_encontrada = false;
+        for (var m = 0; m < arrys_notas.length; m++) {
+            for (var i = 0; i < arrys_notas[m].length; i++) {
+                for (var j = 0; j < rutas.length; j++) {
+                    if (arrys_notas[m][i].ruta_nvta != null)
+                        if (rutas[j].ruta == arrys_notas[m][i].ruta_nvta.trim()) {
+                            ruta_encontrada = true;
+                        }
+
+                }
+                if (!ruta_encontrada) {
+                    if (arrys_notas[m][i].ruta_nvta != null)
+                        rutas.push({ ruta: arrys_notas[m][i].ruta_nvta.trim(), notas: 0, kilos: 0, notasAnt: 0, kilosAnt: 0 });
+                }
+                ruta_encontrada = false;
+            }
+        }
+        rutas.push({ ruta: "NOTAS SIN RUTA", notas: 0, kilos: 0, notasAnt: 0, kilosAnt: 0 });
+        rutas.push({ ruta: "TOTAL", notas: 0, kilos: 0, notasAnt: 0, kilosAnt: 0 });
+        for (var m = 0; m < arrys_notas.length; m++) {
+            for (var i = 0; i < arrys_notas[m].length; i++) {
+                if ((planta == arrys_notas[m][i].pla_nvta || planta == 'TODAS')) {
+
+
+                    for (var j = 0; j < rutas.length; j++) {
+                        if (arrys_notas[m][i].ruta_nvta != null) {
+
+                            if (rutas[j].ruta == arrys_notas[m][i].ruta_nvta.trim()) {
+                                switch (m) {
+                                    case 0:
+                                        if (arrys_notas[m][i].tlts_nvta != null) {
+                                            switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                                case "B":
+                                                    rutas[j].notas++;
+                                                    rutas[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    rutas[rutas.length - 1].notas++;
+                                                    rutas[rutas.length - 1].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "C":
+                                                    rutas[j].notas++;
+                                                    rutas[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    rutas[rutas.length - 1].notas++;
+                                                    rutas[rutas.length - 1].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                                case "E":
+                                                    rutas[j].notas++;
+                                                    rutas[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    rutas[rutas.length - 1].notas++;
+                                                    rutas[rutas.length - 1].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "D":
+                                                    rutas[j].notas++;
+                                                    rutas[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    rutas[rutas.length - 1].notas++;
+                                                    rutas[rutas.length - 1].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    case 1:
+                                        if (arrys_notas[m][i].tlts_nvta != null) {
+                                            switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                                case "B":
+                                                    rutas[j].notasAnt++;
+                                                    rutas[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    rutas[rutas.length - 1].notasAnt++;
+                                                    rutas[rutas.length - 1].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "C":
+                                                    rutas[j].notasAnt++;
+                                                    rutas[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    rutas[rutas.length - 1].notasAnt++;
+                                                    rutas[rutas.length - 1].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                                case "E":
+                                                    rutas[j].notasAnt++;
+                                                    rutas[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    rutas[rutas.length - 1].notasAnt++;
+                                                    rutas[rutas.length - 1].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "D":
+                                                    rutas[j].notasAnt++;
+                                                    rutas[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    rutas[rutas.length - 1].notasAnt++;
+                                                    rutas[rutas.length - 1].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                            }
+
+                                            break;
+
+                                        }
+                                }
+                                break;
+
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }// fin de ciclo de arreglos;
+
+        var tablausonvta = new google.visualization.DataTable();
+
+        tablausonvta.addColumn("string", " RUTA");
+        tablausonvta.addColumn("string", "NOTAS MES SELECCIONADO");
+        tablausonvta.addColumn("string", "KGS MES SELECCIONADO");
+        tablausonvta.addColumn("string", "NOTAS MES ANTERIOR");
+        tablausonvta.addColumn("string", "KGS MES ANTERIOR");
+        tablausonvta.addColumn("string", "DIFERENCIAS NOTAS");
+        tablausonvta.addColumn("string", "DIFERENCIAS KGS");
+        var colorvsnotas = "";
+        var colorvsks = "";
+        for (var i = 0; i < rutas.length; i++) {
+            if (rutas[i].notas != 0 || rutas[i].notasAnt != 0) {
+                colorvsnotas = "#000000";
+                colorvsks = "#000000";
+                if ((rutas[i].notas - rutas[i].notasAnt) > 0) {
+                    colorvsnotas = "#66C902 ";
+                }
+                if ((rutas[i].notas - rutas[i].notasAnt) < 0) {
+                    colorvsnotas = "#FA1919";
+                }
+                if ((rutas[i].kilos - rutas[i].kilosAnt) > 0) {
+                    colorvsks = "#66C902 ";
+                }
+                if ((rutas[i].kilos - rutas[i].kilosAnt) < 0) {
+                    colorvsks = "#FA1919";
+                }
+                tablausonvta.addRow([
+                               rutas[i].ruta + '',
+                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notas).toFixed(2)) + '',
+                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilos).toFixed(2)) + '',
+                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notasAnt).toFixed(2)) + '',
+                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilosAnt).toFixed(2)) + '',
+                               '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].notas - rutas[i].notasAnt).toFixed(2)) + '<label>',
+                               '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].kilos - rutas[i].kilosAnt).toFixed(2)) + '<label>'
+                ]);
+            }
+
+        }
+
+
+
+        var formatter = new google.visualization.ColorFormat();
+        formatter.addRange(1, 10000000000000, 'black', 'green');
+        formatter.addRange(-10000000000000, -1, 'black', 'red');
+
+        formatter.format(tablausonvta, 5);
+        formatter.format(tablausonvta, 6);
+
+        var contenedor5 = new google.visualization.Table(tblRutaNota);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+        google.visualization.events.addListener(contenedor5, 'select', function () {
+            var row = contenedor5.getSelection()[0].row;
+
+        });
+
+        // GRAFICA DE VENTA POR DIA.
+        var dias = diasEnUnMes(document.getElementById("fm").value.toString().trim().split('-')[1], document.getElementById("fm").value.toString().trim().split('-')[0])
+
+        var arr_dias = [];
+        for (var i = 0; i < dias; i++) {
+            arr_dias.push({ dia: (i + 1) + '', kilos: 0, kilosAnt: 0 });
+        }
+
+        for (var m = 0; m < arrys_notas.length; m++) {
+            for (var i = 0; i < arrys_notas[m].length; i++) {
+                if ((planta == arrys_notas[m][i].pla_nvta || planta == 'TODAS')) {
+                    for (var j = 0; j < arr_dias.length; j++) {
+                        if (arrys_notas[m][i].fes_nvta != null) {
+
+                            if (parseInt(arr_dias[j].dia) == parseInt(arrys_notas[m][i].fes_nvta.trim().split('/')[0])) {
+                                switch (m) {
+                                    case 0:
+
+
+                                        if (arrys_notas[m][i].tlts_nvta != null) {
+                                            switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                                case "B":
+                                                    arr_dias[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "C":
+                                                    arr_dias[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                                case "E":
+                                                    arr_dias[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "D":
+                                                    arr_dias[j].kilos += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                            }
+                                        }
+
+                                        break;
+                                    case 1:
+                                        if (arrys_notas[m][i].tlts_nvta != null) {
+                                            switch (arrys_notas[m][i].tip_nvta.trim()) {
+                                                case "B":
+                                                    arr_dias[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "C":
+                                                    arr_dias[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                                case "E":
+                                                    arr_dias[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta) * 0.54);
+                                                    break;
+                                                case "D":
+                                                    arr_dias[j].kilosAnt += (parseFloat(arrys_notas[m][i].tlts_nvta));
+                                                    break;
+                                            }
+                                        }
+                                        break;
+
+                                }
+                                break;
+
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }// fin de ciclo de arreglos;
+
+        // grafica de horas
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'DIA');
+        data.addColumn('number', 'MES');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+        data.addColumn('number', 'MES ANT');
+        data.addColumn({ type: 'string', role: 'annotation' });
+        data.addColumn({ type: 'string', role: 'annotationText' });
+
+        for (var l = 0; l < arr_dias.length; l++) {
+
+            data.addRow([arr_dias[l].dia,
+                          arr_dias[l].kilos,
+                          null,
+                          arr_dias[l].kilos + '',
+                          arr_dias[l].kilosAnt,
+                          null,
+                          arr_dias[l].kilosAnt + '',
+            ]);
+
+
+        }
+        // creacion de la grafica
+        var options = {
+            width: 1900,
+            height: 500,
+            title: 'VENTAS POR DIA DEL MES',
+            hAxis: {
+                //slantedTextAngle: -90,
+                title: "DIA DEL MES",
+                // direction: 1,
+            },
+            vAxis: {
+                //slantedTextAngle: -90,
+                title: "KILOS",
+                // direction: 1,
+            }
+        };
+        var chart = new google.visualization.AreaChart(document.getElementById('grfkilosdia'));
+        chart.draw(data, options);
+        // fin de la grafica de horas
+
+
+
+
+
+    }
+    /////////////////////////////////////////////////// SECCION DE COBRANZA///////////////////////////////////////////////
+    // obtiene el estado de cobranza del mes actual
+    function getCartera() {
+        var serv = "";
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+            serv = $("#slcservidor option:selected").text().trim();
+
+        }
+        else {
+            serv = document.getElementById('serv').innerHTML;
+        }
+
+
+        document.getElementById('imgCargando').style.display = 'inline';
+        $.ajax({
+            type: "POST",
+            url: "/Home/Cartera/",
+            data: { paramSrv: serv, fechaI: $("#fm").val() + "-01" },
+            datatype: "json",
+            success: function (data) {
+
+                cartera_ = data[0];
+                notasCredito = data[1];
+                descuentoDir = data[2];
+                drawCartera(cartera_);
+                document.getElementById('imgCargando').style.display = 'none';
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+                document.getElementById('imgCargando').style.display = 'none';
+            }
+        });
+
+    }
+    // grafica la cobranza en graficas de barras y depastl asi como  en tablas
+    function drawCartera(cartera) {
+        //
+        document.getElementById('GrfCarMovDiv').style.display = "inline-block";
+        document.getElementById('GrfCarUsoDiv').style.display = "inline-block";
+        document.getElementById('tblCob').style.display = "inline";
+        var mesSeleccionado = $("#fm").val().toString().split('-')[1];
+        var mesPermitidoTodo = (now.getMonth() + 1) + '';
+        if (parseInt(mesSeleccionado) != parseInt(mesPermitidoTodo)) {
+            document.getElementById('GrfCarMovDiv').style.display = "none";
+            document.getElementById('GrfCarUsoDiv').style.display = "none";
+            document.getElementById('tblCob').style.display = "none";
+        }
+
+
+
+        var options = null;
+        /**************** grafica de pastel ***************/
+        if (cartera.carteraMes.Ssvencer_cmes != null && cartera.carteraMes.SaldoVencido != null) {
+            var data = google.visualization.arrayToDataTable([
+           ['Task', 'Hours per Day'],
+           ['corriente ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.Ssvencer_cmes.toFixed(2)), cartera.carteraMes.Ssvencer_cmes],
+           ['vencido ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.SaldoVencido.toFixed(2)), cartera.carteraMes.SaldoVencido]]);
+            options = {
+                pieSliceTextStyle: { fontSize: 20 },
+                legend: {
+                    textStyle: {
+                        fontSize: 12,
+                        bold: true,
+
+                    }
+
+
+                },
+                titleTextStyle: {
+                    // color: <string>,    // any HTML string color ('red', '#cc00cc')
+                    // fontName: <string>, // i.e. 'Times New Roman'
+                    fontSize: 20, // 12, 18 whatever you want (don't specify px)
+                    bold: true    // true or false
+                    // italic: <boolean>   // true of false
+                },
+
+                title: 'Cartera Total: ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.Stotal_cmes.toFixed(2)),
+                width: '2000px',
+                height: '2000px',
+                is3D: true
+            };
+        } else {
+            var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['corriente sin info', 0],
+          ['vencido sin info', 0]]);
+            options = {
+                pieSliceTextStyle: { fontSize: 20 },
+                legend: {
+                    textStyle: {
+                        fontSize: 12,
+                        bold: true,
+
+                    }
+
+
+                },
+                titleTextStyle: {
+                    // color: <string>,    // any HTML string color ('red', '#cc00cc')
+                    // fontName: <string>, // i.e. 'Times New Roman'
+                    fontSize: 20, // 12, 18 whatever you want (don't specify px)
+                    bold: true    // true or false
+                    // italic: <boolean>   // true of false
+                },
+
+                title: 'Cartera Total: sin informacion por mostrar',
+                width: '2000px',
+                height: '2000px',
+                is3D: true
+            };
+        }
+
+
+        var chart = new google.visualization.PieChart(document.getElementById('GrfCarGral'));
+
+        chart.draw(data, options);
+
+
+        /********************** GRAFICA COBRANZA POS USOS *******************/
+        document.getElementById("chbxVen").checked = false;
+        document.getElementById("chbxSven").checked = false;
+        document.getElementById("chbxTot").checked = true;
+        grfCarteraUso("TOTAL");
+
+        /************************************* GRAFICA COBRANZA SIN MOVIMINETO *************/
+
+
+        //cartera.carteraUsosSinMovimiento=cartera.carteraUsosSinMovimiento.orderByNumber('Stotal_cmusmov');
+        var arr_car_Mes_Uso_Sin_Mov = [];
+
+        arr_car_Mes_Uso_Sin_Mov.push(['Element', 'Total', { role: 'style' }, { role: 'annotation' }]);
+        for (var i = 0; i < cartera.carteraUsosSinMovimiento.length; i++) {
+
+            arr_car_Mes_Uso_Sin_Mov.push([cartera.carteraUsosSinMovimiento[i].GetUSO, cartera.carteraUsosSinMovimiento[i].Stotal_cmusmov, '#3A69D5', new Intl.NumberFormat('es-MX').format(cartera.carteraUsosSinMovimiento[i].Stotal_cmusmov.toFixed(2)) + '']);
+        }
+
+        var data2 = google.visualization.arrayToDataTable(arr_car_Mes_Uso_Sin_Mov);
+
+        var options = {
+            title: '',
+            chartArea: { width: '70%', height: '70%' },
+            hAxis: {
+                title: 'Pesos',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Uso'
+            }
+        };
+
+        var chart2 = new google.visualization.BarChart(document.getElementById('GrfCarMov'));
+        google.visualization.events.addListener(chart2, 'select', function () {
+            var selection = chart2.getSelection();
+            if (selection.length) {
+                detCrtUsoSinMov(data2.getValue(selection[0].row, 0) + '');
+            }
+        });
+
+
+        chart2.draw(data2, options);
+
+        /******************************** grafica de balance de cartera********************/
+        if (cartera.carteraMes != null) {
+            /*
+             var tablausonvta = new google.visualization.DataTable();
+
+             tablausonvta.addColumn("string", "SALDO VENCIDO");
+             tablausonvta.addColumn("string", "SALDO CORRIENTE");
+
+
+             tablausonvta.addRow(['<label style="color:#ffffff; background:#f70a0a; width:100%;">' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.SaldoVencido.toFixed(2)) + '</label>',
+                 '<label style="color:#ffffff; background:#1f0fef; width:100%;">' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.Ssvencer_cmes.toFixed(2)) + '</label>']);
+             var contenedor5 = new google.visualization.Table(balCar);
+             contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+
+             document.getElementById('cartGral').innerHTML = "Cartera General : " + new Intl.NumberFormat('es-MX').format((cartera.carteraMes.SaldoVencido + cartera.carteraMes.Ssvencer_cmes).toFixed(2));
+             */
+        }
+
+
+        /******************************** TABLA FLujo de caja********************/
+        if (cartera.carteraMes != null) {
+            /*
+            var tablausonvta = new google.visualization.DataTable();
+
+            tablausonvta.addColumn("string", "VENTA ACUMULADA");
+            tablausonvta.addColumn("string", "DEP BANCARIOS");
+            tablausonvta.addRow(['<label style="color:#000000;  width:100%;">' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.VentasAcumuladoMes.toFixed(2)) + '</label>',
+                '<label style="color:#000000;  width:100%;">' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.DepositoBancario.toFixed(2)) + '</label>']);
+            var contenedor5 = new google.visualization.Table(flujCaj);
+            contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+            */
+            /* informacion de deudores diversos*/
+            var tablacartera = new google.visualization.DataTable();
+
+            tablacartera.addColumn("string", "INDICADORES FINANCIEROS");
+            tablacartera.addColumn("string", "SALDO");
+            tablacartera.addColumn("string", "+60 DIAS");
+
+            var mas60dias = cartera.carteraMes.S060_090_cmes +
+                            cartera.carteraMes.S090_120_cmes +
+                            cartera.carteraMes.S120_150_cmes +
+                            cartera.carteraMes.S150_180_cmes +
+                            cartera.carteraMes.S180_210_cmes +
+                            cartera.carteraMes.S210_240_cmes +
+                            cartera.carteraMes.S240_270_cmes +
+                            cartera.carteraMes.Smas_270_cmes;
+            var mas60diasDeu = 0;
+            if (cartera.carteraDeudoresDiversos != null)
+                mas60diasDeu = cartera.carteraDeudoresDiversos.D60_rep +
+                cartera.carteraDeudoresDiversos.D90_rep +
+                cartera.carteraDeudoresDiversos.D180_rep +
+                cartera.carteraDeudoresDiversos.D364_rep;
+
+
+            // AGREGANDO IDICADORES FINANCIEROS  Y +60 DIAS
+            var carteraCtes = 0;
+            var deudoresDiv = 0;
+            var cobranza = 0;
+            var credito = 0;
+            var depBanc = 0;
+            var vtaTot = 0;
+            var notasCred = 0;
+            var descDir = 0;
+
+
+            var mesSeleccionado = $("#fm").val().toString().split('-')[1];
+            var mesPermitidoTodo = (now.getMonth() + 1) + '';
+
+            if (cartera.carteraMes.Stotal_cmes != null)
+                carteraCtes = cartera.carteraMes.Stotal_cmes;
+
+            if (cartera.carteraDeudoresDiversos != null)
+                if (cartera.carteraDeudoresDiversos.Sal_rep != null)
+                    deudoresDiv = cartera.carteraDeudoresDiversos.Sal_rep;
+
+            if (cartera.carteraMes.CobranzaAcumuladoMes != null)
+                cobranza = cartera.carteraMes.CobranzaAcumuladoMes;
+
+            if (cartera.carteraMes.CréditoAcumuladoMes != null)
+                credito = cartera.carteraMes.CréditoAcumuladoMes;
+
+            if (cartera.carteraMes.VentasAcumuladoMes != null)
+                vtaTot = cartera.carteraMes.VentasAcumuladoMes;
+
+            if (cartera.carteraMes.DepositoBancario != null)
+                depBanc = cartera.carteraMes.DepositoBancario;
+
+
+            if (notasCredito != null)
+                notasCred = notasCredito;
+
+
+            // creando la tabla  de indicadores financieros
+            /*
+             var carteraCtes = 0;
+            var deudoresDiv = 0;
+            var cobranza = 0;
+            var credito = 0;
+            var depBanc = 0;
+            var vtaTot = 0;
+            var notasCred = 0;
+            var descDir = 0;
+            */
+            if (cartera.carteraMes.Stotal_cmes != null)
+                if (parseInt(mesSeleccionado) != parseInt(mesPermitidoTodo)) {
+                    tablacartera.addRow(['<label style=" background:#90BCF5;  width:100%;">CARTERA CTES</label>',
+                                 '<label style="  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
+                                 '']);
+                    mas60dias = 0;
+                } else {
+                    tablacartera.addRow(['<label style="  background:#90BCF5;  width:100%;">CARTERA CTES</label>',
+                                 '<label style=" background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
+                                 '<button class="btn btn-primary"  onclick="showCtesMas60Dias()" style=" width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60dias.toFixed(2)) + '</button>']);
+                }
+            if (cartera.carteraDeudoresDiversos != null)
+                if (cartera.carteraDeudoresDiversos.Sal_rep != null)
+                    tablacartera.addRow(['<label  style="  background:#90BCF5; width:100%;">DEUDORES DIVERSOS</label>',
+                                        '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(deudoresDiv.toFixed(2)) + '</label>',
+                                        '<label style=" background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60diasDeu.toFixed(2)) + '</label>']);
+
+            var negPoscartTot = '000000';
+            if ((carteraCtes + deudoresDiv) < 0) {
+                negPoscartTot = 'EC1D05';
+            }
+            var negPosMas60 = '000000';
+            if ((mas60dias + mas60diasDeu) < 0) {
+                negPosMas60 = 'EC1D05';
+            }
+            // Totla de carteta y deudores diversos
+            tablacartera.addRow(['<label  style="color:#000000; background:#90BCF5; width:100%;">CARTERA TOTAL</label>',
+                                       '<label style="color:#' + negPoscartTot + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((carteraCtes + deudoresDiv).toFixed(2)) + '</label>',
+                                       '<label style="color:#' + negPosMas60 + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((mas60dias + mas60diasDeu).toFixed(2)) + '</label>']);
+
+            if (cartera.carteraMes.CobranzaAcumuladoMes != null)
+                tablacartera.addRow(['<label style=" background:#FEAEA5; width:100%;">COBRANZA ACUMULADA</label>',
+                                  '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(cobranza.toFixed(2)) + '</label>',
+                                  '']);
+            if (cartera.carteraMes.CréditoAcumuladoMes != null)
+                tablacartera.addRow(['<label  style=" background:#FEAEA5; background:#FEAEA5;  width:100%;">CREDITO ACUMULADO</label>',
+                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(credito.toFixed(2)) + '</label>',
+                                    '']);
+            var cobMenosCred = '000000';
+            if ((cobranza - credito) < 0) {
+                cobMenosCred = 'EC1D05';
+            }
+            // Total de cobranza y credito
+            tablacartera.addRow(['<label  style="color:#000000; background:#FEAEA5;; width:100%;">COBRANZA - CREDITO</label>',
+                                       '<label style="color:#' + cobMenosCred + '; background:#FEAEA5;; width:100%;">' + new Intl.NumberFormat('es-MX').format((cobranza - credito).toFixed(2)) + '</label>',
+                                       '']);
+
+            if (cartera.carteraMes.DepositoBancario != null)
+                tablacartera.addRow(['<label  style=" background:#90BCF5; width:100%;">DEP BANCARIOS</label>',
+                                    '<label style="  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(depBanc.toFixed(2)) + '</label>',
+                                    '']);
+            if (cartera.carteraMes.VentasAcumuladoMes != null)
+                tablacartera.addRow(['<label style="  background:#90BCF5;  width:100%;">VENTA ACUMULADA</label>',
+                                 '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(vtaTot.toFixed(2)) + '</label>',
+                                 '']);
+
+            var depMenosVta = '000000';
+            if ((depBanc - vtaTot) < 0) {
+                depMenosVta = 'EC1D05';
+            }
+            // Depositos - venta total
+            tablacartera.addRow(['<label  style="color:#000000; background:#90BCF5; width:100%;">DEP BAN - VENTA</label>',
+                                      '<label style="color:#' + depMenosVta + ';  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((depBanc - vtaTot).toFixed(2)) + '</label>',
+                                      '']);
+
+            if (notasCredito != null)
+                tablacartera.addRow(['<label  style=" background:#FEAEA5;  width:100%;">NOTAS DE CREDITO</label>',
+                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(notasCred.toFixed(2)) + '</label>',
+                                    '']);
+            if (notasCredito != null)
+                tablacartera.addRow(['<label  style=" background:#FEAEA5;  width:100%;">DESCUENTO DIRECTO</label>',
+                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(descuentoDir.toFixed(2)) + '</label>',
+                                    '']);
+
+            var descTotal = '000000';
+            if ((notasCred + descuentoDir) < 0) {
+                descTotal = 'EC1D05';
+            }
+            // notas de credito + descuento directo
+            tablacartera.addRow(['<label  style="color:#000000; background:#FEAEA5;; width:100%;">DESCUENTO TOTAL</label>',
+                                      '<label style="color:#' + descTotal + '; background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format((notasCred + descuentoDir).toFixed(2)) + '</label>',
+                                      '']);
+
+
+
+
+
+
+
+            document.getElementById('lbldiarot').innerHTML = cartera.carteraMes.Rotcar_cmes + "";
+            document.getElementById('lbldiaprom').innerHTML = cartera.carteraMes.Diapro_cmes + "";
+            var contenedor6 = new google.visualization.Table(flujCar);
+            contenedor6.draw(tablacartera, { allowHtml: true, showRowNumber: true });
+
+
+
+
+        }
+
+
+
+        /******************************** TABLA CON INCREMENTO********************/
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn("string", "CLIENTE");
+        tablausonvta.addColumn("string", "NO CLIENTE");
+        tablausonvta.addColumn("string", "RFC");
+        tablausonvta.addColumn("string", "USO");
+        tablausonvta.addColumn("number", "SIN VENCER");
+        tablausonvta.addColumn("number", "VENCIDO");
+        tablausonvta.addColumn("number", "DIF MES ANT");
+        tablausonvta.addColumn("number", "% INCREMENTO");
+        tablausonvta.addColumn("number", "DIF VENCIDO VS MES ANT ");
+        tablausonvta.addColumn("number", "% INCR VS MES ANT");
+        tablausonvta.addColumn("number", "DIA PROM ANTI DOC");
+        tablausonvta.addColumn("number", "DIAS CREDITO");
+
+
+        /*
+        dvmesant_cmcmov decimal(12,2),          {Direncia en lo vencido contra el mes anterior}
+        pvmesant_cmcmov decimal(12,2)            {Porcentaje de incremento  contra el mes anterior}
+
+        */
+
+        for (var i = 0; i < cartera.carteraCtesConMovimiento.length; i++) {
+            tablausonvta.addRow([cartera.carteraCtesConMovimiento[i].Nomcte_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Numcte_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Rfc_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].GetUSO,
+                                cartera.carteraCtesConMovimiento[i].Svencer_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Vencido_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Dmesant_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Pmesant_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Diapro_cmcmov,
+                                cartera.carteraCtesConMovimiento[i].Dcred_cmcmov]);
+        }
+
+        var contenedor5 = new google.visualization.Table(tblIncrCred);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+
+
+
+
+    }
+    //muestra en una tabla el detalle de la cartera sin movimiento por uso
+    function detCrtUsoSinMov(uso) {
+        document.getElementById('lblUsoSinMov').innerHTML = uso;
+
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn("string", "CLIENTE");
+        tablausonvta.addColumn("string", "NO CLIENTE");
+        tablausonvta.addColumn("string", "RFC");
+        tablausonvta.addColumn("string", "USO");
+        tablausonvta.addColumn("number", "PROM DIA ANTI DOC");
+        tablausonvta.addColumn("number", "DIAS CREDITO")
+        tablausonvta.addColumn("number", "SIN VENCER");
+        tablausonvta.addColumn("number", "VENCIDO")
+        tablausonvta.addColumn("string", "TOTAL");
+
+
+        var sinVencer = 0;
+        var vencido = 0;
+        for (var i = 0; i < cartera_.carteraCtesSinMovimiento.length; i++) {
+            if (cartera_.carteraCtesSinMovimiento[i].GetUSO.substring(0, 3).trim() == uso.substring(0, 3).trim()) {
+                sinVencer += cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov;
+                vencido += cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov;
+
+                tablausonvta.addRow([cartera_.carteraCtesSinMovimiento[i].Nomcte_cmcsmov,
+                                cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov,
+                                cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov,
+                                cartera_.carteraCtesSinMovimiento[i].GetUSO,
+                                cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov,
+                                 cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov,
+                                cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov,
+                                cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
+            }
+
+        }
+
+        tablausonvta.addRow(['TOTAL', '', '', '', 0, 0, sinVencer, vencido, (sinVencer + vencido) + '']);
+
+
+        var contenedor5 = new google.visualization.Table(divUsoSinMovDet);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+
+
+        var msg = document.getElementById('dlgUsoSinMov');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    //muestra en una tabla el detalle de la cartera  por uso
+    function detCrtUsoMov(uso) {
+        document.getElementById('lblUsoMov').innerHTML = uso;
+
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn("string", "CLIENTE");
+        tablausonvta.addColumn("string", "NO CLIENTE");
+        tablausonvta.addColumn("string", "RFC");
+        tablausonvta.addColumn("string", "USO");
+        tablausonvta.addColumn("string", "DIAS PROM");
+        tablausonvta.addColumn("string", "DIAS CRED");
+        tablausonvta.addColumn("number", "SIN VENCER");
+        tablausonvta.addColumn("number", "VENCIDO")
+        tablausonvta.addColumn("string", "TOTAL");
+        tablausonvta.addColumn("number", "TOTAL MAS 60 DIAS")
+
+        var sinVencer = 0;
+        var vencido = 0;
+        var totMas60Dias = 0;
+        for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
+            if (cartera_.carteraMesCte[i].GetUSO.substring(0, 3).trim() == uso.substring(0, 3).trim()) {
+                sinVencer += cartera_.carteraMesCte[i].Ssvencer_cmcte;
+                vencido += cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte;
+
+                tablausonvta.addRow([cartera_.carteraMesCte[i].Nomcte_cmcte,
+                                cartera_.carteraMesCte[i].Numcte_cmcte,
+                                cartera_.carteraMesCte[i].Rfc_cmcte,
+                                cartera_.carteraMesCte[i].GetUSO,
+                                cartera_.carteraMesCte[i].Diapro_cmcte + '',
+                                cartera_.carteraMesCte[i].Diacre_cmcte + '',
+
+                                cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                                cartera_.carteraMesCte[i].Stotal_cmcte + '',
+                                (cartera_.carteraMesCte[i].S060_090_cmcte +
+                                cartera_.carteraMesCte[i].S090_120_cmcte +
+                                cartera_.carteraMesCte[i].S120_150_cmcte +
+                                cartera_.carteraMesCte[i].S150_180_cmcte +
+                                cartera_.carteraMesCte[i].S180_210_cmcte +
+                                cartera_.carteraMesCte[i].S210_240_cmcte +
+                                cartera_.carteraMesCte[i].S240_270_cmcte +
+                                cartera_.carteraMesCte[i].Smas_270_cmcte)]);
+
+                totMas60Dias += (cartera_.carteraMesCte[i].S060_090_cmcte +
+                                cartera_.carteraMesCte[i].S090_120_cmcte +
+                                cartera_.carteraMesCte[i].S120_150_cmcte +
+                                cartera_.carteraMesCte[i].S150_180_cmcte +
+                                cartera_.carteraMesCte[i].S180_210_cmcte +
+                                cartera_.carteraMesCte[i].S210_240_cmcte +
+                                cartera_.carteraMesCte[i].S240_270_cmcte +
+                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+            }
+
+        }
+
+        tablausonvta.addRow(['TOTAL', '', '', '', '', '', sinVencer, vencido, (sinVencer + vencido) + '', totMas60Dias]);
+
+
+        var contenedor5 = new google.visualization.Table(divUsoMovDet);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+
+
+        var msg = document.getElementById('dlgUsoMov');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+
+    function grfCarteraUso(tipo) {
+        var arr_car_Mes_Uso = [];
+
+        arr_car_Mes_Uso.push(['Element', 'Total', { role: 'style' }, { role: 'annotation' }]);
+        for (var i = 0; i < cartera_.carteraMesUso.length; i++) {
+
+            switch (tipo) {
+                case "TOTAL":
+                    arr_car_Mes_Uso.push([cartera_.carteraMesUso[i].GetUSO, cartera_.carteraMesUso[i].Stotal_cmuso, '#3A69D5', new Intl.NumberFormat('es-MX').format(cartera_.carteraMesUso[i].Stotal_cmuso.toFixed(2)) + '']);
+                    break;
+                case "VENCIDA":
+                    arr_car_Mes_Uso.push([cartera_.carteraMesUso[i].GetUSO, cartera_.carteraMesUso[i].Stotal_cmuso - cartera_.carteraMesUso[i].Ssvencer_cmuso, '#FA5F2D', new Intl.NumberFormat('es-MX').format((cartera_.carteraMesUso[i].Stotal_cmuso - cartera_.carteraMesUso[i].Ssvencer_cmuso).toFixed(2)) + '']);
+                    break;
+                case "SINVENCER":
+                    arr_car_Mes_Uso.push([cartera_.carteraMesUso[i].GetUSO, cartera_.carteraMesUso[i].Ssvencer_cmuso, '#5AD108', new Intl.NumberFormat('es-MX').format(cartera_.carteraMesUso[i].Ssvencer_cmuso.toFixed(2)) + '']);
+                    break;
+                case "MAS60":
+
+
+                    var arrUsoMas60Dias = [];
+                    var usoEcontrado = false;
+
+                    for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
+
+                        for (var j = 0; j < arrUsoMas60Dias.length; j++) {
+                            if (arrUsoMas60Dias[j].uso == cartera_.carteraMesCte[i].GetUSO.trim()) {
+
+
+                                arrUsoMas60Dias[j].total += (
+                                cartera_.carteraMesCte[i].S060_090_cmcte +
+                                cartera_.carteraMesCte[i].S090_120_cmcte +
+                                cartera_.carteraMesCte[i].S120_150_cmcte +
+                                cartera_.carteraMesCte[i].S150_180_cmcte +
+                                cartera_.carteraMesCte[i].S180_210_cmcte +
+                                cartera_.carteraMesCte[i].S210_240_cmcte +
+                                cartera_.carteraMesCte[i].S240_270_cmcte +
+                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+                                usoEcontrado = true;
+                                break;
+                            }
+                        }
+
+                        if (!usoEcontrado) {
+                            arrUsoMas60Dias.push({ uso: cartera_.carteraMesCte[i].GetUSO.trim(), total: 0, color: '#FA5F2D' });
+                            for (var j = 0; j < arrUsoMas60Dias.length; j++) {
+                                if (arrUsoMas60Dias[j].uso == cartera_.carteraMesCte[i].GetUSO.trim()) {
+
+
+                                    arrUsoMas60Dias[j].total += (
+                                    cartera_.carteraMesCte[i].S060_090_cmcte +
+                                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                                    cartera_.carteraMesCte[i].Smas_270_cmcte);
+                                    cartera_.carteraMesCte[i].usoEcontrado = true;
+                                    break;
+                                }
+                            }
+                        }
+                        usoEcontrado = false
+
+                    }
+
+                    for (var i = 0; i < arrUsoMas60Dias.length; i++) {
+                        arr_car_Mes_Uso.push([arrUsoMas60Dias[i].uso, arrUsoMas60Dias[i].total, arrUsoMas60Dias[i].color, new Intl.NumberFormat('es-MX').format(arrUsoMas60Dias[i].total.toFixed(2)) + '']);
+                    }
+
+
+
+
+                    break;
+
+                default:
+                    break;
+            }
+
+
+        }
+
+        var data1 = google.visualization.arrayToDataTable(arr_car_Mes_Uso);
+
+        var options = {
+            title: '',
+            chartArea: { width: '70%', height: '70%' },
+            hAxis: {
+                title: 'Pesos',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Uso'
+            }
+        };
+
+        var chart1 = new google.visualization.BarChart(document.getElementById('GrfCarUso'));
+        google.visualization.events.addListener(chart1, 'select', function () {
+            var selection = chart1.getSelection();
+            if (selection.length) {
+                detCrtUsoMov(data1.getValue(selection[0].row, 0) + '');
+            }
+        });
+
+
+        chart1.draw(data1, options);
+
+    }
+
+    function switchUsoChange(CheckBox) {
+
+        switch (CheckBox.value) {
+            case "MAS60":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = true;
+                    grfCarteraUso(CheckBox.value);
+                }
+                else {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso("");
+                }
+
+                break;
+            case "TOTAL":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = true;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso(CheckBox.value);
+                }
+                else {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso("");
+                }
+
+                break;
+            case "VENCIDA":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxVen").checked = true;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso(CheckBox.value);
+                }
+                else {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso("");
+                }
+
+                break;
+            case "SINVENCER":
+                if (CheckBox.checked) {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = true;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso(CheckBox.value);
+                }
+                else {
+                    document.getElementById("chbxVen").checked = false;
+                    document.getElementById("chbxSven").checked = false;
+                    document.getElementById("chbxTot").checked = false;
+                    document.getElementById("chbxMas60").checked = false;
+                    grfCarteraUso("");
+                }
+                break;
+        }
+
+    }
+
+    function showCtesMas60Dias() {
+        var tablausonvta = new google.visualization.DataTable();
+        tablausonvta.addColumn("string", "No Cliente");
+        tablausonvta.addColumn("string", "Cliente");
+        tablausonvta.addColumn("string", "RFC");
+        tablausonvta.addColumn("string", "Uso");
+        tablausonvta.addColumn("number", "60-90 Dias");
+        tablausonvta.addColumn("number", "90-120 Dias");
+        tablausonvta.addColumn("number", "120-150 Dias");
+        tablausonvta.addColumn("number", "150-180 Dias");
+        tablausonvta.addColumn("number", "180-210 Dias");
+        tablausonvta.addColumn("number", "210-240 Dias");
+        tablausonvta.addColumn("number", "240-270 Dias");
+        tablausonvta.addColumn("number", "Mas-270 Dias");
+        tablausonvta.addColumn("number", "TOTAL");
+
+
+        var sinVencer = 0;
+        var vencido = 0;
+        var sumaMas60 = 0;
+        var totalMas60 = 0;
+        for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
+
+            sumaMas60 = cartera_.carteraMesCte[i].S060_090_cmcte +
+                      cartera_.carteraMesCte[i].S090_120_cmcte +
+                      cartera_.carteraMesCte[i].S120_150_cmcte +
+                      cartera_.carteraMesCte[i].S150_180_cmcte +
+                      cartera_.carteraMesCte[i].S180_210_cmcte +
+                      cartera_.carteraMesCte[i].S210_240_cmcte +
+                      cartera_.carteraMesCte[i].S240_270_cmcte +
+                      cartera_.carteraMesCte[i].Smas_270_cmcte;
+
+            if (sumaMas60 > 0) {
+
+                tablausonvta.addRow([cartera_.carteraMesCte[i].Numcte_cmcte,
+                                     cartera_.carteraMesCte[i].Nomcte_cmcte,
+                                     cartera_.carteraMesCte[i].Rfc_cmcte,
+                                     cartera_.carteraMesCte[i].GetUSO,
+                                     cartera_.carteraMesCte[i].S060_090_cmcte,
+                                     cartera_.carteraMesCte[i].S090_120_cmcte,
+                                     cartera_.carteraMesCte[i].S120_150_cmcte,
+                                     cartera_.carteraMesCte[i].S150_180_cmcte,
+                                     cartera_.carteraMesCte[i].S180_210_cmcte,
+                                     cartera_.carteraMesCte[i].S210_240_cmcte,
+                                     cartera_.carteraMesCte[i].S240_270_cmcte,
+                                     cartera_.carteraMesCte[i].Smas_270_cmcte,
+                                     sumaMas60]);
+            }
+            totalMas60 += sumaMas60;
+            sumaMas60 = 0;
+        }
+
+        tablausonvta.addRow(['TOTAL', '', '', '', 0, 0, 0, 0, 0, 0, 0, 0, totalMas60]);
+
+
+        var contenedor5 = new google.visualization.Table(divMas60dias);
+        contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
+
+
+
+
+        var msg = document.getElementById('mas60Dias');
+        msg.showModal();
+        dialogos.push(msg);
+    }
+    /////////////////////////////////////////////////////METODOS DE USO GENERAL/////////////////////////////////////////
+    function cerrarDialog() {
+        for (var i = 0; i < dialogos.length; i++) {
+            dialogos[i].close();
+        }
+        dialogos = [];
+
+    }
+    function diasEnUnMes(mes, año) {
+        return new Date(año, mes, 0).getDate();
+    }
+
+    function GoToReporteador() {
+
+
+        if (document.getElementById('serv').innerHTML == 'Admin') {
+
+            window.open("http://172.16.1.155:9600/?user=fuente&pass=espuma1");
+        }
+        else {
+            var planta = "";
+            for (var i = 0; i < arrPlaRep.length; i++) {
+                if (arrPlaRep[i].servidor == document.getElementById('serv').innerHTML) {
+                    planta = arrPlaRep[i].planta;
+                    break;
+                }
+            }
+            if (planta != "") {
+                window.open("http://172.16.1.155:9600/?user=" + document.getElementById('usr').innerHTML + "&pass=" + document.getElementById('pwd').innerHTML + "&pla=" + planta);
+            }
+        }
+
+
+
+
+
+        //
+    }
+</script>
+<style>
+    #grfCob {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+    #tblCob {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+    }
+
+    body {
+        background: #ffffff;
+    }
+
+    progress[value] {
+        /* Elimino la apariencia por defecto */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        /* Quito el borde que aparece en Firefox */
+        border: none;
+        /* Añado mis propios estilos */
+        width: 270px;
+        height: 30px;
+        overflow: hidden;
+        /*  Estos estilos solo se aplicaran al fondo de la barra en mozilla */
+        border: 1px inset #666;
+        background-color: #ffffff;
+        border-radius: 20px;
+    }
+
+        progress[value]::-webkit-progress-value {
+            background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%), -webkit-linear-gradient(top, rgba(255, 255, 255, .25), rgba(0, 0, 0, .25)), -webkit-linear-gradient(left,#f44,#09c);
+            background-size: 35px 20px, 100% 100%, 100% 100%;
+        }
+
+    progress::-moz-progress-bar {
+        border-radius: 20px;
+    }
+
+    progress::-webkit-progress-value {
+        border-radius: 20px;
+    }
+
+    progress::-webkit-progress-bar {
+        background-color: #ffffff;
+        box-shadow: #ffffff; /*esta sombra es para simular el borde que he aplicado arriba para Mozilla*/
+        border-radius: 20px;
+    }
+</style>
