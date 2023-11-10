@@ -25,6 +25,6 @@ C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\bi
 C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\bin\Release\MySql.Data.dll
 C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\bin\Release\GENAnalizerWebDAL.pdb
 C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\bin\Release\GENAnalizerWebETY.pdb
+C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\obj\Release\GENAnalizerWebBLL.csprojResolveAssemblyReference.cache
 C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\obj\Release\GENAnalizerWebBLL.dll
 C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\obj\Release\GENAnalizerWebBLL.pdb
-C:\Users\HECTOR\Documents\Visual Studio 2013\GENAnalizerWeb\GENAnalizerWebBLL\obj\Release\GENAnalizerWebBLL.csprojResolveAssemblyReference.cache

@@ -29,7 +29,7 @@ namespace GENAnalizerWebDAL
                if (id.paramSrv.Trim().Equals("Admin"))
                    il = sqldir.GetDataFromSicoBySQL("select * from geocercas;");
                else
-                   il = sqldir.GetDataFromSicoBySQL("select * from geocercas where srv_geo='" + id.paramSrv + "' and  cia_geo='" + id.paramCia + "' and pla_geo='" + id.paramPla + "';");              
+                   il = sqldir.GetDataFromSicoBySQL("select * from geocercas where srv_geo='" + id.paramSrv + "';");              
                DataTable dt = (DataTable)il[0];
                string JSONresult = JsonConvert.SerializeObject(dt);
                li = JsonConvert.DeserializeObject<List<clGeocercas>>(JSONresult);
@@ -56,72 +56,113 @@ namespace GENAnalizerWebDAL
                 usr.usr_usr = id.paramUsr.Trim();
                 usr.pwd_usr = EncriptaPassLeve(id.paramPwd.Trim());
 
+                clsUsuarios user_anr = new clsUsuarios();
+                List<clsUsuarios> li_usrAnr = new List<clsUsuarios>();
                 List<GEN.ETY.clsUsuarioModel> li = new List<GEN.ETY.clsUsuarioModel>();
                 List<GEN.ETY.clsPlantaModel> liPla = new List<GEN.ETY.clsPlantaModel>();
                 GEN.ETY.clsUsuarioModel user = new GEN.ETY.clsUsuarioModel();
+                clsUsuarios user_ = new clsUsuarios();
                 List<Object> objsReturn = new List<object>();
                 clsRespuesta respueta = new clsRespuesta();
-                clsPlantaService plantas = new clsPlantaService(sqldir.Session);
+
+
+
+
+
+               //Consultar Listado de plantas
+                UnitOfWorkNH u_;
+                clsSQLDirectosService sqldir_ = null;
+                ISession s_;
+                u_ = new UnitOfWorkNH("DSN="+id.paramSrv.Trim()+";UID=sicogas;PWD=imponente;");
+                s_ = u_._sessionFactory.OpenSession();
+                sqldir_ = new clsSQLDirectosService(s_);
+                clsPlantaService plantas = new clsPlantaService(sqldir_.Session);
+                liPla = plantas.List(new clsFilter() { Cia="15"});
+
+                if (id.paramSrv.Equals("Celaya"))
+                {
+                    liPla.RemoveAt(0);
+                }
+
+
 
                 if (id.paramUsr.Trim().ToLower().Equals("administrador") && id.paramPwd.Trim().ToLower().Equals("admingroup")  )
                 {
                     IList ilPla = null;
                     string JSONresultPla = string.Empty;
                     DataTable dtPla = null;
-                    liPla = plantas.List(new clsFilter());
-                    user.Nom_ucve = "Administrador";
-                    user.Tip_ucve = "Administrador";
-                    user.Cia_ucve = "";
-                    user.Lada_ucve = "";
-                    user.Pas_ucve = "admingroup";
-                    user.Pla_ucve = "";
-                    user.Tpu_ucve = "Administrador";
-                    user.Usr_ucve = "Administrador";
 
-                    objsReturn.Add(user);
-                    objsReturn.Add(liPla);
-                    respueta.ObjetReturn = objsReturn;
-                    respueta.iconMessage = "success";
-                    return respueta;
-                    
+                       // user_anr.id_usr =
+                       //user_anr.usr_usr =
+                       //user_anr.pwd_usr =
+                       user_anr.srv_usr =id.paramSrv.Trim();
+                       //user_anr.pla_usr =
+                       user_anr.nom_usr = "Administrador";
+                       //user_anr.fecha_secion =
+                       //user_anr.hora_secion =
+                       //user_anr.logeos =
+                       user_anr.rol_usr = "Administrador";
+
+
+                   // 
+                    //user.Nom_ucve = "Administrador";
+                    //user.Tip_ucve = "Administrador";
+                    //user.Cia_ucve = "";
+                    //user.Lada_ucve = "";
+                    //user.Pas_ucve = "admingroup";
+                    //user.Pla_ucve = "";
+                    //user.Tpu_ucve = "Administrador";
+                    //user.Usr_ucve = "Administrador";
+
+                    //objsReturn.Add(user);
+                    //objsReturn.Add(liPla);
+                    //respueta.ObjetReturn = objsReturn;
+                    //respueta.iconMessage = "success";
+                    //return respueta;
+                       for (int i = 0; i < liPla.Count; i++)
+                       {
+                           user_anr.pla_usr += liPla[i].Cve_pla.Trim()+",";
+                       }
                     
                 }
 
-                IList il = sqldir.GetDataFromSicoBySQL("select * from usr_cve where usr_ucve='" + id.paramUsr.Trim() + "' and pas_ucve='" + EncriptaPassLeve(id.paramPwd.Trim()) + "'");
+                String query = "select * from usr_anr where usr_usr='" + id.paramUsr.Trim() + "' and pwd_usr='" + id.paramPwd.Trim() + "' and srv_usr='"+id.paramSrv.Trim()+"'";
+                IList il = sqldir.GetDataFromSicoBySQL(query);
+                //IList il = sqldir.GetDataFromSicoBySQL("select * from usr_cve where usr_ucve='" + id.paramUsr.Trim() + "' and pas_ucve='" + EncriptaPassLeve(id.paramPwd.Trim()) + "'");
                 DataTable dt = (DataTable)il[0];
 
                        string JSONresult;
                        if (dt != null && dt.Rows.Count > 0)
-                       {
-
-                           
+                       {                          
                            JSONresult = JsonConvert.SerializeObject(dt);
-                           li = JsonConvert.DeserializeObject<List<GEN.ETY.clsUsuarioModel>>(JSONresult);
-                           if (li.Count == 1)
+                           li_usrAnr = JsonConvert.DeserializeObject<List<clsUsuarios>>(JSONresult);
+                           if (li_usrAnr.Count == 1)
                            {
-                               user = li[0];
-                               IList ilPla = null;
-                               string JSONresultPla = string.Empty;
-                               DataTable dtPla = null;
-                               if (id.paramSrv.Equals("Celaya"))
-                                   liPla = plantas.List(new clsFilter { Cia="15"});
-                               else
-                                   liPla = plantas.List(new clsFilter());
+                               user_anr = li_usrAnr[0];
+                               //IList ilPla = null;
+                               //string JSONresultPla = string.Empty;
+                               //DataTable dtPla = null;
+                               //if (id.paramSrv.Equals("Celaya"))
+                               //    liPla = plantas.List(new clsFilter { Cia="15"});
+                               //else
+                               //    liPla = plantas.List(new clsFilter());
                                
                                
-                               if(!li[0].Tpu_ucve.Equals("GG"))
-                               {
-                                   liPla = liPla.Where(x => x.Cve_pla == user.Pla_ucve && x.Cia_pla.Cve_cia == user.Cia_ucve).ToList();
-                               }
+                               //if(!li[0].Tpu_ucve.Equals("GG"))
+                               //{
+                               //    liPla = liPla.Where(x => x.Cve_pla == user.Pla_ucve && x.Cia_pla.Cve_cia == user.Cia_ucve).ToList();
+                               //}
                                
 
                            }
-                           objsReturn.Add(user);
-                           objsReturn.Add(liPla);
-                           respueta.ObjetReturn = objsReturn;
-                           respueta.iconMessage = "success";
-                           return respueta;
-                       }                      
+                        
+                       }
+
+                       objsReturn.Add(user_anr);
+                       objsReturn.Add(liPla);
+                       respueta.ObjetReturn = objsReturn;
+                       respueta.iconMessage = "success";
+                       return respueta;
                        respueta.iconMessage = "info";
                        respueta.MesajeReturn="Usuario no encontrado";
 
@@ -168,64 +209,88 @@ namespace GENAnalizerWebDAL
        {
            try
            {
+             //Validar rango de fechas para optimizar las consultas.
+               String query = "";
+               if (id.fechaI.Year==id.fechaF.Year)
+               {
+               // Consulta sobre el mismo año
+               query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_"+id.fechaI.Year.ToString()+"c where srv_nvta in (" + id.paramSrv + ") and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta <> 'B'";
+
+               }
+               else
+               {
+
+                 // Validar si es de dos años difertes realizar una union 
+                   if (id.fechaF.Year-id.fechaI.Year==1)
+                   {
+                       query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_"+id.fechaI.Year.ToString()+"c where srv_nvta in (" + id.paramSrv + ") and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta <> 'B'"+
+                               " union select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_" + id.fechaF.Year.ToString() + "c where srv_nvta in (" + id.paramSrv + ") and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta <> 'B'";
+                   }
+                   else
+                   {
+                       //Si son mas de dos años consultar con la vista 
+                       query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_con where srv_nvta in (" + id.paramSrv + ") and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta <> 'B'";                  
+                   }
+                
+               }
+               
+               
+
+
+
                List<clsNotas_con> li = new List<clsNotas_con>();
-               String query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_con where srv_nvta in (" + id.paramSrv + ") and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta <> 'B'";
                IList il = sqldir.GetDataFromSicoBySQL(query);
                DataTable dt = (DataTable)il[0];
+               string JSONresult;
                if (il!=null)
                {
-                   li = (from dr in dt.AsEnumerable()
-                         select new clsNotas_con
-                         {
-                             srv_nvta = dr[0].ToString(),
-                             fol_nvta = dr[1].ToString(),
-                             ffis_nvta = dr[2].ToString(),
-                             cia_nvta = dr[3].ToString(),
-                             pla_nvta = dr[4].ToString(),
-                             ped_nvta = dr[5].ToString(),
-                             numcte_nvta = dr[6].ToString(),
-                             numtqe_nvta = dr[7].ToString(),
-                             ruta_nvta = dr[8].ToString(),
-                             tip_nvta = dr[9].ToString(),
-                             tiprut_nvta = dr[10].ToString(),
-                             uso_nvta = dr[11].ToString(),
-                             fep_nvta = dr[12].ToString(),
-                             fes_nvta = dr[13].ToString(),
-                             fliq_nvta = dr[14].ToString(),
-                             edo_nvta = dr[15].ToString(),
-                             tpa_nvta = dr[16].ToString(),
-                             nept_nvta = dr[17].ToString(),
-                             tlts_nvta = dr[18].ToString(),
-                             tprd_nvta = dr[19].ToString(),
-                             pru_nvta = dr[20].ToString(),
-                             impt_nvta = dr[21].ToString(),
-                             tpdo_nvta = dr[22].ToString(),
-                             asiste_nvta = dr[23].ToString(),
-                             impasi_nvta = dr[24].ToString(),
-                             gps_nvta = dr[25].ToString(),
-                             gpe_nvta = dr[26].ToString(),
-                             eco_nvta = dr[27].ToString(),
-                             fhs_nvta = dr[28].ToString(),
-                             chf_nvta = dr[29].ToString(),
-                             dia_semana = dr[30].ToString(),
-                             dia_semana_sur = dr[31].ToString()
-                         }).ToList();  
+
+                   JSONresult = JsonConvert.SerializeObject(dt);
+                   li = JsonConvert.DeserializeObject<List<clsNotas_con>>(JSONresult);
+
+                   //li = (from dr in dt.AsEnumerable()
+                   //      select new clsNotas_con
+                   //      {
+                   //          srv_nvta = dr[0].ToString(),
+                   //          fol_nvta = dr[1].ToString(),
+                   //          ffis_nvta = dr[2].ToString(),
+                   //          cia_nvta = dr[3].ToString(),
+                   //          pla_nvta = dr[4].ToString(),
+                   //          ped_nvta = dr[5].ToString(),
+                   //          numcte_nvta = dr[6].ToString(),
+                   //          numtqe_nvta = dr[7].ToString(),
+                   //          ruta_nvta = dr[8].ToString(),
+                   //          tip_nvta = dr[9].ToString(),
+                   //          tiprut_nvta = dr[10].ToString(),
+                   //          uso_nvta = dr[11].ToString(),
+                   //          fep_nvta = dr[12].ToString(),
+                   //          fes_nvta = dr[13].ToString(),
+                   //          fliq_nvta = dr[14].ToString(),
+                   //          edo_nvta = dr[15].ToString(),
+                   //          tpa_nvta = dr[16].ToString(),
+                   //          nept_nvta = dr[17].ToString(),
+                   //          tlts_nvta = dr[18].ToString(),
+                   //          tprd_nvta = dr[19].ToString(),
+                   //          pru_nvta = dr[20].ToString(),
+                   //          impt_nvta = dr[21].ToString(),
+                   //          tpdo_nvta = dr[22].ToString(),
+                   //          asiste_nvta = dr[23].ToString(),
+                   //          impasi_nvta = dr[24].ToString(),
+                   //          gps_nvta = dr[25].ToString(),
+                   //          gpe_nvta = dr[26].ToString(),
+                   //          eco_nvta = dr[27].ToString(),
+                   //          fhs_nvta = dr[28].ToString(),
+                   //          chf_nvta = dr[29].ToString(),
+                   //          dia_semana = dr[30].ToString(),
+                   //          dia_semana_sur = dr[31].ToString()
+                   //      }).ToList();  
                }
                else
                {
                    li = new List<clsNotas_con>();
                }
 
-               
 
-               //if ()
-               //{
-                   
-               //}
-
-               //string JSONresult = JsonConvert.SerializeObject(dt);
-
-               //li = JsonConvert.DeserializeObject<List<clsNotas_con>>(JSONresult);
                return li;
 
 
@@ -247,44 +312,49 @@ namespace GENAnalizerWebDAL
                String query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_con where srv_nvta in ('" + id.paramSrv.ToLower() + "') and fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and tiprut_nvta = 'B'";
                IList il = sqldir.GetDataFromSicoBySQL(query);
                DataTable dt = (DataTable)il[0];
+               String JSONresult;
                if (il != null)
                {
-                   li = (from dr in dt.AsEnumerable()
-                         select new clsNotas_con
-                         {
-                             srv_nvta = dr[0].ToString(),
-                             fol_nvta = dr[1].ToString(),
-                             ffis_nvta = dr[2].ToString(),
-                             cia_nvta = dr[3].ToString(),
-                             pla_nvta = dr[4].ToString(),
-                             ped_nvta = dr[5].ToString(),
-                             numcte_nvta = dr[6].ToString(),
-                             numtqe_nvta = dr[7].ToString(),
-                             ruta_nvta = dr[8].ToString(),
-                             tip_nvta = dr[9].ToString(),
-                             tiprut_nvta = dr[10].ToString(),
-                             uso_nvta = dr[11].ToString(),
-                             fep_nvta = dr[12].ToString(),
-                             fes_nvta = dr[13].ToString(),
-                             fliq_nvta = dr[14].ToString(),
-                             edo_nvta = dr[15].ToString(),
-                             tpa_nvta = dr[16].ToString(),
-                             nept_nvta = dr[17].ToString(),
-                             tlts_nvta = dr[18].ToString(),
-                             tprd_nvta = dr[19].ToString(),
-                             pru_nvta = dr[20].ToString(),
-                             impt_nvta = dr[21].ToString(),
-                             tpdo_nvta = dr[22].ToString(),
-                             asiste_nvta = dr[23].ToString(),
-                             impasi_nvta = dr[24].ToString(),
-                             gps_nvta = dr[25].ToString(),
-                             gpe_nvta = dr[26].ToString(),
-                             eco_nvta = dr[27].ToString(),
-                             fhs_nvta = dr[28].ToString(),
-                             chf_nvta = dr[29].ToString(),
-                             dia_semana = dr[30].ToString(),
-                             dia_semana_sur = dr[31].ToString()
-                         }).ToList();
+
+                   JSONresult = JsonConvert.SerializeObject(dt);
+                   li = JsonConvert.DeserializeObject<List<clsNotas_con>>(JSONresult);
+
+                   //li = (from dr in dt.AsEnumerable()
+                   //      select new clsNotas_con
+                   //      {
+                   //          srv_nvta = dr[0].ToString(),
+                   //          fol_nvta = dr[1].ToString(),
+                   //          ffis_nvta = dr[2].ToString(),
+                   //          cia_nvta = dr[3].ToString(),
+                   //          pla_nvta = dr[4].ToString(),
+                   //          ped_nvta = dr[5].ToString(),
+                   //          numcte_nvta = dr[6].ToString(),
+                   //          numtqe_nvta = dr[7].ToString(),
+                   //          ruta_nvta = dr[8].ToString(),
+                   //          tip_nvta = dr[9].ToString(),
+                   //          tiprut_nvta = dr[10].ToString(),
+                   //          uso_nvta = dr[11].ToString(),
+                   //          fep_nvta = dr[12].ToString(),
+                   //          fes_nvta = dr[13].ToString(),
+                   //          fliq_nvta = dr[14].ToString(),
+                   //          edo_nvta = dr[15].ToString(),
+                   //          tpa_nvta = dr[16].ToString(),
+                   //          nept_nvta = dr[17].ToString(),
+                   //          tlts_nvta = dr[18].ToString(),
+                   //          tprd_nvta = dr[19].ToString(),
+                   //          pru_nvta = dr[20].ToString(),
+                   //          impt_nvta = dr[21].ToString(),
+                   //          tpdo_nvta = dr[22].ToString(),
+                   //          asiste_nvta = dr[23].ToString(),
+                   //          impasi_nvta = dr[24].ToString(),
+                   //          gps_nvta = dr[25].ToString(),
+                   //          gpe_nvta = dr[26].ToString(),
+                   //          eco_nvta = dr[27].ToString(),
+                   //          fhs_nvta = dr[28].ToString(),
+                   //          chf_nvta = dr[29].ToString(),
+                   //          dia_semana = dr[30].ToString(),
+                   //          dia_semana_sur = dr[31].ToString()
+                   //      }).ToList();
                }
                else
                {
@@ -311,47 +381,51 @@ namespace GENAnalizerWebDAL
            try
            {
                List<clsNotas_con> li = new List<clsNotas_con>();
-               String query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_con where srv_nvta in (" + id.paramSrv + ") and cia_nvta='" + id.paramCia + "' and pla_nvta='" + id.paramPla + "' and  fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') ";
+               String query = "select *, WEEKDAY(fep_nvta) dia_semana, WEEKDAY(fes_nvta) dia_semana_sur from notas_con where srv_nvta in (" + id.paramSrv + ")  and pla_nvta in (" + id.paramPla.Trim() + ") and  fes_nvta >=  TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fes_nvta <=  TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') ";
                IList il = sqldir.GetDataFromSicoBySQL(query);
                DataTable dt = (DataTable)il[0];
+               String JSONresult;
                if (il != null)
                {
-                   li = (from dr in dt.AsEnumerable()
-                         select new clsNotas_con
-                         {
-                             srv_nvta = dr[0].ToString(),
-                             fol_nvta = dr[1].ToString(),
-                             ffis_nvta = dr[2].ToString(),
-                             cia_nvta = dr[3].ToString(),
-                             pla_nvta = dr[4].ToString(),
-                             ped_nvta = dr[5].ToString(),
-                             numcte_nvta = dr[6].ToString(),
-                             numtqe_nvta = dr[7].ToString(),
-                             ruta_nvta = dr[8].ToString(),
-                             tip_nvta = dr[9].ToString(),
-                             tiprut_nvta = dr[10].ToString(),
-                             uso_nvta = dr[11].ToString(),
-                             fep_nvta = dr[12].ToString(),
-                             fes_nvta = dr[13].ToString(),
-                             fliq_nvta = dr[14].ToString(),
-                             edo_nvta = dr[15].ToString(),
-                             tpa_nvta = dr[16].ToString(),
-                             nept_nvta = dr[17].ToString(),
-                             tlts_nvta = dr[18].ToString(),
-                             tprd_nvta = dr[19].ToString(),
-                             pru_nvta = dr[20].ToString(),
-                             impt_nvta = dr[21].ToString(),
-                             tpdo_nvta = dr[22].ToString(),
-                             asiste_nvta = dr[23].ToString(),
-                             impasi_nvta = dr[24].ToString(),
-                             gps_nvta = dr[25].ToString(),
-                             gpe_nvta = dr[26].ToString(),
-                             eco_nvta = dr[27].ToString(),
-                             fhs_nvta = dr[28].ToString(),
-                             chf_nvta = dr[29].ToString(),
-                             dia_semana = dr[30].ToString(),
-                             dia_semana_sur = dr[31].ToString()
-                         }).ToList();
+                   JSONresult = JsonConvert.SerializeObject(dt);
+                   li = JsonConvert.DeserializeObject<List<clsNotas_con>>(JSONresult);
+
+                   //li = (from dr in dt.AsEnumerable()
+                   //      select new clsNotas_con
+                   //      {
+                   //          srv_nvta = dr[0].ToString(),
+                   //          fol_nvta = dr[1].ToString(),
+                   //          ffis_nvta = dr[2].ToString(),
+                   //          cia_nvta = dr[3].ToString(),
+                   //          pla_nvta = dr[4].ToString(),
+                   //          ped_nvta = dr[5].ToString(),
+                   //          numcte_nvta = dr[6].ToString(),
+                   //          numtqe_nvta = dr[7].ToString(),
+                   //          ruta_nvta = dr[8].ToString(),
+                   //          tip_nvta = dr[9].ToString(),
+                   //          tiprut_nvta = dr[10].ToString(),
+                   //          uso_nvta = dr[11].ToString(),
+                   //          fep_nvta = dr[12].ToString(),
+                   //          fes_nvta = dr[13].ToString(),
+                   //          fliq_nvta = dr[14].ToString(),
+                   //          edo_nvta = dr[15].ToString(),
+                   //          tpa_nvta = dr[16].ToString(),
+                   //          nept_nvta = dr[17].ToString(),
+                   //          tlts_nvta = dr[18].ToString(),
+                   //          tprd_nvta = dr[19].ToString(),
+                   //          pru_nvta = dr[20].ToString(),
+                   //          impt_nvta = dr[21].ToString(),
+                   //          tpdo_nvta = dr[22].ToString(),
+                   //          asiste_nvta = dr[23].ToString(),
+                   //          impasi_nvta = dr[24].ToString(),
+                   //          gps_nvta = dr[25].ToString(),
+                   //          gpe_nvta = dr[26].ToString(),
+                   //          eco_nvta = dr[27].ToString(),
+                   //          fhs_nvta = dr[28].ToString(),
+                   //          chf_nvta = dr[29].ToString(),
+                   //          dia_semana = dr[30].ToString(),
+                   //          dia_semana_sur = dr[31].ToString()
+                   //      }).ToList();
                }
                else
                {
@@ -427,7 +501,8 @@ namespace GENAnalizerWebDAL
            try
            {
                List<clsLiquida> li = new List<clsLiquida>();
-               String query = " select srv_cop, max(fec_cop) fecha from ctrl_coP  where srv_cop='"+id.paramSrv+"' group by 1";
+               String query = "SELECT MAX (fes_nvta) fes_nvta  from notas_2023c where srv_nvta in ('" + id.paramSrv + "')";
+               //String query = " select srv_cop, max(fec_cop) fecha from ctrl_coP  where srv_cop='"+id.paramSrv+"' group by 1";
                IList il = sqldir.GetDataFromSicoBySQL(query);
                DataTable dt = (DataTable)il[0];
                if (il != null)
@@ -435,8 +510,10 @@ namespace GENAnalizerWebDAL
                    li = (from dr in dt.AsEnumerable()
                          select new clsLiquida
                          {
-                             srv_eru = dr[0].ToString(),
-                             fec_eru = dr[1].ToString(),
+                             //srv_eru = dr[0].ToString(),
+                             //fec_eru = dr[1].ToString(),
+                             //srv_eru = dr[0].ToString(),
+                             fec_eru = dr[0].ToString(),
                              
                          }).ToList();
                }
@@ -862,11 +939,6 @@ namespace GENAnalizerWebDAL
                    result = sqldir.GetExisteDatoEnSicogas("Insert into usr_anr (usr_usr,pwd_usr,srv_usr, rol_usr) values ('" + id.paramUsr + "','" + id.paramPwd + "','" + id.paramSrv + "','" + id.paramString1 + "')").ToString();
                    return "Se ha insertado correctamente el registro.";
                }
-
-               
-
-
-
            }
            catch (Exception)
            {
@@ -950,7 +1022,7 @@ namespace GENAnalizerWebDAL
        {
            try
            {
-               String inRutas = "";
+                String inRutas = "";
 
                for (int i = 0; i < listaRutas.Count; i++)
                {
@@ -960,71 +1032,114 @@ namespace GENAnalizerWebDAL
                        inRutas += "'"+listaRutas[i].Cve_rut+"',";
                }
                List<clsPedidos> li = new List<clsPedidos>();
-             
-                
 
-               String query = "select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_con where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= '" + sqldir.GetFechaValidaServer(id.fechaI) +"' and fecrsur_ped <= '" + sqldir.GetFechaValidaServer(id.fechaF)+"' and ruta_ped in ("+inRutas+")";// and tpdo_ped <> 'C'";
-               IList il = sqldir.GetDataFromSicoBySQL(query);
-               DataTable dt = (DataTable)il[0];
-               if (il != null)
+               String query = "";
+               if (id.fechaI.Year == id.fechaF.Year)
                {
-                   li = (from dr in dt.AsEnumerable()
-                         select new clsPedidos
-                         {
-                             //srv_nvta = dr[0].ToString(),
-                            srv_ped = dr[0].ToString(),
-                            num_ped = dr[1].ToString(),
-                            fhr_ped = dr[2].ToString(),
-                            tipo_ped = dr[3].ToString(),
-                            numcte_ped = dr[4].ToString(),
-                            lada_ped = dr[5].ToString(),
-                            tel_ped = dr[6].ToString(),
-                            numtqe_ped = dr[7].ToString(),
-                            ruta_ped = dr[8].ToString(),
-                            observ_ped = dr[9].ToString(),
-                            fecsur_ped = dr[10].ToString(),
-                            edo_ped = dr[11].ToString(),
-                            usr_ped = dr[12].ToString(),
-                            edotx_ped = dr[13].ToString(),
-                            fhtx_ped = dr[14].ToString(),
-                            usrtx_ped = dr[15].ToString(),
-                            fecrsur_ped = dr[16].ToString(),
-                            usrcan_ped = dr[17].ToString(),
-                            motcan_ped = dr[18].ToString(),
-                            nmod_ped = dr[19].ToString(),
-                            fhrp_ped = dr[20].ToString(),
-                            usrrp_ped = dr[21].ToString(),
-                            nmtx_ped = dr[22].ToString(),
-                            fhptx_ped = dr[23].ToString(),
-                            usrtp_ped = dr[24].ToString(),
-                            tmcan_ped = dr[25].ToString(),
-                            horrsur_ped = dr[26].ToString(),
-                            tpdo_ped = dr[27].ToString(),
-                            kgsu_ped = dr[28].ToString(),
-                            c20k_ped = dr[29].ToString(),
-                            c30k_ped = dr[30].ToString(),
-                            c45k_ped = dr[31].ToString(),
-
-                             dia_ped = dr[32].ToString(),
-                            dia_sur_can = dr[33].ToString(),
-                         }).ToList();
+                   // Consulta sobre el mismo año
+                   query = "select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_" + id.fechaI.Year.ToString() + "c where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fecrsur_ped <= TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and ruta_ped in (" + inRutas + ")";// and tpdo_ped <> 'C'";
+           
                }
                else
                {
-                   li = new List<clsPedidos>();
-               }
 
-               // calcular los tiempos en los que tardo un servicio.
-               DateTime fped;
+                   // Validar si es de dos años difertes realizar una union 
+                   if (id.fechaF.Year - id.fechaI.Year == 1)
+                   {
+                       query = "select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_" + id.fechaI.Year.ToString() + "c where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fecrsur_ped <= TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and ruta_ped in (" + inRutas + ") "+
+                               " union select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_" + id.fechaF.Year.ToString() + "c where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fecrsur_ped <= TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and ruta_ped in (" + inRutas + ")";// and tpdo_ped <> 'C'";
+           
+                   }
+                   else
+                   {
+                       //Si son mas de dos años consultar con la vista 
+                       query = "select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_con where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= TO_DATE('" + id.fechaI.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and fecrsur_ped <= TO_DATE('" + id.fechaF.ToString("yyyy-MM-dd") + " 00:00', '%Y-%m-%d %H:%M') and ruta_ped in (" + inRutas + ")";// and tpdo_ped <> 'C'";
+                   }
+
+               } 
+
+
+
+
+
+            //String query = "select *, WEEKDAY(fhrp_ped) dia_ped, WEEKDAY(fecrsur_ped) dia_sur_can from pedidos_con where srv_ped in ('" + id.paramSrv.ToLower() + "') and fecrsur_ped >= '" + sqldir.GetFechaValidaServer(id.fechaI) +"' and fecrsur_ped <= '" + sqldir.GetFechaValidaServer(id.fechaF)+"' and ruta_ped in ("+inRutas+")";// and tpdo_ped <> 'C'";
+               
+            Console.WriteLine("Se creo la el script");
+            IList il = sqldir.GetDataFromSicoBySQL(query);
+            Console.WriteLine("Se ejecuto el script la el script");
+            DataTable dt = (DataTable)il[0];
+
+            string JSONresult;
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                JSONresult = JsonConvert.SerializeObject(dt);
+                li = JsonConvert.DeserializeObject<List<clsPedidos>>(JSONresult);
+            }
+            
+            
+               //if (il != null)
+               //{
+               //    li = (from dr in dt.AsEnumerable()
+               //          select new clsPedidos
+               //          {
+               //              //srv_nvta = dr[0].ToString(),
+               //             srv_ped = dr[0].ToString(),
+               //             num_ped = dr[1].ToString(),
+               //             fhr_ped = dr[2].ToString(),
+               //             tipo_ped = dr[3].ToString(),
+               //             numcte_ped = dr[4].ToString(),
+               //             lada_ped = dr[5].ToString(),
+               //             tel_ped = dr[6].ToString(),
+               //             numtqe_ped = dr[7].ToString(),
+               //             ruta_ped = dr[8].ToString(),
+               //             observ_ped = dr[9].ToString(),
+               //             fecsur_ped = dr[10].ToString(),
+               //             edo_ped = dr[11].ToString(),
+               //             usr_ped = dr[12].ToString(),
+               //             edotx_ped = dr[13].ToString(),
+               //             fhtx_ped = dr[14].ToString(),
+               //             usrtx_ped = dr[15].ToString(),
+               //             fecrsur_ped = dr[16].ToString(),
+               //             usrcan_ped = dr[17].ToString(),
+               //             motcan_ped = dr[18].ToString(),
+               //             nmod_ped = dr[19].ToString(),
+               //             fhrp_ped = dr[20].ToString(),
+               //             usrrp_ped = dr[21].ToString(),
+               //             nmtx_ped = dr[22].ToString(),
+               //             fhptx_ped = dr[23].ToString(),
+               //             usrtp_ped = dr[24].ToString(),
+               //             tmcan_ped = dr[25].ToString(),
+               //             horrsur_ped = dr[26].ToString(),
+               //             tpdo_ped = dr[27].ToString(),
+               //             kgsu_ped = dr[28].ToString(),
+               //             c20k_ped = dr[29].ToString(),
+               //             c30k_ped = dr[30].ToString(),
+               //             c45k_ped = dr[31].ToString(),
+
+               //              dia_ped = dr[32].ToString(),
+               //             dia_sur_can = dr[33].ToString(),
+               //          }).ToList();
+               //}
+               //else
+               //{
+               //    li = new List<clsPedidos>();
+               //}
+
+            Console.WriteLine("Tamaño de la lista "+li.Count);
+
+            // calcular los tiempos en los que tardo un servicio.
+            DateTime fped;
                DateTime fsur;
                String[] valoresFechaPedido;
                String[] valoresFP;
                String[] valoresHP;
                for (int i = 0; i < li.Count; i++)
                {
-                   // CREAR FECHA DE PEDIDO
-                   valoresFechaPedido = li[i].fhrp_ped.Split(' ');
-                   
+                // CREAR FECHA DE PEDIDO
+                Console.WriteLine(" line 1030 Fecha de pedido" + li[i].fhrp_ped);
+                valoresFechaPedido = li[i].fhrp_ped.Split(' ');
+               
+
                    valoresFP = valoresFechaPedido[0].ToString().Split('/');                   
                    valoresHP = valoresFechaPedido[1].ToString().Split(':');
                    valoresHP[0] = determinaTurno(valoresFechaPedido, valoresHP);
@@ -1053,26 +1168,20 @@ namespace GENAnalizerWebDAL
                    li[i].min_ate = interval.Minutes.ToString();//(minutosToHours % 60).ToString();
 
                    Console.WriteLine(fped.ToString()+" --> "+fsur.ToString()+ "      Dias :" + li[i].dias_ate + " horas: " + li[i].hrs_ate + " Min: " + li[i].min_ate);
-
-
-
-
                }
-
-               
-
                return li;
 
-
-           }
+        }
            catch (Exception ex)
            {
-               List<clsPedidos> li = new List<clsPedidos>();
-               li = new List<clsPedidos>();
-               return li;
-           }
+                Console.WriteLine(ex.Message+ "  "+ex.InnerException+" ");
+               throw  new Exception(ex.Message);
+        //List<clsPedidos> li = new List<clsPedidos>();
+        //li = new List<clsPedidos>();
+        //return li;
+    }
 
-       }
+}
 
        public List<GEN.ETY.clsRutaModel> getRutasByCiaPla(clsSQLDirectosService sqldir, clParametros id)
        {
@@ -1081,8 +1190,17 @@ namespace GENAnalizerWebDAL
            {
               
                
-               clsRutaService rutasService = new clsRutaService(sqldir.Session);               
-               li = rutasService.List(new GEN.ETY.Filter.clsFilter() {Cia= id.paramCia, Branch=id.paramPla});
+               clsRutaService rutasService = new clsRutaService(sqldir.Session);
+               String[] arrPla = id.paramPla.Split(',');
+               foreach (var item in arrPla)
+               {
+                   if (!String.IsNullOrWhiteSpace(item))
+                   {
+                       li.AddRange(  rutasService.List(new GEN.ETY.Filter.clsFilter() { Cia = id.paramCia, Branch = item.Trim() }));
+                   }
+               }
+              
+               
                return li;
 
            }

@@ -679,10 +679,11 @@
         //msg.showModal();
         //dialogos.push(msg);
         // llamada ajax para consultar los pedidos
+        var ped={ paramSrv: $('#hiddenSrv').val(), paramCia: $('#hiddenCia').val(), paramPla: $('#hiddenPla').val(), fechaI: fecha_ini, fechaF: fecha_fin };
         $.ajax({
             type: "POST",
             url: "/Home/getPedidos/",
-            data: { paramSrv: $('#hiddenSrv').val(), paramCia: $('#hiddenCia').val(), paramPla: $('#hiddenPla').val(), fechaI: fecha_ini, fechaF: fecha_fin },
+            data: ped,
             datatype: "json",
             success: function (data) {
 
@@ -703,7 +704,8 @@
             },
             error: function (request, status, error) {
                 cierraDialog();
-                alert(request.responseText);
+                // alert(request.responseText+ error+ status);
+                console.log(request);
             }
         });
     }

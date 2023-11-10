@@ -111,12 +111,13 @@
                                 <label id="serv" style="display:none;">@ViewBag.Srv</label>
                                 <label id="usr" style="display:none;">@ViewBag.Usr</label>
                                 <label id="rol" style="display:none;">@ViewBag.Rol</label>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                                @*<span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>*@
+                                @*<span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>*@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                               
                                 <i class="far fa-user" style="margin-left:15px"></i>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
@@ -606,11 +607,11 @@
 
 
         switch (rol) {
-            case"AD":
+            case"Personal":
                 //document.getElementById('accordionSidebar').style.background = "#e74a3b"
                 document.getElementById('seccPers').style.display = "inline";
                 break;
-            case "GG":
+            case "Gerente":
                 if (servidor != "Admin") {
                    // document.getElementById('accordionSidebar').style.background = "#4e73df"
                     document.getElementById('seccGerente').style.display = "inline";
@@ -623,7 +624,7 @@
                
 
                 break;
-            case "CC":
+            case "CredCob":
                 //document.getElementById('accordionSidebar').style.background = "#36b9cc"
                 document.getElementById('seccCrdCob').style.display = "inline";
 
@@ -668,7 +669,8 @@
                             geocercasC.push(data[i]);
                     }
                     localStorage.setItem('geocercaP', JSON.stringify(geocercasP));
-                    localStorage.setItem('geocercaC', JSON.stringify(geocercasC));
+                    sessionStorage.setItem("geocercaC", JSON.stringify(geocercasC));
+                    //localStorage.setItem('geocercaC', JSON.stringify(geocercasC));
                     
                    
                     alert("geocercas cargadas");

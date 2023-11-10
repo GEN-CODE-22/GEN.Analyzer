@@ -13,6 +13,8 @@ namespace GENAnalizerWebETY
        public  String usr_usr { set; get; }
        public  String pwd_usr { set; get; }
        public String srv_usr { set; get; }
+       public String pla_usr { set; get; }
+       public String nom_usr { set; get; }
        public String fecha_secion { set; get; }
        public String hora_secion { set; get; }
        public int logeos { set; get; }      

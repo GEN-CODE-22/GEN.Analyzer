@@ -1,180 +1,201 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Inicio Sesion</title>
-    <meta>
-    <link rel="stylesheet" type="text/css" href="~/Styles/util.css">
-    <link rel="stylesheet" type="text/css" href="~/Styles/main.css">
-    <meta />
-</head>
-<body>
-    <!--inicio de secion don -->
-    <div class="container">
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"><center><img src="~/Images/LOGO_ANALIZER.png" alt="IMG" style="margin:10px;"></center></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <center><img src="~/Images/logo.png" style="width:150px; margin-top:10px;" /></center>
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4"> ANALYZER </h1>
-                                    </div>
-                                    
-                                        <center>       
-                                                <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
-                                                <select id="slectservidor2" class="form-control"> </select> 
-                                                <br />                                                                
-                                                <input class="form-control" type="text" placeholder="Usuario" id="usr">
-                                                <br />                                             
-                                                <input class="form-control" type="password" placeholder="Contraseña" id="pwd">
-                                                <br /> 
-                                                    <div  id="div_comp" class="" style="display:none">
-                                                        <label>Plantas</label>
-                                                        <input class="form-control" type="text" placeholder="01,02,03,...,##" id="pla">
-                                                        <label>Compañias</label>
-                                                        <input class="form-control" type="text" placeholder="15,...,##" id="cia">                                                       
-                                                        <button class="btn btn-danger" style="width:100%" onclick="compInfo()">Completar información</button>
-                                                    </div>
-                                                
-                                                <center>
-                                                    <div class="checkbox" style="display:none;">
-                                                        <input id="chkGte" type="checkbox" onchange="esGerente(this)"> <label>¿Eres Gerente?</label>
-                                                    </div>
-                                                    <div id="SeccGte" style="display:none;">
-                                                        <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
-                                                        <!--<select id="slectservidor2" class="form-control"> </select>-->
-                                                        <br />
-                                                    </div>
-                                                </center>
-                                                
-                                                    <button class="btn btn-danger" style="width:100%" onclick="login(this)">Entrar</button>
-                                              
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
 
-                                            <div class="text-center p-t-12" style="display:none;">
-                                                <span class="txt1">
-                                                    ¿Nuevo?
-                                                </span>
-                                                <a class="txt2" href="#" onclick="solitarCuenta()">
-                                                    Solicta una cuenta...
-                                                </a>
-                                            </div>                                          
-                                        </center>
-                                                                   
-                                </div>
-                           
-                            </div>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Analyzer</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="~/Images/Temas/GENERALES/TI SISTEMAS nieto.png" rel="icon">
+    <link href="~/Images/Temas/GENERALES/TI SISTEMAS nieto.png" rel="apple-touch-icon">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/Styles/FlexStartBoostrap/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/Styles/FlexStartBoostrap/assets/css/style.css" rel="stylesheet">
+
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/Common/mensajesSweetAlert.js"></script>
+    <script src="~/Scripts/infobubble.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+    <!-- =======================================================
+    * Template Name: FlexStart
+    * Updated: Mar 10 2023 with Bootstrap v5.2.3
+    * Template URL: https://bootstrapmade.com/flexstart-bootstrap-startup-template/
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+</head>
+
+<body>
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top">
+        <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
+            <!--<a class="logo d-flex align-items-center" style="float:left;">-->
+            @*<img src="~/Styles/FlexStartBoostrap/assets/img/logo.png" alt="">*@
+            <!--<img src="~/Images/TI SISTEMAS nieto.png" />
+                <span>TI SISTEMAS NIETO</span>
+            </a>-->
+
+            <nav id="navbar" class="navbar">
+                @*<ul>
+                        <li><a class="nav-link scrollto active" href="#hero" style="display:none">Home</a></li>
+                        <li><a class="nav-link scrollto" href="#about" style="display:none">About</a></li>
+                        <li><a class="nav-link scrollto" href="#services" style="display:none">Services</a></li>
+                        <li><a class="nav-link scrollto" href="#portfolio" style="display:none">Portfolio</a></li>
+                        <li><a class="nav-link scrollto" href="#team" style="display:none">Team</a></li>
+                        <li><a href="blog.html" style="display:none">Blog</a></li>
+                        <li class="dropdown" style="display:none">
+                            <a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+                            <ul>
+                                <li><a href="#">Drop Down 1</a></li>
+                                <li class="dropdown">
+                                    <a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                                    <ul>
+                                        <li><a href="#">Deep Drop Down 1</a></li>
+                                        <li><a href="#">Deep Drop Down 2</a></li>
+                                        <li><a href="#">Deep Drop Down 3</a></li>
+                                        <li><a href="#">Deep Drop Down 4</a></li>
+                                        <li><a href="#">Deep Drop Down 5</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Drop Down 2</a></li>
+                                <li><a href="#">Drop Down 3</a></li>
+                                <li><a href="#">Drop Down 4</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="nav-link scrollto" href="#RegUsr" style="display:none">Contact</a></li>
+                        <li><a id="UrsName" style="color:#b53434" class="nav-link scrollto"></a></li>
+                        <li><a id="ExitSes" style="color:#808080; display:none; " class="nav-link scrollto" onclick="Close()">Cerrar sesión</a></li>
+                        <li><a id="BtnReg" class="getstarted scrollto" href="#SeccRegUsr" onclick="ShowSeccion('SeccRegUsr')">Registrate</a></li>
+                    </ul>*@
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+
+        </div>
+    </header><!-- End Header -->
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="hero d-flex align-items-center">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 d-flex flex-column justify-content-center">
+
+                    <img src="~/Images/Temas/GENERALES/TI nieto.png" style="width:500px; margin-bottom:30px" />
+                    <h1 data-aos="fade-up">ANALYZER </h1>
+                    <h2 data-aos="fade-up" data-aos-delay="400">Inicia sesión </h2>
+                    <br />
+                    <div class="row gy-4">
+                        <div class="col-md-6">
+                            <select id="slectservidor2" class="form-control"> </select>
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row gy-4">
+
+
+                        <div class="col-md-6">
+                            <input class="form-control" type="text" placeholder="Usuario" id="usr">
+                        </div>
+
+                        <div class="col-md-6 ">
+                            <input class="form-control" type="password" placeholder="Contraseña" id="pwd">
                         </div>
                     </div>
+
+
+                    <div data-aos="fade-up" data-aos-delay="600">
+                        <div class="text-center text-lg-start">
+                            @*<a class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center" onclick="Login()">*@
+                            <a class="btn-get-started  d-inline-flex align-items-center justify-content-center align-self-center " style="float:left;" onclick="login(this)">
+                                <span style="color:#fff">Inicia</span>
+                                <i class="bi bi-arrow-right" style="color:#fff"></i>
+                            </a>
+                        </div>
+                        <div class="checkbox" style="display:none;">
+                            <input id="chkGte" type="checkbox" onchange="esGerente(this)"> <label>¿Eres Gerente?</label>
+                        </div>
+                        <div id="SeccGte" style="display:none;">
+                            <label>Selecciona tu servidor y utiliza tu usuario de sicogas </label>
+                            <!--<select id="slectservidor2" class="form-control"> </select>-->
+                            <br />
+                        </div>
+
+
+                    </div>
+                    @*<a style="margin-top:30px;" onclick="ShowSeccion('seccRecPass')">Olvide mi contraseña</a>*@
+                </div>
+                <div class="col-lg-6 hero-img" data-aos="zoom-out" data-aos-delay="200">
+
+                    <img src="~/Images/LOGO_ANALIZER.png" class="img-fluid" alt="">
                 </div>
             </div>
         </div>
-    </div>
-    
 
-  
+    </section><!-- End Hero -->
+    <!-- ======= Footer ======= -->
+    <!--<footer id="footer" class="footer">-->
+    @*<div class="copyright">
+            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+        </div>*@
+    <!--<div class="credits">
 
- 
-    <center>
-        <dialog id="DlgPeticionUsr" style="width:33%" >
 
 
-            <div class="card"><center>
-    
-        SOLICITUD DE USUARIO
-    
-</center>
-<table style="width:100%;">
-    <tr>
-        <td>
-            <center>Servidor:</center>            
-        </td>
-        <td>
+            Designed by TI Sistemas Nieto
+            <br />
+            <center><img src="~/Images/Theme/TI%20SISTEMAS%20nieto.png" style="width:20px;" /></center>
+        </div>
+    </footer>-->
+    <!-- End Footer -->
 
-           <!-- <select id="slectservidor" class="form-control"> </select>-->
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <center>Usuario:</center>
-        </td>
-        <td>
-            <input class="form-control" type="text" name="" placeholder="Usuario" id="InpUsr">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <center>Contraseña:</center>
-        </td>
-        <td>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-            <input class="form-control" type="text" name="" placeholder="Contraseña" id="InpPass">
+    <!-- Vendor JS Files -->
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/aos/aos.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/Styles/FlexStartBoostrap/assets/vendor/php-email-form/validate.js"></script>
 
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <center>Correo:</center>
-            
+    <!-- Template Main JS File -->
+    <script src="~/Styles/FlexStartBoostrap/assets/js/main.js"></script>
 
-        </td>
-        <td>
-
-            <input class="form-control" type="email" name="" placeholder="Correo" id="InpEml">
-
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            <center>Nombre:</center>
-            
-
-        </td>
-        <td>
-            <input class="form-control" type="text" name="" placeholder="Nombre" id="InpNom">
-
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-
-           
-
-        </td>
-        <td>
-
-           
-
-        </td>
-    </tr>
-</table>
-            <div style="width:100%"><button class="btn btn-danger" onclick="enviarSolicitud()" style="width:30%; display:inline-block"> Enviar </button>
-<button class="btn btn-danger" onclick="cerrarDialogo()" style="width:30%; display:inline-block">Cerrar </button>
-                </div>                
-             </div>
-        </dialog>
-        <dialog id="DlgSlcCiaPla" style="width:20%">
-            <div class="card-body">
-                <label>Selecciona compañia planta:</label>
-                <select id="slcCiaPla" class="form-control" onchange="getCiaPla()"></select>
-                @*<label>Compañia</label>
-                <select id="slcCia" class="form-control"></select>
-                <label>Planta</label>
-                <select id="slcPla" class="form-control"></select>*@
-                <br />
-                <button class="btn btn-danger" style="width:100%" onclick="setCiaPla()">Iniciar</button>
-            </div>
-        </dialog>
-</center>
+    <!--js de vista-->
+    <script src="~/Scripts/Index/Index.js"></script>
+    <script src="~/Scripts/Mensajes/mensajesSweetAlert.js"></script>
+    <script src="~/Scripts/Mensajes/Notificaciones.js"></script>
+    <script src="~/Scripts/Mensajes/sweetalert2@10.js"></script>
+    <script src="~/Scripts/Mensajes/sweetalert2@8.js"></script>
 </body>
+
 </html>
+
 
 <script src="~/Scripts/main.js"></script>
 <script src="~/Scripts/tilt.jquery.min.js"></script>
@@ -190,7 +211,7 @@
     var isPlusGen = null;
     $(document).ready(function () {
         localStorage.removeItem('empresa');
-        document.getElementById('header_layout').style.display = "none";
+       // document.getElementById('header_layout').style.display = "none";
 
         // var x = document.getElementById("slectservidor");
         var y = document.getElementById("slectservidor2");
@@ -200,18 +221,18 @@
         y.add(option);
 
         for (var k = 0; k < servers.length; k++) {
-          
+
             var option = document.createElement("option");
             option.text = servers[k].trim();
-           // x.add(option);
+            // x.add(option);
             y.add(option);
         }
-        
+
 
 
         //ExisteEquipo();
     });
-   
+
     function login(btn) {
         var usr = $("#usr").val();
         var pwd = $("#pwd").val();
@@ -221,54 +242,56 @@
             var gte = 'Gerente';
         }
 
-        if (usr.trim() != null | usr.length<1)
-        {
-            if (pwd.trim() != null | pwd.length < 1)
-                {
-               
+        if (usr.trim() != null | usr.length < 1) {
+            if (pwd.trim() != null | pwd.length < 1) {
+
 
                 $.ajax({
                     type: "POST",
                     url: "/Home/userLogin/",
                     data: { paramUsr: usr, paramPwd: pwd, paramString1: gte, paramSrv: srv },
                     datatype: "json",
-                    beforeSend: function (objeto)
-                    {
+                    beforeSend: function (objeto) {
                         btn.innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Iniciando...';
                     },
-                    complete: function ()
-                    {
+                    complete: function () {
                         btn.innerHTML = 'Entrar';
                     },
                     success: function (data) {
 
-                        if (data.iconMessage != "success")
-                        {
+                        if (data.iconMessage != "success") {
                             mensajeSweet("Opss", data.MesajeReturn, data.iconMessage);
                         }
-                        else
-                        {
-                            if (data.ObjetReturn[0].Tpu_ucve == "GG" || data.ObjetReturn[0].Tpu_ucve == "Administrador")
-                            {
-                                document.getElementById("slcCiaPla").innerHTML += '<option value="">Selecciona</option>';
+                        else {
 
-                                for (var i = 0; i < data.ObjetReturn[1].length; i++)
-                                {
-                                    document.getElementById("slcCiaPla").innerHTML += '<option value="' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + '">' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + " " + data.ObjetReturn[1][i].Nom_pla + '</option>';
-                                }
-                                cerrarDialogo();
-                                var msg = document.getElementById('DlgSlcCiaPla');
-                                msg.showModal();
-                                dialogos.push(msg);
+                            localStorage.removeItem("pla_usr");
+                            localStorage.setItem('pla_usr', JSON.stringify(data.ObjetReturn[0].pla_usr));
+                            localStorage.removeItem("lista-plantas");
+                            localStorage.setItem('lista-plantas', JSON.stringify(data.ObjetReturn[1]));
+                            window.location = '/Home/Impresion';
 
-                            }
-                            else
-                            {
-                                compañia = data.ObjetReturn[0].Cia_ucve;
-                                planta = data.ObjetReturn[0].Pla_ucve;
-                                isPlusGen = data.ObjetReturn[1][0].Nom_pla;
-                                setCiaPla();
-                            }
+
+                            //if (data.ObjetReturn[0].Tpu_ucve == "GG" || data.ObjetReturn[0].Tpu_ucve == "Administrador")
+                            //{
+                            //    document.getElementById("slcCiaPla").innerHTML += '<option value="">Selecciona</option>';
+
+                            //    for (var i = 0; i < data.ObjetReturn[1].length; i++)
+                            //    {
+                            //        document.getElementById("slcCiaPla").innerHTML += '<option value="' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + '">' + data.ObjetReturn[1][i].Cia_pla.Cve_cia + "-" + data.ObjetReturn[1][i].Cve_pla + " " + data.ObjetReturn[1][i].Nom_pla + '</option>';
+                            //    }
+                            //    cerrarDialogo();
+                            //    var msg = document.getElementById('DlgSlcCiaPla');
+                            //    msg.showModal();
+                            //    dialogos.push(msg);
+
+                            //}
+                            //else
+                            //{
+                            //    compañia = data.ObjetReturn[0].Cia_ucve;
+                            //    planta = data.ObjetReturn[0].Pla_ucve;
+                            //    isPlusGen = data.ObjetReturn[1][0].Nom_pla;
+                            //    setCiaPla();
+                            //}
 
                         }
                     },
@@ -278,85 +301,81 @@
                     }
 
 
-                        ///////////////////////////////////////////////
-                       
-                        //if (data.usr_usr != null && data.usr_usr != '')
-                        //{
-                        //    usuario = data;
-                        //    if (data.cia_pla == '' || data.cia_usr == '')
-                        //    {
-                                
-                        //        mensajeSweet("Perfil incompleto", "complementa tu perfil con la informacion solicitada", "info");
-                        //       document.getElementById('div_comp').style.display = 'inline';
-                        //    }
-                        //    else
-                        //    {
+                    ///////////////////////////////////////////////
 
-                                /*
-                                 <select id="slcCia"></select>
-                <label>Planta</label>
-                <select id="slcPla"></select>
-                                */
-                                //document.getElementById("slcCia").innerHTML = '';
-                                //for (var i = 0; i < data.cia_usr.trim().split(',').length; i++)
-                                //{
-                                //    document.getElementById("slcCia").innerHTML += '<option value="' + data.cia_usr.trim().split(',')[i] + '">' + data.cia_usr.trim().split(',')[i] + '</option>';
-                                //}
-                                //document.getElementById("slcPla").innerHTML = '';
-                                //for (var i = 0; i < data.pla_usr.trim().split(',').length; i++) {
-                                //    document.getElementById("slcPla").innerHTML += '<option value="' + data.pla_usr.trim().split(',')[i] + '">' + data.pla_usr.trim().split(',')[i] + '</option>';
-                                //}
+                    //if (data.usr_usr != null && data.usr_usr != '')
+                    //{
+                    //    usuario = data;
+                    //    if (data.cia_pla == '' || data.cia_usr == '')
+                    //    {
 
-                                //cerrarDialogo();
-                                //var msg = document.getElementById('DlgSlcCiaPla');
-                                //msg.showModal();
-                                //dialogos.push(msg);
+                    //        mensajeSweet("Perfil incompleto", "complementa tu perfil con la informacion solicitada", "info");
+                    //       document.getElementById('div_comp').style.display = 'inline';
+                    //    }
+                    //    else
+                    //    {
 
-                               // window.location = '/Home/Impresion';
-                //            }
+                    /*
+                     <select id="slcCia"></select>
+    <label>Planta</label>
+    <select id="slcPla"></select>
+                    */
+                    //document.getElementById("slcCia").innerHTML = '';
+                    //for (var i = 0; i < data.cia_usr.trim().split(',').length; i++)
+                    //{
+                    //    document.getElementById("slcCia").innerHTML += '<option value="' + data.cia_usr.trim().split(',')[i] + '">' + data.cia_usr.trim().split(',')[i] + '</option>';
+                    //}
+                    //document.getElementById("slcPla").innerHTML = '';
+                    //for (var i = 0; i < data.pla_usr.trim().split(',').length; i++) {
+                    //    document.getElementById("slcPla").innerHTML += '<option value="' + data.pla_usr.trim().split(',')[i] + '">' + data.pla_usr.trim().split(',')[i] + '</option>';
+                    //}
 
-                           
-                //           }
-                //        else {
-                //            mensajeSweet("Ooops", "No se encontro usuario con esas credenciales", "warning")
-                //        }
-                //    },
-                //    error: function (request, status, error) {
+                    //cerrarDialogo();
+                    //var msg = document.getElementById('DlgSlcCiaPla');
+                    //msg.showModal();
+                    //dialogos.push(msg);
 
-                //        alert(request.responseText);
-                //    }
-               });
-
-                }
-            else
-                {
-                    alert('Ingresa tu contraseña...');
-                }
+                    // window.location = '/Home/Impresion';
+                    //            }
 
 
-         }else
-         {
+                    //           }
+                    //        else {
+                    //            mensajeSweet("Ooops", "No se encontro usuario con esas credenciales", "warning")
+                    //        }
+                    //    },
+                    //    error: function (request, status, error) {
+
+                    //        alert(request.responseText);
+                    //    }
+                });
+
+            }
+            else {
+                alert('Ingresa tu contraseña...');
+            }
+
+
+        } else {
             alert("Ingresa tu usuario...");
-         }
+        }
 
 
-       
+
     }
-    function getCiaPla()
-    {
+    function getCiaPla() {
         compañia = null;
         planta = null;
         isPlusGen = $('#slcCiaPla  option:selected').text();
-        if ($('#slcCiaPla').val().toString().split('-').length==2)
-        {
+        if ($('#slcCiaPla').val().toString().split('-').length == 2) {
             compañia = $('#slcCiaPla').val().toString().split('-')[0];
             planta = $('#slcCiaPla').val().toString().split('-')[1];
         }
 
-        
+
     }
     function solitarCuenta() {
-       
+
         cerrarDialogo();
         var msg = document.getElementById('DlgPeticionUsr');
         msg.showModal();
@@ -394,16 +413,16 @@
 
 
             var datos = document.getElementById("slectservidor").value + "/" + document.getElementById("InpUsr").value + "/" + document.getElementById("InpPass").value +
-                  "/" + document.getElementById("InpEml").value + "//" + document.getElementById("InpNom").value +
-                  "// ";
+                "/" + document.getElementById("InpEml").value + "//" + document.getElementById("InpNom").value +
+                "// ";
 
 
 
 
-         
+
             $.ajax({
                 type: "POST",
-                url: "/Home/emailSolicitud/", // the method we are calling            
+                url: "/Home/emailSolicitud/", // the method we are calling
                 data: { id: datos },
                 dataType: "json",
                 success: function (result) {
@@ -416,7 +435,7 @@
                     alert('Problemas al mandar la solicitud');
                 }
             });
-           
+
 
         } catch (excepcion) {
             alert(excepcion.mensaje);
@@ -437,13 +456,10 @@
         }
 
     }
-    function compInfo()
-    {
-       
-        try
-        {
-            if($('#pla').val()=='')
-            {
+    function compInfo() {
+
+        try {
+            if ($('#pla').val() == '') {
                 mensajeSweet("Informacion incompleta", "No has colocado las plantas asociadas", "warning");
                 return;
             }
@@ -451,12 +467,12 @@
                 mensajeSweet("Informacion incompleta", "No has colocado las compañias asociadas", "warning");
                 return;
             }
-            usuario.cia_usr=$('#cia').val();
+            usuario.cia_usr = $('#cia').val();
             usuario.pla_usr = $('#pla').val();
             $.ajax({
                 type: "POST",
                 url: "/Home/uptUserLogin/",
-                data:  usuario ,
+                data: usuario,
                 datatype: "json",
                 success: function (data) {
 
@@ -490,177 +506,324 @@
         }
 
     }
-    function setCiaPla()
-    {
-        if (compañia==null || planta==null)
-        {
+    function setCiaPla() {
+        if (compañia == null || planta == null) {
             mensajeSweet("Opss", "Ingresa valores validos", "waning");
             return;
         }
-       
-            $.ajax({
-                type: "POST",
-                url: "/Home/setCiaPla/",
-                data:{ id:compañia+","+planta},
-                datatype: "json",
-                success: function (data) {
 
-                    if (data=='OK') {
-                        localStorage.setItem('cia', compañia);
-                        localStorage.setItem('pla', planta);
-                        localStorage.setItem('cias', compañia);
-                        localStorage.setItem('plas', planta);
+        $.ajax({
+            type: "POST",
+            url: "/Home/setCiaPla/",
+            data: { id: compañia + "," + planta },
+            datatype: "json",
+            success: function (data) {
 
-                        //Determiar si es plus gas o gas express
-                        //var sucursal = "";
-                        //for (var i = 0; i < plantas.length; i++)
-                        //{
-                        //    if ( plantas[i].includes($("#slcPla").val()))
-                        //    {
-                        //        sucursal = plantas[i];
-                        //    }
-                        //}
+                if (data == 'OK') {
+                    localStorage.setItem('cia', compañia);
+                    localStorage.setItem('pla', planta);
+                    localStorage.setItem('cias', compañia);
+                    localStorage.setItem('plas', planta);
 
-                        localStorage.removeItem("empresa");
-                        if (isPlusGen.toUpperCase().includes("PLUS")) {
-                            localStorage.setItem("empresa", "PLUS");
-                        } else {
-                            localStorage.setItem("empresa", "GEN");
-                        }
+                    //Determiar si es plus gas o gas express
+                    //var sucursal = "";
+                    //for (var i = 0; i < plantas.length; i++)
+                    //{
+                    //    if ( plantas[i].includes($("#slcPla").val()))
+                    //    {
+                    //        sucursal = plantas[i];
+                    //    }
+                    //}
 
-                        window.location = '/Home/Impresion';
+                    localStorage.removeItem("empresa");
+                    if (isPlusGen.toUpperCase().includes("PLUS")) {
+                        localStorage.setItem("empresa", "PLUS");
+                    } else {
+                        localStorage.setItem("empresa", "GEN");
                     }
-                    else {
-                        mensajeSweet("Ooops", "Problemas al ingresar", "warning")
-                    }
-                },
-                error: function (request, status, error) {
 
-                    alert(request.responseText);
+                    window.location = '/Home/Impresion';
                 }
-            });
+                else {
+                    mensajeSweet("Ooops", "Problemas al ingresar", "warning")
+                }
+            },
+            error: function (request, status, error) {
+
+                alert(request.responseText);
+            }
+        });
 
 
-       
+
 
     }
 </script>
 <script>
     var plantas = [
-'92-PLUS GAS EST. CARBURACION               ',
-'84-GAS EXPRESS NIETO EST. CARB. ZITACUARO  ',
-'12-GAS EXPRESS NIETO ACAMBARO, S.A. DE C.V.',
-'87-PLUS GAS ZINAPECUARO                    ',
-'29-GAS EXPRESS NIETO AGUASCALIENTES        ',
-'80-GAS EXPRESS NIETO EST. SAN PANCHO       ',
-'19-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'01-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'93-PLUS GAS                                ',
-'58-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'59-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'57-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'24-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'07-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'90-PLUS GAS SAN FELIPE                     ',
-'89-PLUS GAS DOLORES                        ',
-'66-GAS EXPRESS NIETO ACATLAN               ',
-'26-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'04-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'05-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'81-GAS EXPRESS NIETO SA DE CV (PENJAMO)    ',
-'82-GAS EXPRESS NIETO SA DE CV (SILAO Y GTO)',
-'16-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'55-GAS EXPRESS NIETO                       ',
-'14-GASEXPRESS NIETO, S.A. DE C.V.          ',
-'61-GAS EXPRESS NIETO,S.A.DE C.V.           ',
-'45-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'95-GAS EXPRESS NIETO (LAGOS DE MORENO)     ',
-'94-PLUS GAS LEON                           ',
-'20-GAS EXPRESS NIETO                       ',
-'47-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'25-GAS EXPRESS NIETO S. A. DE C. V.        ',
-'46-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'49-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'48-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'27-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'72-GAS EXPRESS NIETO EST CARB STA ROSA     ',
-'74-GAS EXPRESS NIETO SALTILLO              ',
-'73-GAS EXPRESS NIETO EST CARB TOPOCHICO    ',
-'67-GAS EXPRESS NIETO EST CARB ALLENDE      ',
-'71-GAS EXPRESS NIETO EST CARB GARCIA       ',
-'68-GAS EXPRESS NIETO EST CARB APODACA      ',
-'21-GAS EXPRESS NIETO (MONTERREY)           ',
-'69-GAS EXPRESS NIETO EST CARB STA CATARINA ',
-'70-GAS EXPRESS NIETO EST CARB GUADALUPE    ',
-'97-GAS EXPRESS NIETO (ARTEAGA COAHUILA)    ',
-'40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
-'41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
-'44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
-'09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
-'85-PLUS GAS ESTACION DE CARBURACION        ',
-'86-PLUS GAS MORELIA                        ',
-'43-GAS EXPRESS ALFAGAS, S.A. DE C.V.       ',
-'42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
-'39-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'18-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'38-GAS EXPRESS NIETO, S.A DE C.V           ',
-'37-PLUS GAS PURUANDIRO                     ',
-'91-PLUS GAS URIANGATO                      ',
-'33-GAS EXPRESS NIETO (GALERAS)             ',
-'30-GAS EXPRESS NIETO BANCHIS               ',
-'02-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'32-PLUS GAS QUERETARO                      ',
-'31-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'17-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'79-PLUS GAS, SAN LUIS DE LA PAZ            ',
-'13-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'78-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'88-PLUS GAS CAZADERO                       ',
-'06-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'22-GAS EXPRESS NIETO                       ',
-'23-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'76-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'03-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'65-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'28-GAS EXPRESS NIETO, S.A. DE C.V          ',
-'53-GAS EXPRESS NIETO, S.A DE C.V. ALVARADO ',
-'34-GAS EXPRESS NIETO, S.A. DE C.V.         ',
-'50-GAS EXPRESS NIETO S A DE C V CORDOBA    ',
-'54-GAS EXPRESS NIETO SA DE CV COSAMALOAPAN ',
-'52-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
-'10-GAS EXPRESS NIETO S.A. DE C.V. VERACRUZ ',
-'51-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
-'98-PLUS GAS VERACRUZ                       ',
-'08-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'34-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'35-GAS EXPRESS NIETO S.A. DE C.V.          ',
-'36-GAS EXPRESS NIETO SA DE CV (MARTINEZ)   ',
-'15-GAS EXPRESS NIETO,URUAPAN',
-'56-GAS EXPRESS NIETO APATZINGAN',
-'62-GAS EXPRESS NIETO EST. NUEVA ITALIA',
-'64-PLANTA TECAL',
-'60-GAS EXPRESS NIETO EST. CARB. TANCITARO',
-'77-GAS EXPRESS NIETO EST. CARB. COTIJA',
-'96-GAS EXPRESS NIETO EST. CARB. SAHUAYO',
-'63-GAS EXPRESS NIETO EST. CARB. PERIBAN',
-'09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
-'40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
-'41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
-'42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
-'85-PLUS GAS ESTACION DE CARBURACION        ',
-'86-PLUS GAS MORELIA                        ',
-'44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
+        '92-PLUS GAS EST. CARBURACION               ',
+        '84-GAS EXPRESS NIETO EST. CARB. ZITACUARO  ',
+        '12-GAS EXPRESS NIETO ACAMBARO, S.A. DE C.V.',
+        '87-PLUS GAS ZINAPECUARO                    ',
+        '29-GAS EXPRESS NIETO AGUASCALIENTES        ',
+        '80-GAS EXPRESS NIETO EST. SAN PANCHO       ',
+        '19-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '01-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '93-PLUS GAS                                ',
+        '58-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '59-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '57-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '24-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '07-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '90-PLUS GAS SAN FELIPE                     ',
+        '89-PLUS GAS DOLORES                        ',
+        '66-GAS EXPRESS NIETO ACATLAN               ',
+        '26-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '04-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '05-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '81-GAS EXPRESS NIETO SA DE CV (PENJAMO)    ',
+        '82-GAS EXPRESS NIETO SA DE CV (SILAO Y GTO)',
+        '16-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '55-GAS EXPRESS NIETO                       ',
+        '14-GASEXPRESS NIETO, S.A. DE C.V.          ',
+        '61-GAS EXPRESS NIETO,S.A.DE C.V.           ',
+        '45-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '95-GAS EXPRESS NIETO (LAGOS DE MORENO)     ',
+        '94-PLUS GAS LEON                           ',
+        '20-GAS EXPRESS NIETO                       ',
+        '47-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '25-GAS EXPRESS NIETO S. A. DE C. V.        ',
+        '46-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '49-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '48-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '27-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '72-GAS EXPRESS NIETO EST CARB STA ROSA     ',
+        '74-GAS EXPRESS NIETO SALTILLO              ',
+        '73-GAS EXPRESS NIETO EST CARB TOPOCHICO    ',
+        '67-GAS EXPRESS NIETO EST CARB ALLENDE      ',
+        '71-GAS EXPRESS NIETO EST CARB GARCIA       ',
+        '68-GAS EXPRESS NIETO EST CARB APODACA      ',
+        '21-GAS EXPRESS NIETO (MONTERREY)           ',
+        '69-GAS EXPRESS NIETO EST CARB STA CATARINA ',
+        '70-GAS EXPRESS NIETO EST CARB GUADALUPE    ',
+        '97-GAS EXPRESS NIETO (ARTEAGA COAHUILA)    ',
+        '40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
+        '41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
+        '44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
+        '09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
+        '85-PLUS GAS ESTACION DE CARBURACION        ',
+        '86-PLUS GAS MORELIA                        ',
+        '43-GAS EXPRESS ALFAGAS, S.A. DE C.V.       ',
+        '42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
+        '39-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '18-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '38-GAS EXPRESS NIETO, S.A DE C.V           ',
+        '37-PLUS GAS PURUANDIRO                     ',
+        '91-PLUS GAS URIANGATO                      ',
+        '33-GAS EXPRESS NIETO (GALERAS)             ',
+        '30-GAS EXPRESS NIETO BANCHIS               ',
+        '02-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '32-PLUS GAS QUERETARO                      ',
+        '31-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '17-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '79-PLUS GAS, SAN LUIS DE LA PAZ            ',
+        '13-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '78-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '88-PLUS GAS CAZADERO                       ',
+        '06-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '22-GAS EXPRESS NIETO                       ',
+        '23-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '76-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '03-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '65-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '28-GAS EXPRESS NIETO, S.A. DE C.V          ',
+        '53-GAS EXPRESS NIETO, S.A DE C.V. ALVARADO ',
+        '34-GAS EXPRESS NIETO, S.A. DE C.V.         ',
+        '50-GAS EXPRESS NIETO S A DE C V CORDOBA    ',
+        '54-GAS EXPRESS NIETO SA DE CV COSAMALOAPAN ',
+        '52-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
+        '10-GAS EXPRESS NIETO S.A. DE C.V. VERACRUZ ',
+        '51-GAS EXPRESS NIETO S A DE C V VERACRUZ   ',
+        '98-PLUS GAS VERACRUZ                       ',
+        '08-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '34-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '35-GAS EXPRESS NIETO S.A. DE C.V.          ',
+        '36-GAS EXPRESS NIETO SA DE CV (MARTINEZ)   ',
+        '15-GAS EXPRESS NIETO,URUAPAN',
+        '56-GAS EXPRESS NIETO APATZINGAN',
+        '62-GAS EXPRESS NIETO EST. NUEVA ITALIA',
+        '64-PLANTA TECAL',
+        '60-GAS EXPRESS NIETO EST. CARB. TANCITARO',
+        '77-GAS EXPRESS NIETO EST. CARB. COTIJA',
+        '96-GAS EXPRESS NIETO EST. CARB. SAHUAYO',
+        '63-GAS EXPRESS NIETO EST. CARB. PERIBAN',
+        '09-GAS EXPRESS MORELIA, S.A. DE C.V.       ',
+        '40-GAS EXPRESS PATZCUARO, S.A. DE C.V.     ',
+        '41-GAS EXPRESS TACAMBARO, S.A DE C.V       ',
+        '42-GAS EXPRESS ZACAPU, S.A DE C.V.         ',
+        '85-PLUS GAS ESTACION DE CARBURACION        ',
+        '86-PLUS GAS MORELIA                        ',
+        '44-GAS EXPRESS QUINCEO, S.A. DE C.V.       ',
     ];
 </script>
 <style>
-     dialog{      
+    dialog {
         color: #000;
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50px);
-        box-sizing: border-box;       
-        position: absolute;   
-        border:none;
-        border-radius:5px;    
+        box-sizing: border-box;
+        position: absolute;
+        border: none;
+        border-radius: 5px;
+    }
+
+
+    body {
+        background-image: url('../../Styles/FlexStartBoostrap/assets/img/hero-bg.png');
     }
 </style>
+<script>
+    var arr_plantas =
+
+        [
+            'Aguascalientes|29|GEN AGUASCALIENTES',
+            'Arandas|19|GEN ARANDAS',
+            'Celaya|01|GEN CELAYA',
+            'Celaya|93|PLG CELAYA',
+            'Culiacan|24|GEN CULIACAN',
+            'Culiacan|58|GEN CULIACAN',
+            'Culiacan|59|GEN CULIACAN',
+            'Dolores|07|GEN DOLORES',
+            'Dolores|89|PLG  DOLORES',
+            'Dolores|90|PLG  SAN FELIPE ',
+            'Guamuchi|26|GEN GUAMUCHIL ',
+            'Irapuato|04|HGS IRAPUATO ',
+            'Irapuato|05|GEN VALLE DE SANTIAGO',
+            'Irapuato|81|GEN PENJAMO ',
+            'Irapuato|82|GEN SILAO-GTO  ',
+            'Leon|20|GEN LEON, GUANAJUATO',
+            'Leon|95|GEN LAGOS DE MORENO ',
+            'LaPiedad|16|GEN',
+            'LaPiedad|55|GEN',
+            'Mazatlan|25|GEN MAZATLAN ',
+            'Mazatlan|46|GEN ESCUINAPA ',
+            'Mochis|27|GEN LOS MOCHIS',
+            'Mochis|48|GEN LOS MOCHIS ',
+            'Mochis|49|GEN GUASAVE ',
+            'Queretar|02|GEN QUERERETARO  ',
+            'Queretar|32|PLG QUERETARO  ',
+            'Queretar|33|GEN GALERAS ',
+            'SanJoseI|13|GEN SAN JOSE ITURBIDE ',
+            'SanJoseI|79|PLG  SAN LUIS DE LA PAZ ',
+            'SanJuan|06|GEN SAN JUAN DEL RIO ',
+            'SanJuan|88|PLG  CAZADERO',
+            'SanLuis|23|GEN SAN LUIS POTOSI ',
+            'SanLuis|76|GEN RIO VERDE ',
+            'SnMiguel|03|GEN SAN MIGUEL',
+            'Mazatlan|03|GAS NE MAZATLAN ',
+            'Tula|28|GEN ATITALAQUIA',
+            'Veracruz|10|GEN VERACRUZ ',
+            'Veracruz|34|GEN LA MANCHA ',
+            'Veracruz|50|GEN CORDOBA',
+            'Veracruz|53|GEN ALVARADO ',
+            'Veracruz|54|GEN COSAMALOAPAN',
+            'Xalapa|08|XALAPA',
+            'Xalapa|36|MARTINEZ',
+            'Xalapa|34|XALAPA',
+            'Xalapa|35|XALAPA',
+            'Acambaro|12|GEN ACAMBARO',
+            'Acambaro|84|GEN ZITACUARO',
+            'Acambaro|87|PLG ZINAPECUARO',
+            'LazaroCardenas|14|GEN',
+            'LazaroCardenas|45|GEN',
+            'Moroleon|18|GEN',
+            'Moroleon|91|PLG URIANGATO',
+            'Moroleon|37|PLG PURUANDIRO',
+            'Moroleon|38|GEN',
+            'Moroleon|39|GEN',
+            'Salvatierra|17|GEN SALVATIERRA',
+            'Morelia|43|GEN EXPRESS ALFAGAS, S.A. DE C.V.',
+            'Morelia|09|GEN EXPRESS MORELIA, S.A. DE C.V.',
+            'Morelia|40|GEN EXPRESS PATZCUARO, S.A. DE C.V.',
+            'Morelia|41|GEN EXPRESS TACAMBARO, S.A DE C.V',
+            'Morelia|42|GEN EXPRESS ZACAPU, S.A DE C.V.',
+            'Morelia|85|PLG ESTACION DE CARBURACION ',
+            'Morelia|86|PLG MORELIA',
+            'Morelia|44|GEN QUINCEO, S.A. DE C.V.',
+            'Uruapan|15|GAS EXPRESS NIETO,URUAPAN',
+            'Uruapan|56|GAS EXPRESSNIETO APATZINGAN',
+            'Uruapan|62|GAS EXPRESS NIETO EST. NUEVA ITALIA',
+            'Uruapan|64|PLANTA TECAL',
+            'Uruapan|60|GAS EXPRESS NIETO (EST.CARB.TANCITARO)',
+            'Uruapan|77|GAS EXPRESS NIETO (EST.CARB.COTIJA)',
+            'Uruapan|96|GAS EXPRESS NIETO (EST.SAHUAYO)',
+            'Uruapan|63|GAS EXPRESS NIETO EST. CARB. PERIBAN'
+        ];
+
+
+    var servers =
+        [
+            'Acambaro',
+            'Aguascalientes',
+            'Arandas',
+            'Celaya',
+            'Culiacan',
+            'Dolores',
+            'Guadalaj',
+            'Guamuchi',
+            'Irapuato',
+            'LaPiedad',
+            'LazaroCardenas',
+            'Leon',
+            'Mazatlan',
+            'Mochis',
+            'Monterrey',
+            'Morelia',
+            'Moroleon',
+            'Queretar',
+            'Salvatierra',
+            'SanJoseI',
+            'SanJuan',
+            'SanLuis',
+            'SnMiguel',
+            'Tepatitlan',
+            'Tula',
+            'Uruapan',
+            'Veracruz',
+            'Xalapa',
+            'Admin'
+        ];
+
+
+    var arrPlaRep = [
+        { planta: "01", servidor: 'Celaya' },
+        { planta: "02", servidor: 'Queretar' },
+        { planta: "03", servidor: 'SnMiguel' },
+        { planta: "04", servidor: 'Irapuato' },
+        { planta: "06", servidor: 'SanJuan' },
+        { planta: "07", servidor: 'Dolores' },
+        { planta: "08", servidor: 'Xalapa' },
+        { planta: "09", servidor: 'Morelia' },
+        { planta: "10", servidor: 'Veracruz' },
+        { planta: "12", servidor: 'Acambaro' },
+        { planta: "13", servidor: 'SanJoseI' },
+        { planta: "14", servidor: 'LazaroCardenas' },
+        { planta: "15", servidor: 'Uruapan' },
+        { planta: "16", servidor: 'LaPiedad' },
+        { planta: "17", servidor: 'Salvatierra' },
+        { planta: "18", servidor: 'Moroleon' },
+        { planta: "19", servidor: 'Arandas' },
+        { planta: "20", servidor: 'Leon' },
+        { planta: "21", servidor: 'Monterrey' },
+        { planta: "23", servidor: 'SanLuis' },
+        { planta: "24", servidor: 'Culiacan' },
+        { planta: "25", servidor: 'Mazatlan' },
+        { planta: "26", servidor: 'Guamuchi' },
+        { planta: "27", servidor: 'Mochis' },
+        { planta: "28", servidor: 'Tula' },
+        { planta: "29", servidor: 'Aguascalientes' },
+        { planta: "65", servidor: 'Tepatitlan' },
+        { planta: "66", servidor: 'Guadalaj' }
+    ];
+</script>

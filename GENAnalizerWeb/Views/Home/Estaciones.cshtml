@@ -123,7 +123,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <div id="map">
+                    <div id="map" style="height: 100vh;">
                     </div>
                    
                 </div>
@@ -216,7 +216,7 @@
     <img src="~/Images/CARGANDO.gif" style="display:inline" />
 </dialog>
 </html>
-<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
     google.load("visualization", "1", { packages: ["table", "corechart"], 'language': 'es' });
@@ -231,18 +231,18 @@
     var notasConGPS = [];
     var strIntervaloFechas;
 
-    // inicializacion de los componentes del modulo 
+    // inicializacion de los componentes del modulo
     $(document).ready(function () {
-        // colocar fechas actuales en los campos de fecha 
+        // colocar fechas actuales en los campos de fecha
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
         var today = now.getFullYear() + "-" + (month) + "-" + (day);
         $("#fecha_ini").val(today);
         $("#fecha_fin").val(today);
-   
-      
-      
+
+
+
         // desabilitar opciones si no es usuario administrador
         if (document.getElementById("serv").innerHTML.trim() != 'Admin') {
             //document.getElementById('btnToExcel').style.display = "none";
@@ -262,13 +262,13 @@
 
 
     });
+
     // inicializa el mapa en el navegador
-    function initMap() {
+      function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 20.6122835, lng: -100.4802576 },
-            zoom: 10,
+            zoom: 13,
         });
-
         var drawingManager = new google.maps.drawing.DrawingManager({
             // drawingMode: google.maps.drawing.OverlayType.MARKER,
             drawingControl: true,
@@ -282,18 +282,14 @@
         drawingManager.setMap(map);
         google.maps.event.addListener(drawingManager, 'overlaycomplete', finDraw);
 
+        map.addListener('click', function (mapsMouseEvent) {
+            if (document.getElementById('checNegocios').checked) {
+                getNegocios(mapsMouseEvent.latLng);
+            }
 
-        map.addListener('click', function (e) {
-            // 3 seconds after the center of the map has changed, pan back to the
-            // marker.
-            alert(e.latLng);
         });
-
-        //marker.addListener('click', function () {
-        //    map.setZoom(8);
-        //    map.setCenter(marker.getPosition());
-       // });
     }
+
     // evento que ocurre al finalizar el trazado de un poligono.
     function finDraw(event)
     {
@@ -308,7 +304,7 @@
         strIntervaloFechas = fecha_ini + ' - ' + fecha_fin;
 
         //document.getElementById('imgload').style.display = "inline";
-       
+
 
         //var serv = document.getElementById("serv").innerHTML.trim();
 
@@ -316,7 +312,7 @@
         //    servidoresNotas = '';
         //    // seleccionar los servidores que seran consultados por el usuario admin
         //    document.getElementById('imgload').style.display = "none";
-           
+
         //        cerrarDialogo();
         //        var msg = document.getElementById('buscarColonina');
         //        msg.showModal();
@@ -330,7 +326,7 @@
         //}
 
         //if (servidoresNotas != '') {
-       
+
             //consultar las notas
             $.ajax({
                 type: "POST",
@@ -383,19 +379,19 @@
 
         for (var i = 0; i < notas.length; i++) {
 
-            if (notas[i].pla_nvta.trim() == $('#hiddenPla').val() ) {
-              
+            if (  $('#hiddenPla').val().includes(notas[i].pla_nvta.trim()) ) {
+
                 notasEvaluar.push(notas[i]);
 
                 for (var j = 0; j < plantas.length; j++) {
                     if (plantas[j].planta == notas[i].pla_nvta) {
                         indice = plantas[j].indice;
-                        
+
                     }
-                    
+
                 }
 
-                
+
                 iconPath = "/Images/EST_PLA_"+indice+".png";
 
                 ptosLatLong = notas[i].gps_nvta.split(' ');
@@ -413,7 +409,7 @@
         }
         notasConSinGPS();
     }
-    // evento al cambiar de planta 
+    // evento al cambiar de planta
     //$(select_plantas).change(function () {
     //    dibujanotas();
     //});
@@ -433,10 +429,10 @@
             }
         }
 
-        
+
 
         document.getElementById('btnNotasAnalizar').innerText = "Notas totales para Analizar " + notasEvaluar.length;
-        document.getElementById('btnNotasSinGPS').innerText = "Notas sin GPS " + notasSinGPS.length;   
+        document.getElementById('btnNotasSinGPS').innerText = "Notas sin GPS " + notasSinGPS.length;
         document.getElementById('btnNotasConGPS').innerText = "Notas con GPS " + notasConGPS.length;
         document.getElementById('divTools').style.display = "inline";
 
@@ -454,7 +450,7 @@
                 break;
             case "btnNotasConGPS":
                 AnalizarNotas = notasConGPS;
-                break;       
+                break;
         }
 
         var noServicios = 0;
@@ -482,7 +478,7 @@
             divContenedor.style.display = "inline-block";
 
 
-           
+
             //var label = document.createElement("LABEL");
             //label.innerText = "Ruta" + rutas[i].trim();
 
@@ -510,24 +506,24 @@
 
 
 
-             
+
             for (var j = 0; j < AnalizarNotas.length; j++) {
 
                 if (AnalizarNotas[j].ruta_nvta.trim()==rutas[i].trim()) {
                     noServicios++;
                     importe = importe + parseFloat(AnalizarNotas[j].impt_nvta);
                     nolts = nolts + parseFloat(AnalizarNotas[j].tlts_nvta);
-                    
+
                 }
             }
 
-            // crear tabla api Google 
+            // crear tabla api Google
             // Tabla promedios
-           
-                           
+
+
             tablapromedios.addRow([rutas[i].trim(),noServicios + '', importe.toFixed(2) + '', nolts.toFixed(2) +''])
-            
-            
+
+
             // fin de crear tabla api google
 
 
@@ -536,7 +532,7 @@
              nolts = 0;
 
 
-           
+
 
         }
         var contenedor2 = new google.visualization.Table(document.getElementById("divReportes"));
@@ -545,12 +541,12 @@
             //var row = table3.getSelection()[0].row
         });
 
-        
+
         cierraDialog();
         muestraDialog('dialogReportes')
 
 
-      
+
 
 
 
@@ -598,14 +594,14 @@
 
         for (var i = 0; i < NotasAnalizar.length; i++) {
 
-            if (NotasAnalizar[i].fhs_nvta.trim()!='') {
+            if (NotasAnalizar[i].fhs_nvta!=null) {
                 var valoresHF = NotasAnalizar[i].fhs_nvta.split(" ");
                 horaPedido = determinaTurno(valoresHF);
                 y = parseInt(horaPedido);
                 x = parseInt(NotasAnalizar[i].dia_semana_sur.trim())
                 matrizPedidosxHrxDia[y][x]++;
             }
-           
+
         }
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'DIA');
@@ -715,9 +711,9 @@
         var chart = new google.visualization.AreaChart(document.getElementById('divReporteColRutas'));
         chart.draw(data, options);
 
-        
+
         muestraDialog('dialogReporteColRutas')
-       
+
 
     }
 
@@ -727,7 +723,7 @@
             dialogos[i].close();
         }
         dialogos = [];
-        
+
     }
     function colocarPlantas()
     {
@@ -756,7 +752,7 @@
                 }
 
             }
-            if (!rutaEncontrada && notas[i].pla_nvta.trim() == $('#hiddenPla').val()) {
+            if (! $('#hiddenPla').val().includes(rutaEncontrada && notas[i].pla_nvta.trim() )) {
                 rutas.push(notas[i].ruta_nvta.trim());
             }
             rutaEncontrada = false;
@@ -764,7 +760,7 @@
 
         plantas.sort();
         rutas.sort();
-        
+
         // colcoar las plantas
         //var x = document.getElementById("select_plantas");
         //x.innerHTML = "";
@@ -777,7 +773,7 @@
         //    x.add(option);
         //}
         // colocar las rutas
-       
+
         var y = document.getElementById("select_rutas_estaciones");
         for (var k = 0; k < rutas.length; k++) {
             var option = document.createElement("option");
@@ -826,7 +822,7 @@
         ventanaImpresion.document.write('<div id="cuerpo">');
         ventanaImpresion.document.write(ficha.innerHTML);
         ventanaImpresion.document.write('</div>');
-        ventanaImpresion.document.write('</center>');       
+        ventanaImpresion.document.write('</center>');
         ventanaImpresion.document.write('</body>');
         ventanaImpresion.document.write('</html>');
         // se agrega el css
@@ -843,16 +839,16 @@
 
         ventanaImpresion.document.write('</style>');
         // se agrega el java script
-      
+
         ventanaImpresion.document.write(jquery1 + jquery2 + jquery3);
 
         ventanaImpresion.document.write('<script type="text/javascript">');
         ventanaImpresion.document.write(' $(document).ready(function () {');
-       
+
         switch (seccion) {
 
             case "colrutas":
-                
+
                 ventanaImpresion.document.write(' document.getElementById(\'descGral\').innerText= document.getElementById(\'descReporte\').value;');
                 ventanaImpresion.document.write(' document.getElementById(\'descReporte\').style.display="none";');
                 break;
@@ -886,7 +882,7 @@
         if (!rutaConsiderada) {
             document.getElementById('colRutas').value = document.getElementById('colRutas').value + ruta + ','
         }
-        
+
 
     }
     function quitarultimaRuta() {
@@ -944,6 +940,8 @@
 
 
 </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
 <style>
 
     #divReportes{

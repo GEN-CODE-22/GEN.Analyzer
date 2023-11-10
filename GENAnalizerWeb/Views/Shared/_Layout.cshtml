@@ -43,11 +43,23 @@
         
     </header>
     @RenderBody()
-
+    
     @Scripts.Render("~/bundles/jquery")
     @RenderSection("scripts", required: false)
 </body>
+<footer id="footer" class="footer">
+    <div class="copyright">
+        
+        <br />
+        <center>
+           
+            <img src="~/Images/Temas/GENERALES/TI%20SISTEMAS%20nieto.png" style="width:20px;" />
+            Designed by TI Sistemas Nieto
+        </center>
 
+    </div>
+
+</footer>
 </html>
 <script src="~/Scripts/EquiposComputo.js"></script>
 <script src="~/Scripts/Common/MsgBroadcastPestañas.js"></script>
@@ -68,6 +80,8 @@
 <script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
 <script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
 <script>
+     $('head').append('<link rel="stylesheet" type="text/css" href="../Styles/background.css">');
+    /*
     if (localStorage.getItem("empresa") != null && localStorage.getItem("empresa") != '') {
         if (localStorage.getItem("empresa") == 'PLUS') {
             $("#image_profile").attr("src", "/Images/TEMAS/PLUS/logo_plus.png");
@@ -79,7 +93,7 @@
             $('head').append('<link rel="stylesheet" type="text/css" href="../Styles/background.css">');
 
         }
-    }
+    }*/
 </script>
 
 <style>
@@ -103,18 +117,10 @@
     }
 </style>
 
-
-
-
-
-
-
-
-
-
 <script>
     var arr_plantas =
-        [
+        
+         [
     'Aguascalientes|29|GEN AGUASCALIENTES',
     'Arandas|19|GEN ARANDAS',
     'Celaya|01|GEN CELAYA',
@@ -170,9 +176,25 @@
     'Moroleon|37|PLG PURUANDIRO',
     'Moroleon|38|GEN',
     'Moroleon|39|GEN',    
-    'Salvatierra|17|GEN SALVATIERRA'
+    'Salvatierra|17|GEN SALVATIERRA',
+    'Morelia|43|GEN EXPRESS ALFAGAS, S.A. DE C.V.',       
+    'Morelia|09|GEN EXPRESS MORELIA, S.A. DE C.V.',       
+    'Morelia|40|GEN EXPRESS PATZCUARO, S.A. DE C.V.',     
+    'Morelia|41|GEN EXPRESS TACAMBARO, S.A DE C.V',       
+    'Morelia|42|GEN EXPRESS ZACAPU, S.A DE C.V.',         
+    'Morelia|85|PLG ESTACION DE CARBURACION ',       
+    'Morelia|86|PLG MORELIA',                        
+    'Morelia|44|GEN QUINCEO, S.A. DE C.V.',
+'Uruapan|15|GAS EXPRESS NIETO,URUAPAN',               
+'Uruapan|56|GAS EXPRESSNIETO APATZINGAN',             
+'Uruapan|62|GAS EXPRESS NIETO EST. NUEVA ITALIA',     
+'Uruapan|64|PLANTA TECAL',                            
+'Uruapan|60|GAS EXPRESS NIETO (EST.CARB.TANCITARO)',  
+'Uruapan|77|GAS EXPRESS NIETO (EST.CARB.COTIJA)',     
+'Uruapan|96|GAS EXPRESS NIETO (EST.SAHUAYO)',         
+'Uruapan|63|GAS EXPRESS NIETO EST. CARB. PERIBAN'           
+         ];
 
-        ];
 
     var servers =
         [

@@ -1,0 +1,28 @@
+﻿#dropSection {
+        background: #fff;
+        border: #808080 dashed 3px;
+        height: 200px;
+        text-align: center;
+        color: #83cdee;
+        padding-top: 12px;
+       
+    }
+
+    #btnUpload {
+        display: none;
+    }
+
+    .actives {
+        background-color: #83cdee !important;
+        border: #83cdee dashed 3px;
+        
+    }
+
+.dropSection {
+    background: #fff;
+    border: #808080 dashed 3px;
+    height: 200px;
+    text-align: center;
+    color: #83cdee;
+    padding-top: 12px;
+}

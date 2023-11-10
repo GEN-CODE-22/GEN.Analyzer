@@ -34,8 +34,8 @@ namespace GENAnalizerWeb.Controllers
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
             ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
 
             // registar el ingreso al modulo
             UnitOfWorkNH u = new UnitOfWorkNH("DSN=Consolid;UID=sicogas;PWD=imponente;");
@@ -54,8 +54,8 @@ namespace GENAnalizerWeb.Controllers
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
             ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
             return View();
         }
         public ActionResult Medidores()
@@ -63,8 +63,8 @@ namespace GENAnalizerWeb.Controllers
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
             ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
             return View();
         }
         public ActionResult Negocios()
@@ -79,8 +79,8 @@ namespace GENAnalizerWeb.Controllers
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
             ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
 
             // registar el ingreso al modulo
             UnitOfWorkNH u = new UnitOfWorkNH("DSN=Consolid;UID=sicogas;PWD=imponente;");
@@ -100,7 +100,7 @@ namespace GENAnalizerWeb.Controllers
         {
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
-            ViewBag.pla = GetSesPla();
+            ViewBag.pla = GetSesPlas();
             // registar el ingreso al modulo
             UnitOfWorkNH u = new UnitOfWorkNH("DSN=Consolid;UID=sicogas;PWD=imponente;");
             ISession s = u._sessionFactory.OpenSession();
@@ -140,8 +140,8 @@ namespace GENAnalizerWeb.Controllers
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
             ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
             return View();
         }
         public ActionResult CreditoyCobranza()
@@ -170,8 +170,8 @@ namespace GENAnalizerWeb.Controllers
         {
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
 
             // registar el ingreso al modulo
             UnitOfWorkNH u = new UnitOfWorkNH("DSN=Consolid;UID=sicogas;PWD=imponente;");
@@ -209,9 +209,9 @@ namespace GENAnalizerWeb.Controllers
         {
             ViewBag.Srv = GetSesServ();
             ViewBag.Usr = GetSesUrs();
-            ViewBag.Rol = GetSesRol();
-            ViewBag.cia = GetSesCia();
-            ViewBag.pla = GetSesPla();
+            //ViewBag.Rol = GetSesRol();
+            //ViewBag.cia = GetSesCia();
+            ViewBag.pla = GetSesPlas();
 
 
             // registar el ingreso al modulo
@@ -267,7 +267,8 @@ namespace GENAnalizerWeb.Controllers
                 ISession s;
                 //if (id.paramString1.Equals("Gerente"))
                 //{
-                   u  = new UnitOfWorkNH("DSN="+id.paramSrv.Trim()+";UID=sicogas;PWD=imponente;");
+                u = new UnitOfWorkNH("DSN=Consolid;UID=sicogas;PWD=imponente;");
+                   //u  = new UnitOfWorkNH("DSN="+id.paramSrv.Trim()+";UID=sicogas;PWD=imponente;");
                    s = u._sessionFactory.OpenSession();
                    sqldir = new clsSQLDirectosService(s);
                    conexion = new clConexionBLL();
@@ -276,7 +277,12 @@ namespace GENAnalizerWeb.Controllers
                    
                    if (!respuesta.iconMessage.Equals("success"))
                        return  Json(respuesta);
-                   
+
+
+                   if (id.paramSrv.Equals("Celaya"))
+                   {
+                      
+                   }
 
                    //lstUsrAnr.Add( conexion.userLoginBLL(sqldir, id));
                    //if (lstUsrAnr.Count>0)
@@ -303,9 +309,10 @@ namespace GENAnalizerWeb.Controllers
                 
                
                     Session["DSN"] = id.paramSrv; //serv.Split(',')[0].Trim();
-                    Session["rol"] = ((GEN.ETY.clsUsuarioModel)((List<object>) respuesta.ObjetReturn)[0]).Tpu_ucve;//serv.Split(',')[1].Trim();
-                    Session["usr"] = ((GEN.ETY.clsUsuarioModel)((List<object>)respuesta.ObjetReturn)[0]).Nom_ucve;//lstUsrAnr[0].usr_usr;//id.paramUsr;
-                    Session["pwd"] = ((GEN.ETY.clsUsuarioModel)((List<object>)respuesta.ObjetReturn)[0]).Pas_ucve;//id.paramPwd;
+                    Session["rol"] = ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).rol_usr.Trim();//serv.Split(',')[1].Trim();
+                    Session["usr"] = ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).nom_usr;//lstUsrAnr[0].usr_usr;//id.paramUsr;
+                    Session["pwd"] = ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).pwd_usr;//id.paramPwd;
+                    Session["pla_anr"] = ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).pla_usr;
 
                     // crear las cookies
                     //HttpCookie servCookie = new HttpCookie("servCookie", serv.Split(',')[0]);
@@ -314,24 +321,28 @@ namespace GENAnalizerWeb.Controllers
                     ControllerContext.HttpContext.Response.SetCookie(servCookie);
 
                     //HttpCookie usrCookie = new HttpCookie("usrCookie", id.paramUsr);
-                    HttpCookie usrCookie = new HttpCookie("usrCookie", ((GEN.ETY.clsUsuarioModel)((List<object>)respuesta.ObjetReturn)[0]).Nom_ucve);
+                    HttpCookie usrCookie = new HttpCookie("usrCookie", ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).nom_usr);
                     //usrCookie.Expires = DateTime.Now.AddMinutes(360.0);
                     ControllerContext.HttpContext.Response.SetCookie(usrCookie);
 
                     //HttpCookie rolCookie = new HttpCookie("rolCookie", serv.Split(',')[1]);
-                    HttpCookie rolCookie = new HttpCookie("rolCookie", ((GEN.ETY.clsUsuarioModel)((List<object>) respuesta.ObjetReturn)[0]).Tpu_ucve);
+                    HttpCookie rolCookie = new HttpCookie("rolCookie", ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).rol_usr);
                     //rolCookie.Expires = DateTime.Now.AddMinutes(360.0);
                     ControllerContext.HttpContext.Response.SetCookie(rolCookie);
 
                     //HttpCookie pwdCookie = new HttpCookie("pwdCookie",id.paramPwd);
-                    HttpCookie pwdCookie = new HttpCookie("pwdCookie",((GEN.ETY.clsUsuarioModel)((List<object>)respuesta.ObjetReturn)[0]).Pas_ucve);
+                    HttpCookie pwdCookie = new HttpCookie("pwdCookie", ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).pwd_usr);
+                    //rolCookie.Expires = DateTime.Now.AddMinutes(360.0);
+                    ControllerContext.HttpContext.Response.SetCookie(pwdCookie);
+
+                    HttpCookie plaCookie = new HttpCookie("pla_anrCookie", ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).pla_usr);
                     //rolCookie.Expires = DateTime.Now.AddMinutes(360.0);
                     ControllerContext.HttpContext.Response.SetCookie(pwdCookie);
                    
                     // registrar el logeo;
                     clParametros param = new clParametros();
                     param.paramSrv = id.paramSrv;
-                    param.paramUsr = ((GEN.ETY.clsUsuarioModel)((List<object>)respuesta.ObjetReturn)[0]).Nom_ucve; ;
+                    param.paramUsr = ((clsUsuarios)((List<object>)respuesta.ObjetReturn)[0]).nom_usr;
                     param.paramString1 = "Login";
 
 
@@ -821,6 +832,7 @@ namespace GENAnalizerWeb.Controllers
                  u = new UnitOfWorkNH("DSN="+id.paramSrv+";UID=sicogas;PWD=imponente;");
                  s = u._sessionFactory.OpenSession();
                  sqldir = new clsSQLDirectosService(s);
+                 id.paramCia = "15";
                  li = conexion.getRutasByCiaPla(sqldir,id);
 
 
@@ -835,7 +847,7 @@ namespace GENAnalizerWeb.Controllers
             {
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\log\LogAnr.txt", true))
                 {
-                    file.WriteLine(string.Format("Generado al consultar los pedidos de: {2}{0}{1}", DateTime.Now, ex, id.paramSrv));
+                    file.WriteLine(string.Format("Generado al consultar los pedidos de: {2}{0}{1}", DateTime.Now, ex.Message, id.paramSrv));
                 }
                 throw new Exception(string.Format("respuesta: {0}{1}", ex.Message, DateTime.Now));
                 // throw new Exception("error", ex);
@@ -857,7 +869,7 @@ namespace GENAnalizerWeb.Controllers
             {
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\log\LogAnr.txt", true))
                 {
-                    file.WriteLine(string.Format("Generado al  ingresos de modulo: {2}{0}{1}", DateTime.Now, ex, id.paramSrv));
+                    file.WriteLine(string.Format("Generado al  ingresos de modulo: {2}{0}{1}", DateTime.Now, ex.Message, id.paramSrv));
                 }
                 throw new Exception(string.Format("respuesta: {0}{1}", ex.Message, DateTime.Now));
                 // throw new Exception("error", ex);
@@ -1150,12 +1162,14 @@ namespace GENAnalizerWeb.Controllers
             Decimal descuento = 0;
             try
             {
+
                 GEN.ETY.Cartera.clsGrupoCartera cartera = new GEN.ETY.Cartera.clsGrupoCartera();
                 //agregar cache
                   var cache = MemoryCache.Default;
                   if (cache.Get(id.paramSrv.Trim() + id.fechaI.Year + "_" + id.fechaI.Month) == null)
                    {
-                    u = new UnitOfWorkNH("DSN=genctral;UID=root;PWD=gint230;");
+                       u = new UnitOfWorkNH("DSN=genctral;UID=sicogas;PWD=imponente;");
+                    //u = new UnitOfWorkNH("DSN=genctral;UID=root;PWD=gint230;");
                     s = u._sessionFactory.OpenSession();
 
                     clsFilter fil = new clsFilter();
@@ -1407,6 +1421,8 @@ namespace GENAnalizerWeb.Controllers
             return strPwd;
         }
 
+        
+
         public string GetSesCia()
         {
             string strPwd = string.Empty;
@@ -1434,6 +1450,24 @@ namespace GENAnalizerWeb.Controllers
             catch (Exception ex)
             {
                 var c = ControllerContext.HttpContext.Request.Cookies["plaCookie"];
+                if (c != null)
+                {
+                    strPwd = c.Value;
+                }
+            }
+            return strPwd;
+        }
+
+         public string GetSesPlas()
+        {
+            string strPwd = string.Empty;
+            try
+            {
+                strPwd = Session["pla_anr"].ToString();
+            }
+            catch (Exception ex)
+            {
+                var c = ControllerContext.HttpContext.Request.Cookies["pla_anrCookie"];
                 if (c != null)
                 {
                     strPwd = c.Value;

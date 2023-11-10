@@ -78,12 +78,13 @@
                                 <label id="serv" style="display:none;">@ViewBag.Srv</label>
                                 <label id="usr" style="display:none;">@ViewBag.Usr</label>
                                 <label id="rol" style="display:none;">@ViewBag.Rol</label>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                                @*<span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>*@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
+                             
                                 <i class="far fa-user" style="margin-left:15px"></i>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
@@ -227,7 +228,12 @@
                                 <label>USO DE NOTA DE VENTA</label>
                                 <div class="tablasresumen" id="tblAnalisisUsoNvta"></div><br />
                             </center>
-                        </div>  <br />
+                        </div> 
+                        <br />
+                        <label>NOTAS POR RUTA</label> 
+                        <div id="NotasxRuta">
+                        </div>
+                        <br />
                         <!--divs de graficas-->
                         <div style="float:left;width: 50%;" id="grfVtaTipSer"></div><br />
                         <div style="float:left;width: 50%;" id="grfTipServ"></div><br /><br />
@@ -237,6 +243,9 @@
                         <div style="float:left;width: 50%;" id="grfAnalisisDiaSemana"></div><br /><br />
                         <div style="float:left;width: 50%;" id="grfAnalisisDiaSemanaSur"></div><br /><br />
 
+                        <br />
+
+                        
                         <div class="tablasresumen">
                             <center>
 
@@ -268,9 +277,9 @@
 
                     </tr>
                 </table>
-                
-                   
-                    
+
+
+            </dialog>      
                    
                     
                     
@@ -698,6 +707,8 @@
                 </div>
                 <div class="modal-body card">
                     <center>
+                        <label style="margin-left:50px"> PLANTAS: </label>
+                        <select id="select_plantas_Geo" class="form-control"></select>
                         <label style="margin-left:50px"> TURNOS GEOCERCAS : </label>
                         <div style="width:100%">
                             <div style="display:inline-block; width:49%">
@@ -766,7 +777,8 @@
 
 
 </html>
-<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
+
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
 <script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
@@ -812,8 +824,12 @@
 
     var geoCircle = [];          //Contiene la coleccion de circulos dibujados en el mapa
     var km_m = 1000;
-    var negocios = [];           //Contine los negicios tras llamar la api de INEGI 
+    var negocios = [];           //Contine los negicios tras llamar la api de INEGI
     var negociosEnMapa = [];     // contiene los negocios dibujados en el mapa
+
+    var listPlantas = [];
+
+    var notasEnMapa=[];
 
     $(document).ready(function () {
         document.getElementById('header_layout').style.display = "none";
@@ -835,45 +851,23 @@
         }
         //obtener las geocercas dependiendo del servidor
         //geocercas = JSON.parse(localStorage.getItem('geocercas'));
-        var geopAux=JSON.parse(localStorage.getItem('geocercaP'));
-        var geocAux = JSON.parse(localStorage.getItem('geocercaC'));
+        var geopAux = JSON.parse(localStorage.getItem('geocercaP'));
+        var geocAux =  JSON.parse(sessionStorage.getItem("geocercaC"));
+        //var geocAux = JSON.parse(localStorage.getItem('geocercaC'));
+
+        listPlantas = JSON.parse(localStorage.getItem('lista-plantas'));
         for (var i = 0; i < geopAux.length; i++) {
             geocercas.push(geopAux[i]);
         }
         for (var i = 0; i < geocAux.length; i++) {
             geocercas.push(geocAux[i]);
         }
-       
+
         guardaServidores();
         dibujaGeocercas();
         getLastDayNotes();
         colocaPlantas();
 
-        //$.ajax({
-        //    type: "POST",
-        //    url: "/Home/getGeocercas/",
-        //    data: { paramSrv: document.getElementById('serv').innerHTML },
-        //    datatype: "json",
-        //    success: function (data) {
-
-        //        if (data.length > 0) {
-        //            document.getElementById('geoload').style.display = "none";
-        //            geocercas = data;
-        //            guardaServidores();
-        //            dibujaGeocercas();
-        //            getLastDayNotes();
-
-        //        }
-        //        else {
-        //            document.getElementById('geoload').style.display = "none";
-        //            alert("No existe información de geocercas en el servidor ingresado");
-        //        }
-        //    },
-        //    error: function (request, status, error) {
-
-        //        alert(request.responseText);
-        //    }
-        //});
         // obtener los estados y los indices de sus colonias
         $.ajax({
             type: "POST",
@@ -966,45 +960,61 @@
 
 
 
-
-
-
-
-
-
-
-
     }
     // asignacion de plantas en el control delect
     function colocaPlantas() {
 
+
+        var pla_usr = (JSON.parse(localStorage.getItem('pla_usr')).split(","));
         //agregar los elementos a  la lista desplegable
         document.getElementById('select_plantas').length = 0;
         // vaciar el arreglo de color por planta
         icon_planta = [];
         var index_icon = 1;
         select = document.getElementById('select_plantas');
+        select_geo=document.getElementById('select_plantas_Geo');
         select.lenght = 0;
         // colocar la opcion de Todas por defaul
-        //var opt = document.createElement('option');
-        //opt.innerHTML = 'Todas' + '-' + '';
-        //select.appendChild(opt);
+        var opt = document.createElement('option');
+        opt.innerHTML = 'Todas' + '-' + '';
+        select.appendChild(opt);
 
 
 
-        if (document.getElementById('serv').innerHTML.trim() != 'Admin') {
-            for (var i = 0; i < arr_plantas.length; i++) {
-                var arr_valores = arr_plantas[i].split("|");
+        if (document.getElementById('serv').innerHTML.trim() != 'Admin')
+        {
+
+            for (var i = 0; i < listPlantas.length; i++)
+            {
+                //var arr_valores = arr_plantas[i].split("|");
                 //hiddenPla
                 //if (document.getElementById('serv').innerHTML.toUpperCase().trim() == arr_valores[0].trim().toUpperCase().trim()) {
-                if (document.getElementById('hiddenPla').value == arr_valores[1].trim().toUpperCase().trim()) {
-                    var opt = document.createElement('option');
-                    opt.value = i;
-                    opt.innerHTML = arr_valores[1] + '-(' + arr_valores[0] + ')' + arr_valores[2];
-                    select.appendChild(opt);
-                    icon_planta.push({ indiceColor: index_icon, planta: arr_valores[1].trim() });
-                    index_icon++;
+                //if (document.getElementById('hiddenPla').value == arr_valores[1].trim().toUpperCase().trim())
+                //{
+
+                for (var j = 0; j < pla_usr.length; j++)
+                {
+                    if (pla_usr[j].trim()==listPlantas[i].Cve_pla.trim())
+                    {
+                        var opt = document.createElement('option');
+                        opt.value = i;
+                        opt.innerHTML = listPlantas[i].Cve_pla + '-(' + listPlantas[i].Nom_pla + ')';
+                        select.appendChild(opt);
+
+                       var opt_geo = document.createElement('option');
+                        opt_geo.value = i;
+                        opt_geo.innerHTML = listPlantas[i].Cve_pla + '-(' + listPlantas[i].Nom_pla + ')';
+                        select_geo.appendChild(opt_geo);
+
+                        break;
+                    }
+
                 }
+
+
+                    //icon_planta.push({ indiceColor: index_icon, planta: arr_valores[1].trim() });
+                    //index_icon++;
+                //}
 
             }
         }
@@ -1047,7 +1057,7 @@
         var valores = txtSelec.split('-');
         llenaRutas(valores[0].trim());
         planta = valores[0].trim();
-        dibujaGeocercas();
+        //dibujaGeocercas();
         if (ped_rut == "RUTAS") {
             limpiarMarcadores();
 
@@ -1066,11 +1076,17 @@
         dibujaGeocercas();
     });
     //Dibujar las geocercas
-    function dibujaGeocercas() {
+    function dibujaGeocercas()
+    {
+     var txtSelec = $("#select_plantas_Geo option:selected").text();
+        var ped_rut = $("#accion option:selected").text();
+        var valores = txtSelec.split('-');
+        llenaRutas(valores[0].trim());
+        var pla_geo= valores[0].trim();
 
         quitarGeocercas();
         for (var i = 0; i < geocercas.length; i++) {
-            if (planta == geocercas[i].pla_geo.trim()) {
+            if (pla_geo == geocercas[i].pla_geo.trim()) {
                 var puntos = geocercas[i].puntos_geo.trim();
                 var coordenadas = puntos.split('),(');
                 var poligon = [];
@@ -1458,7 +1474,8 @@
 
     });
     //cambia los div para consultar pedidos o informacion de las rutas
-    $(accion).change(function () {
+    $(accion).change(function ()
+    {
         var txtSelec = $("#accion option:selected").text();
         //ViewBag.Srv
         //confirm('has cambiado de opcion ')
@@ -1491,24 +1508,29 @@
         }
     }
     // acciones al seleccionar una ruta
-    $(rutas).change(function () {
+    $(rutas).change(function ()
+    {
+
+        notasEnMapa=[];
         var nombre_ruta = $("#rutas option:selected").text();
 
-        //quitarRutas();
+        quitarRutas();
 
         //inicio de remarcar
         var txtSelec = $("#select_plantas option:selected").text();
         var valores = txtSelec.split("-");
         var planta_seleccionada = valores[0].trim();
-        for (var i = 0; i < geocercas.length; i++) {
+        for (var i = 0; i < geocercas.length; i++)
+    {
             if (planta_seleccionada == geocercas[i].pla_geo.trim() & geocercas[i].nom_geo.trim() == nombre_ruta.trim()) {
                 var puntos = geocercas[i].puntos_geo.trim();
                 var coordenadas = puntos.split('),(');
                 var poligon = [];
                 var lonlat;
-                var point;
+                var point=null;
                 // obtener las coredenadas en areglo
-                for (var j = 0; j < coordenadas.length; j++) {
+                for (var j = 0; j < coordenadas.length; j++)
+                {
                     coordenadas[j] = coordenadas[j].replace('(', '');
                     coordenadas[j] = coordenadas[j].replace(')', '');
                     lonlat = coordenadas[j].split(",");
@@ -1599,7 +1621,7 @@
                         {
                             NotasProblemasGPS.push(notas[i]);
                         }
-                       
+
                     }
 
 
@@ -1720,7 +1742,7 @@
     }
     // obtiene conjunto de notas deacuerdo el servidor o servidores y las fechas.
     function getNotas() {
-        
+
        // $('#cargaNotas').modal('hide');
         var fecha_ini = document.getElementById("fecha_ini").value;
         var fecha_fin = document.getElementById("fecha_fin").value;
@@ -1742,7 +1764,7 @@
         }
 
         if (servidoresNotas != '') {
-            colocaPlantas();
+            //colocaPlantas();
             limpiarMarcadores();
             limpiarHeatmaps();
 
@@ -1753,23 +1775,23 @@
                 url: "/Home/getNotas/",
                 data: { paramSrv: servidoresNotas.toLowerCase(), fechaI: fecha_ini, fechaF: fecha_fin },
                 beforeSend: function (objeto) {
-                    
+
                     document.getElementById('btnInfoServer').innerHTML = '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Consultando...';
-                   
+
 
                 },
                 complete: function () {
                     document.getElementById('btnInfoServer').innerHTML = 'Consultar Notas';
-                    
-                   
-                    
+
+
+
                 },
                 datatype: "json",
                 success: function (data) {
 
                     if (data.length > 0) {
-                        
-                       
+
+
                         notas = [];
                         notas = data;
                         document.getElementById('filtros').style.display = "inline"
@@ -1779,6 +1801,7 @@
                         muestraIconos();
 
                         document.getElementById("input_servidores").value = "";
+                        mensajeSweet("",data.length +"Notas consultadas", "success")
                     }
                     else {
                         alert("No existen notas en el (los) servidor (es) consultado (s) en ese intervalo de fechas");
@@ -1819,23 +1842,25 @@
       'rgba(191, 0, 31, 1)',
       'rgba(255, 0, 0, 1)']; // muestra el color de presencia de  los estacionarios
         var heatmapcil, heatmapest;
-        var punto;
+        var punto=null;
         heatMapDataCil.length = 0;
         heatMapDataEst.length = 0;
         limpiarMarcadores();
         limpiarHeatmaps();
+
+        notasEnMapa=[];
+
         if (notas.length <= 0)
         {
-            mensajeSweet("Ooops", "No existe informacion de notas de venta cargada.", "info");
+            //mensajeSweet("Ooops", "No existe informacion de notas de venta cargada.", "info");
             //alert("No existe informacion de notas de venta cargada.");
         }
         else {
             var iconPath = "";
-            for (var i = 0; i < notas.length; i++) {
-                if (notas[i].tip_nvta.trim() != 'F' && notas[i].tip_nvta.trim() != 'T') {
-    
-                
-
+            for (var i = 0; i < notas.length; i++)
+            {
+                if (notas[i].tip_nvta.trim() != 'F' && notas[i].tip_nvta.trim() != 'T')
+                {
                 if (notas[i].gps_nvta != null & notas[i].gps_nvta.trim().length > 2 & notas[i].pla_nvta.trim() == planta || planta == 'Todas') {
                     //si esta seleccionado el check de presencia (mapa de calor)entra al if
                     if (pre) {
@@ -1844,7 +1869,9 @@
                             switch (notas[i].tip_nvta.trim()) {
                                 case "C":
                                     ptosLatLong = notas[i].gps_nvta.split(' ');
-                                    if (ptosLatLong.length == 2) {
+                                    if (ptosLatLong.length == 2)
+                                     {
+                                        notasEnMapa.push(notas[i]);
                                         heatMapDataCil.push(new google.maps.LatLng(parseFloat(ptosLatLong[0]), parseFloat(ptosLatLong[1])));
                                         point = new google.maps.LatLng(parseFloat(ptosLatLong[0]), parseFloat(ptosLatLong[1]));
                                     }
@@ -1852,7 +1879,9 @@
                                     break;
                                 case "E":
                                     ptosLatLong = notas[i].gps_nvta.split(' ');
-                                    if (ptosLatLong.length == 2) {
+                                    if (ptosLatLong.length == 2)
+                                    {
+                                        notasEnMapa.push(notas[i]);
                                         heatMapDataEst.push(new google.maps.LatLng(parseFloat(ptosLatLong[0]), parseFloat(ptosLatLong[1])));
                                         point = new google.maps.LatLng(parseFloat(ptosLatLong[0]), parseFloat(ptosLatLong[1]));
                                     }
@@ -1861,7 +1890,11 @@
                         }
                     }
                     else {
-                        if (determinarMuestreoMarker(notas[i], formaGraficar)) {
+                        if (determinarMuestreoMarker(notas[i], formaGraficar))
+                           {
+
+                             notasEnMapa.push(notas[i]);
+
                             ptosLatLong = notas[i].gps_nvta.split(' ');
                             //determinar el icono a usar
                             switch (formaGraficar) {
@@ -1895,7 +1928,8 @@
 
                             if (planta == 'Todas') {
 
-                                for (var m = 0; m < icon_planta.length; m++) {
+                                for (var m = 0; m < icon_planta.length; m++)
+                                {
                                     //icon_planta.push({ indiceColor: index_icon, planta: arr_valores[1].trim() });
                                     if (icon_planta[m].planta.trim() == notas[i].pla_nvta.trim()) {
 
@@ -1922,11 +1956,16 @@
                             var marker = new google.maps.Marker({
                                 position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
                                 map: map,
-                                title: 'PLANTA:' + notas[i].pla_nvta + 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fes_nvta,
+                                title: 'PLANTA:' + notas[i].pla_nvta + 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fhs_nvta
+,
                                 icon: iconPath,
                                 html: ''
                             });
                             point = new google.maps.LatLng(parseFloat(ptosLatLong[0]), parseFloat(ptosLatLong[1]));
+
+                            if (point != null) {
+                                map.setCenter(point);
+                            }
 
                             arr_marcadores.push(marker);
                             // crear informacion para mostrar en un evento del marcador
@@ -1944,7 +1983,8 @@
             }
             // centrar el mapa en el punto de venta
 
-            map.setCenter(point);
+
+
 
             if (pre) {
                 // agregar el heatmap de cilindros
@@ -2453,28 +2493,30 @@
         //alert(poligonoLibre);
         polygonDrawin = new google.maps.Polygon({ path: new google.maps.MVCArray(event.overlay.getPath().getArray()) });
         notas_analisis = [];
-        if (notas != null) {
-            if (notas.length > 0) {
+        if (notasEnMapa != null)
+        {
+            if (notasEnMapa.length > 0)
+              {
                 if (ped_rut == "PEDIDOS") {
-                    for (var i = 0; i < notas.length; i++) {
-                        if (notas[i].gps_nvta != null && notas[i].gps_nvta.trim().split(' ').length >= 2) {
-                            var putosgps = notas[i].gps_nvta.trim().split(' ');
+                    for (var i = 0; i < notasEnMapa.length; i++) {
+                        if (notasEnMapa[i].gps_nvta != null && notasEnMapa[i].gps_nvta.trim().split(' ').length >= 2) {
+                            var putosgps = notasEnMapa[i].gps_nvta.trim().split(' ');
                             var point1 = new google.maps.LatLng(parseFloat(putosgps[0].trim()), parseFloat(putosgps[1].trim()));
-                            if ((google.maps.geometry.poly.containsLocation(point1, polygonDrawin) & planta.trim() == notas[i].pla_nvta.trim()) || (planta == 'Todas' & google.maps.geometry.poly.containsLocation(point1, polygonDrawin)))
-                                if (determinarMuestreoMarker(notas[i], formaInfo))
-                                    notas_analisis.push(notas[i]);
+                            if ((google.maps.geometry.poly.containsLocation(point1, polygonDrawin) & planta.trim() == notasEnMapa[i].pla_nvta.trim()) || (planta == 'Todas' & google.maps.geometry.poly.containsLocation(point1, polygonDrawin)))
+                                if (determinarMuestreoMarker(notasEnMapa[i], formaInfo))
+                                    notas_analisis.push(notasEnMapa[i]);
                         }
 
                     }
                 }
                 else {
-                    for (var i = 0; i < notasRuta.length; i++) {
-                        if (notasRuta[i].gps_nvta != null && notasRuta[i].gps_nvta.trim().split(' ').length > 2) {
-                            var putosgps = notasRuta[i].gps_nvta.trim().split(' ');
+                    for (var i = 0; i < notasEnMapa.length; i++) {
+                        if (notasEnMapa[i].gps_nvta != null && notasEnMapa[i].gps_nvta.trim().split(' ').length >= 2) {
+                            var putosgps = notasEnMapa[i].gps_nvta.trim().split(' ');
                             var point1 = new google.maps.LatLng(parseFloat(putosgps[0].trim()), parseFloat(putosgps[1].trim()));
-                            if (google.maps.geometry.poly.containsLocation(point1, polygonDrawin) & planta.trim() == notasRuta[i].pla_nvta.trim())
-                                if (determinarMuestreoMarker(notasRuta[i], formaInfo))
-                                    notas_analisis.push(notasRuta[i]);
+                            if (google.maps.geometry.poly.containsLocation(point1, polygonDrawin) & planta.trim() == notasEnMapa[i].pla_nvta.trim())
+                                if (determinarMuestreoMarker(notasEnMapa[i], formaInfo))
+                                    notas_analisis.push(notasEnMapa[i]);
                         }
 
                     }
@@ -3075,11 +3117,11 @@
                 notasByPla.push(notas[i]);
                 if (notas[i].gps_nvta.trim() == '' | notas[i].gps_nvta == null)
                     notasSinGPS.push(notas[i]);
-               
+
                 else
                     notasConGps++;
             }
-          
+
         }
         document.getElementById("notassingps").innerHTML = 'No de notas sin GPS: ' + notasSinGPS.length;
         document.getElementById("notascongps").innerHTML = 'No de notas con GPS: ' + notasConGps;
@@ -3172,8 +3214,12 @@
             var iconPath = "";
             for (var i = 0; i < notas.length; i++) {
 
-                if (notas[i].gps_nvta != null & notas[i].gps_nvta.trim().length > 2 & notas[i].pla_nvta.trim() == planta & notas[i].ruta_nvta.trim() == ruta.trim()) {
+                if (notas[i].gps_nvta != null & notas[i].gps_nvta.trim().length > 2 & notas[i].pla_nvta.trim() == planta & notas[i].ruta_nvta.trim() == ruta.trim())
+                   {
+
                     notasRuta.push(notas[i]);
+                    notasEnMapa.push(notas[i]);
+
                     //si esta seleccionado el check de presencia (mapa de calor)entra al if
                     if (pre) {
 
@@ -3224,7 +3270,7 @@
                             var marker = new google.maps.Marker({
                                 position: { lat: parseFloat(ptosLatLong[0]), lng: parseFloat(ptosLatLong[1]) },
                                 map: map,
-                                title: 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fes_nvta,
+                                title: 'RUTA:' + notas[i].ruta_nvta + '  L/kg:' + notas[i].tlts_nvta + '  IMPORTE:' + notas[i].impt_nvta + ' FECHA:' + notas[i].fhs_nvta,
                                 icon: iconPath,
                                 html: ''
                             });
@@ -4210,11 +4256,36 @@
         var ImpPan = 0, NotasPan = 0, kilosPan = 0;
         var ImpEju = 0, NotasEju = 0, kilosEju = 0;
         var ImpPlg = 0, NotasPlg = 0, kilosPlg = 0;
+        // NotasxRuta
+        //Variables de nota por ruta
+        var arrNotasXRutas = [];
+        var encontrado = false;
+        for (var i = 0; i < notas.length; i++)
+        {
+
+            //Obtener numero de notas por ruta
+            encontrado = false;
+            for (var r = 0; r < arrNotasXRutas.length; r++)
+            {
+                if (arrNotasXRutas[r].ruta.trim() == notas[i].ruta_nvta.trim())
+                {
+                    arrNotasXRutas[r].notas += 1;
+                    encontrado = true;
+
+                    break;
+                }
+            }
+            if (!encontrado)
+            {
+                arrNotasXRutas.push({ ruta: notas[i].ruta_nvta.trim(), notas: 1 });
+            }
+
+            if ((notas[i].tip_nvta.trim() == 'E' | (notas[i].tip_nvta.trim() == 'C') | (notas[i].tip_nvta.trim() == 'B')))
+            {
 
 
-        for (var i = 0; i < notas.length; i++) {
 
-            if ((notas[i].tip_nvta.trim() == 'E' | (notas[i].tip_nvta.trim() == 'C') | (notas[i].tip_nvta.trim() == 'B'))) {
+
 
                 totalNotasVta++;
                 sumaImp = sumaImp + parseFloat(notas[i].impt_nvta.trim());
@@ -4525,9 +4596,6 @@
                             break;
                     }
                     break;
-
-
-
             }//FIN SWITH
 
             // se analisa los usos
@@ -4694,11 +4762,6 @@
                     }
                     break;
             }
-
-
-
-
-
         }// FIN FOR
 
         var mystyles = { Rows: 'mystyle1' };
@@ -4729,7 +4792,9 @@
             tablaresumen.addRow(['Prom $ por nota  Est', '' + '$ ' + new Intl.NumberFormat('es-MX').format((sumaImpEst.toFixed(2) / notasEst).toFixed(2)) + '']);
 
             var contenedor = new google.visualization.Table(tblAnalisiGral);
-            contenedor.draw(tablaresumen, { allowHtml: true, showRowNumber: false, chartArea: {
+            contenedor.draw(tablaresumen, {
+                allowHtml: true, showRowNumber: false, chartArea:
+                    {
                 // leave room for y-axis labels
                 width: '100%'
             },
@@ -4741,9 +4806,10 @@
             google.visualization.events.addListener(contenedor, 'select', function () {
                 //var row = table3.getSelection()[0].row
             });
-
-
         }
+
+
+
 
         // Tabla Tip_nvta
         var tablatipnvta = new google.visualization.DataTable();
@@ -4754,8 +4820,6 @@
         tablatipnvta.addColumn('string', 'Imp prom');
         tablatipnvta.addColumn('string', 'Kg´s prom');
         tablatipnvta.addColumn('string', '%');
-
-
 
         tablatipnvta.addRow(['Donaciones kg ', '' + new Intl.NumberFormat('es-MX').format(impdonkg.toFixed(2)), new Intl.NumberFormat('es-MX').format(contdonkg) + '', '' + new Intl.NumberFormat('es-MX').format(donkg.toFixed(2)), '' + new Intl.NumberFormat('es-MX').format((impdonkg.toFixed(2) / contdonkg).toFixed(2)), '' + new Intl.NumberFormat('es-MX').format((donkg.toFixed(2) / contdonkg).toFixed(2)), '' + ((100 * contdonkg) / notas.length).toFixed(2)]);
         tablatipnvta.addRow(['Donaciones lt ', '' + new Intl.NumberFormat('es-MX').format(impdonlt.toFixed(2)), new Intl.NumberFormat('es-MX').format(contdonlt) + '', '' + new Intl.NumberFormat('es-MX').format(donlt.toFixed(2)), '' + new Intl.NumberFormat('es-MX').format((impdonlt.toFixed(2) / contdonkg).toFixed(2)), '' + new Intl.NumberFormat('es-MX').format((donlt.toFixed(2) / contdonlt).toFixed(2)), '' + ((100 * contdonlt) / notas.length).toFixed(2)]);
@@ -4882,6 +4946,35 @@
         google.visualization.events.addListener(contenedor5, 'select', function () {
             //var row = table3.getSelection()[0].row
         });
+
+        //Tabla cantidad de notas
+        //varibles de tipo de uso
+        var tblsNotasXruta = new google.visualization.DataTable();
+        tblsNotasXruta.addColumn('string', 'Ruta');
+        tblsNotasXruta.addColumn('string', 'No Notas');
+
+
+        for (var r = 0; r < arrNotasXRutas.length;r++)
+        {
+            tblsNotasXruta.addRow([arrNotasXRutas[r].ruta, arrNotasXRutas[r].notas+'']);
+
+        }
+
+
+        var contenedor6 = new google.visualization.Table(NotasxRuta);
+        contenedor6.draw(tblsNotasXruta, {
+            allowHtml: true, showRowNumber: false, chartArea: {
+                // leave room for y-axis labels
+                width: '100%'
+            },
+            legend: {
+                position: 'top'
+            },
+            width: '100%'
+        });
+        //google.visualization.events.addListener(contenedor5, 'select', function () {
+        //    //var row = table3.getSelection()[0].row
+        //});
 
 
         // analsis de frecuencia de pedidos por dia de la semana.
@@ -5129,7 +5222,7 @@
             strokeOpacity: 0.9,
             strokeWeight: 2,
             fillColor: "#FF0000",
-            fillOpacity: 0.0,           
+            fillOpacity: 0.0,
             center: latlg,
             radius: $('#inpKmM').val() * km_m
         });
@@ -5139,7 +5232,7 @@
         // llamada a INUE
 
         var urlApiBusqueda = "https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/#condicion/#latitud,#longitud/#metros/#token";
-        var token = '517589e1-18b8-468f-b21a-94f55976a5e2';       
+        var token = '517589e1-18b8-468f-b21a-94f55976a5e2';
         var coordenadas = latlg.toString().replace('(', '').replace(')', '').trim().split(',');
             var condicion = $('#condi').val();
             var longitud = coordenadas[1];
@@ -5189,7 +5282,7 @@
                                // label: { color: '#ffffff', fontWeight: 'bold', fontSize: '14px', text: negocios[i].Nombre }
                             });
                             negociosEnMapa.push(marker);
-                            
+
                             infoWindowG = new google.maps.InfoWindow();
                             google.maps.event.addListener(marker, 'click',  MuestraInfo);
                         }
@@ -5200,13 +5293,13 @@
                             infoWindowG.open(map);
                         }
 
-                       
+
 
 
                     }
                 });
             }
-        
+
     }
     function quitarGeoCirculos()
     {
@@ -5222,14 +5315,14 @@
     }
     function KmM(check)
     {
-        
+
         switch (document.getElementById(check.id).value) {
             case "Metros":
                 km_m = 1;
                 $("#inpKmM").prop('min', 0);
                 $("#inpKmM").prop('max', 5000);
                 $("#inpKmM").val(1);
-               
+
                 document.getElementById("checKilometros").checked = false;
                 break;
             case "Kilometros":
@@ -5237,7 +5330,7 @@
                 $("#inpKmM").prop('min', 0);
                 $("#inpKmM").prop('max', 5);
                 $("#inpKmM").val(1);
-              
+
                 document.getElementById("checMetros").checked = false;
                 break;
 
@@ -5270,10 +5363,10 @@
             "UBICACION"]);
 
         for (var i = 0; i < negocios.length ; i++) {
-           
-                                  
-                                    
-            
+
+
+
+
             ws_data.push([
                    negocios[i].CP,
                     negocios[i].Calle,
@@ -5281,8 +5374,8 @@
                     negocios[i].Clase_actividad,
                     negocios[i].Colonia,
                     negocios[i].Correo_e,
-                    negocios[i].Estrato,                                 
-                    negocios[i].Latitud+" "+negocios[i].Longitud,                                    
+                    negocios[i].Estrato,
+                    negocios[i].Latitud+" "+negocios[i].Longitud,
                     negocios[i].Nombre,
                     negocios[i].NumLocal,
                     negocios[i].Num_Exterior,
@@ -5290,7 +5383,7 @@
                     negocios[i].Razon_social,
                     negocios[i].Sitio_internet,
                     negocios[i].Telefono,
-                    negocios[i].Tipo,                                    
+                    negocios[i].Tipo,
                     negocios[i].Ubicacion
             ]);
 
@@ -5329,11 +5422,11 @@
     {
         var div = document.getElementById("tableNegocioshtml");
         div.innerHTML = "";
-       
 
-       
 
-       
+
+
+
         var vecNombres = [
  'id de establecimiento',
  'Nombre de la unidad econ&oacute;mica:',
@@ -5386,7 +5479,7 @@
             codHtml += '<tr><td></td></tr></table><br><br>';
             div.innerHTML += codHtml;
         }
-      
+
         imprimirDIV("tableNegocioshtml");
 
     }
@@ -5403,6 +5496,7 @@
 
 </script>
 
+<script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
 
 
 
