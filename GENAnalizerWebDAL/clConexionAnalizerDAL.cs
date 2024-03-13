@@ -501,7 +501,8 @@ namespace GENAnalizerWebDAL
            try
            {
                List<clsLiquida> li = new List<clsLiquida>();
-               String query = "SELECT MAX (fes_nvta) fes_nvta  from notas_2023c where srv_nvta in ('" + id.paramSrv + "')";
+               //String query = "SELECT MAX (fes_nvta) fes_nvta  from notas_2024c where srv_nvta in ('" + id.paramSrv + "')";
+               String query = "select max(fec_cop) fes_nvta from ctrl_cop where srv_cop ='" + id.paramSrv + "' and ffin_cop is not null ";
                //String query = " select srv_cop, max(fec_cop) fecha from ctrl_coP  where srv_cop='"+id.paramSrv+"' group by 1";
                IList il = sqldir.GetDataFromSicoBySQL(query);
                DataTable dt = (DataTable)il[0];
@@ -1196,7 +1197,7 @@ namespace GENAnalizerWebDAL
                {
                    if (!String.IsNullOrWhiteSpace(item))
                    {
-                       li.AddRange(  rutasService.List(new GEN.ETY.Filter.clsFilter() { Cia = id.paramCia, Branch = item.Trim() }));
+                       li.AddRange(  rutasService.List(new GEN.ETY.Filter.clsFilter() { Cia = id.paramCia/*, Branch = item.Trim() */}));
                    }
                }
               

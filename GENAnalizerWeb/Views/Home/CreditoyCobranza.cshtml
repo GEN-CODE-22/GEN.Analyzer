@@ -1,699 +1,778 @@
 ﻿@{
     ViewBag.Title = "Credito y cobranza";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+  
+    Layout = "~/Views/Shared/Template2022Layout.cshtml";
 }
-<html lang="es">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <title>Credito y cobranza</title>
-
-</head>
+<!DOCTYPE html>
 
 
 
+<body>
 
-<body id="page-top">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
-                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
-                <!--<div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+
+        <div class="d-flex align-items-center justify-content-between">
+            <a class="logo d-flex align-items-center">
+                <img id="id_logo">
+                <span id="EmpName" class="d-none d-lg-block">Gas Express Nieto</span>
             </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
+        <div id="div_calendario_mes" style=" float:left; margin:20px; display:none;">
 
-            <li class="nav-item active">
-                <a class="nav-link">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Analyzer</span>
+            <input id="fm" type="month" class="form-control" style="margin:10px; float:left; " max="2024-03" onchange="getCartera()">
+        </div>
+        <div id="div_calendarios" style="width:50%; float:left; margin:20px; display:none;">
+            <h5 style="width:15%; float:left; "> Fecha Inicial </h5>
+            <input id="fi" type="date" class="form-control" style="width:30%; margin:10px; float:left; ">
+            <h5 style="width:15%; float:left; "> Fecha Final </h5>
+            <input id="ff" type="date" class="form-control" style="width:30%; margin:10px; float:left; ">
+        </div>
+
+
+
+        <nav class="header-nav ms-auto" style="font:xx-small">
+            <ul class="d-flex align-items-center">
+                <li class="nav-item ">
+                    <select class="form-control" id="slcservidor"></select>
+                </li>
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2"> Cia: @ViewBag.Cia</span>
+                </li>
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2">Pla: @ViewBag.Pla</span>
+                </li><!-- End Messages Nav -->
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2">Srv: @ViewBag.Srv</span>
+                </li><!-- End Messages Nav -->
+
+                <li class="nav-item dropdown pe-3">
+
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+
+                        <span class="d-none d-md-block dropdown-toggle ps-2"> @ViewBag.Usr</span>
+                    </a><!-- End Profile Iamge Icon -->
+                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                    <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                    <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+
+                        <li>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" onclick="exitAnalizer()">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Salir
+                            </a>
+                        </li>
+                        @*<li>
+                                <button class="btn btn-danger" style="display:inline-block;" onclick="getGeocercasMC()">
+                                    <span class="fas fa-map-marker-alt" role="status" aria-hidden="true"></span>
+                                    Refrescar Mis geocrecas
+                                </button>
+                            </li>*@
+
+                    </ul><!-- End Profile Dropdown Items -->
+                </li><!-- End Profile Nav -->
+
+                <li class="nav-item ">
+                    <img id="image_profile" style="width:25px;" class="rounded-circle">
+                </li>
+            </ul>
+        </nav>
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link ">
+                    <i class="bi bi-grid"></i>
+                    <span>Credito y cobranza</span>
                 </a>
+            </li><!-- End Dashboard Nav -->
+            <li id="Lecturas" onclick="mostrarSecmento(this)" class="nav-item" style="display:none;">
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Lectura de almacenes</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
             </li>
-
-
-
-
-
-            <!--<li id="Lecturas" onclick="mostrarSecmento(this)" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Lectura de almacenes</span>
-                </a>
-
-            </li>-->
-
-            <li id="Cuentas" onclick="mostrarSecmento(this)" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>Cuentas por cobrar</span>
+            <li id="Cuentas" onclick="mostrarSecmento(this)" class="nav-item" style="display:none;">
+                <a class="nav-link collapsed" data-bs-target="#estaciones-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Cuentas por cobrar</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
 
             </li>
-
-            <!--<li id="Pedidos" onclick="mostrarSecmento(this)" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-ticket-alt"></i>
-                    <span>Pedidos Actuales</span>
+            <li id="Pedidos" onclick="mostrarSecmento(this)" class="nav-item" style="display:none;">
+                <a class="nav-link collapsed" data-bs-target="#Cartera-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Pedidos Actuales</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
 
-            </li>-->
-
-           <!-- <li id="PedidosVsMes" onclick="mostrarSecmento(this)" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Pedidos vs mes Anterior</span>
+            </li>
+            <li id="PedidosVsMes" onclick="mostrarSecmento(this)" class="nav-item" style="display:none" style="display:none;">
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Pedidos vs mes Anterior</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
 
-            </li>-->
+            </li>
 
             <li id="Cobranza" onclick="mostrarSecmento(this)" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-coins"></i>
-                    <span>Dashboard cobranza</span>
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Dashboard cobranza</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+            </li>
+            <li id="" onclick="GoToReporteador()" class="nav-item" style="display:none;">
+
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>ir a repoteador</span></i>
                 </a>
 
             </li>
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+
         </ul>
-        <!-- End of Sidebar -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <div id="div_calendario_mes" style=" float:left; margin:20px; display:none;">
 
-                        <input id="fm" type="month" class="form-control" style="margin:10px; float:left; " />
-                    </div>
-                    <div id="div_calendarios" style="width:50%; float:left; margin:20px; display:none;">
-                        <h5 style="width:15%; float:left; "> Fecha Inicial </h5>
-                        <input id="fi" type="date" class="form-control" style="width:30%; margin:10px; float:left; " />
-                        <h5 style="width:15%; float:left; "> Fecha Final </h5>
-                        <input id="ff" type="date" class="form-control" style="width:30%; margin:10px; float:left; " />
-                    </div>
-                    <li id="dropdown-menu" style="display:none;" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Reportes
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a id="Reporteador" class="dropdown-item" href="#" onclick="GoToReporteador()">Ir a Repoteador</a>
+    </aside><!-- End Sidebar-->
 
-                        </div>
-                    </li>
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <main id="main" class="main">
 
-
-
-
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-                                <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-
-
-                                    <li class="nav-item active" style="margin:10px;">
-                                        <select class="form-control" id="slcservidor"></select>
-                                    </li>
-                                    <li class="nav-item active" style="margin:10px;">
-
-                                        <label id="pwd" style="display:none;">@ViewBag.Pwd</label>
-                                    </li>
-                                    <li class="nav-item active" style="margin:10px;">
-                                        <img id="imgCargando" src="~/Images/CARGANDO.gif" style="display:none; width:40px;" />
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </nav>
-                        <div class="topbar-divider d-none d-sm-block"></div>
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
-                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
-                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
-                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
-
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><label id="serv">@ViewBag.Srv</label></span>
-                                <i class="far fa-user" style="margin-left:15px"></i>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"><label id="usr">@ViewBag.Usr</label></span>
-                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
+        @*<div class="pagetitle">
+                <h1>Dashboard</h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
                 </nav>
-                <!-- End of Topbar -->
-                <!-- Begin Page Content <div class="container-fluid">-->
-                <div class="container-fluid">
-                    <div id="divLecAlm" style="display:none; overflow:scroll; height:500px;"> </div>
-                    <div id="cxc" style="display:none; ">
+            </div>*@<!-- End Page Title -->
+
+        <section class="section dashboard">
+            <div style="height: 90vh; width: 100%; overflow: scroll;">
+                <div id="divLecAlm" style="display:none; overflow:scroll; height:500px;"> </div>
+                <div id="cxc" style="display:none; ">
 
 
-                        <br />
-                        <br />
+                    <br />
+                    <br />
 
-                        <div style="width:100%;">
+                    <div style="width:100%;">
 
-                            <center>
-                                <div class=" card bg-primary text-white shadow" style="height:50px;">
-                                    <div class="card-body">
-                                        Ingreso de Crédito en Cuentas por Cobrar
-                                        <!--<div class="text-white-50 small">#4e73df</div>-->
-                                    </div>
-                                </div>
-                                <table style="width:100%;">
-                                    <tr style="width:100%;">
-                                        <td style="width:24%;">
-                                            <!--VENTA NOTA DE VENTA-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ventaNotaVenta')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/ventanota.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>VENTA NOTA DE VENTA</h4></center>
-
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--CHEQUE DEVUELTO-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevuelto')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cheques.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>CHEQUES DEVUELTOS</h4></center>
-
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--ANTISIPOS INGRESADOS-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('AntisiposIngresados')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/anticipos.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>ANTISIPOS INGRESADOS</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--VALES DE ACCORD-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ValesdeAccord')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/vales.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>VALES DE ACCORD</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-
-
-
-
-
-                            </center>
-                        </div>
-                        <br />
-                        <div style="width:100%;">
-                            <center>
-                                <div class=" card bg-danger text-white shadow" style="height:50px;">
-                                    <div class="card-body">
-                                        Cobranza de Crédito en Cuentas por Cobrar
-                                    </div>
-                                </div>
-                                <table style="width:100%;">
-                                    <tr style="width:100%;">
-                                        <td style="width:24%;">
-                                            <!--COBRANZA-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('Cobrnzacrédito')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cobranza.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center> <h4>COBRANZA</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--NOTAS DE CREDITO-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('NotasCreditoCredito')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/notascredito.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>NOTAS DE CREDITO</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--CHEQUES DEVUELTOS-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevueltoCobrados')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/chequesdevueltos.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>CHEQUES DEVUELTOS</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--COBRANZA COMISIONES-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>COBRANZA COMISIONES</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr style="width:100%;">
-                                        <td style="width:24%;">
-                                            <!--COBRANZA COMISIONES-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center> <h4>COBRANZA COMISIONES</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--CobranzaPagoBienes-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaPagoBienes')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cobranzabienes.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>COBRANZA PAGOS DE BIENES</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;">
-                                            <!--CobranzaPagoBienes-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaDonaciones')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/cobranzadonaciones.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>COBRANZA DONACIONES</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td style="width:24%;"></td>
-                                    </tr>
-                                </table>
-                            </center>
-                        </div>
-
-                        <div style="width:100%;">
-                            <center>
-                                <div class=" card bg-info text-white shadow" style="height:50px;">
-                                    <div class="card-body">
-                                        Movimientos en Anticipo
-                                    </div>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <!--AnticiposIngresados-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposIngresados')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/anticiposingresados.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>ANTISIPOS INGRESADOS</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <!--AnticiposIngresados-->
-                                            <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposAplicados')">
-                                                <div class="card-body" style="height:100%; width:100%;">
-
-                                                    <div style="display:inline-block; width:30%; float:left;">
-                                                        <img src="@Url.Content("~/Images/anticipadosaplicados.jpg")" style="width: 100px" />
-                                                    </div>
-                                                    <div style="display:inline-block; width:69%;">
-                                                        <center><h4>ANTISIPOS APLICADOS</h4></center>
-                                                        <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </center>
-                        </div>
-                    </div>
-                    <div id="divRepPed" style="display:none; overflow:scroll; height:500px;">
-                        <table style="width:100%">
-
-                            <tr style="width:100%">
-                                <td style="width:50%">
-                                    <div class="card shadow" style=" width:100%; margin:20px;">
-                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                            <h6 class=" m-0 font-weight-bold text-primary">Pendientes Generales</h6>
-
-                                        </div>
-                                        <div style="" class="card-body">
-
-                                            <center><div id="PendGral"></div></center>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="width:50%">
-                                    <div class="card shadow" style=" width:100%; margin:20px;">
-                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                            <h6 class=" m-0 font-weight-bold text-primary">Cancelados Generales</h6>
-                                        </div>
-                                        <div style="" class="card-body">
-                                            <center><div id="CanGral"></div></center>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr style="width:100%">
-                                <td style="width:50%;">
-                                    <div class="card shadow" style=" width:100%; margin:20px;">
-                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                            <h6 class=" m-0 font-weight-bold text-primary">Pendientes por ruta</h6>
-                                        </div>
-                                        <div style="" class="card-body">
-                                            <center> <div id="PenRut" style=" height: 600px; overflow: scroll;"></div></center>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="width:50%;">
-                                    <div class="card shadow" style=" width:100%; margin:20px;">
-                                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                            <h6 class=" m-0 font-weight-bold text-primary">Cancelados por ruta</h6>
-                                        </div>
-                                        <div style="" class="card-body">
-                                            <center> <div id="CanRut" style=" height: 600px; overflow: scroll;"></div></center>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div id="divPedVsMes" style="display:none; overflow:scroll; height:500px;">
                         <center>
-                            <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="consultarNotas()">Cargar/Refrescar</button>
-                            <h3>PLANTAS</h3>
-                            <select id="slcPlaVsMes" class="form-control" style="width:100%; margin-top:10px;" onchange="drawData()"></select>
-                            <h3>NOTAS POR USO</h3>
-                            <div id="tblUsoNota"></div>
-                            <h3>NOTAS POR RUTA</h3>
-                            <div id="tblRutaNota"></div>
-                            <h3>NOTAS POR DIA</h3>
-                            <div id="grfkilosdia"></div>
+                            <div class=" card bg-primary text-white shadow" style="height:50px;">
+                                <div class="card-body">
+                                    Ingreso de Crédito en Cuentas por Cobrar
+                                    <!--<div class="text-white-50 small">#4e73df</div>-->
+                                </div>
+                            </div>
+                            <table style="width:100%;">
+                                <tr style="width:100%;">
+                                    <td style="width:24%;">
+                                        <!--VENTA NOTA DE VENTA-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ventaNotaVenta')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/ventanota.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>VENTA NOTA DE VENTA</h4></center>
+
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--CHEQUE DEVUELTO-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevuelto')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cheques.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>CHEQUES DEVUELTOS</h4></center>
+
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--ANTISIPOS INGRESADOS-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('AntisiposIngresados')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/anticipos.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>ANTISIPOS INGRESADOS</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--VALES DE ACCORD-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-primary" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ValesdeAccord')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/vales.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>VALES DE ACCORD</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+
+
+
+
                         </center>
                     </div>
-                    <div id="cobranza" style="display:none;">
-
-                        <div id="grfCob" style="width:100%; overflow: auto; float:left;">
-
-                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                    <h6 class=" m-0 font-weight-bold text-primary">Dias rotacion cartera</h6>
-
+                    <br />
+                    <div style="width:100%;">
+                        <center>
+                            <div class=" card bg-danger text-white shadow" style="height:50px;">
+                                <div class="card-body">
+                                    Cobranza de Crédito en Cuentas por Cobrar
                                 </div>
+                            </div>
+                            <table style="width:100%;">
+                                <tr style="width:100%;">
+                                    <td style="width:24%;">
+                                        <!--COBRANZA-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('Cobrnzacrédito')">
+                                            <div class="card-body" style="height:100%; width:100%;">
 
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cobranza.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center> <h4>COBRANZA</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--NOTAS DE CREDITO-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('NotasCreditoCredito')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/notascredito.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>NOTAS DE CREDITO</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--CHEQUES DEVUELTOS-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('ChequeDevueltoCobrados')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/chequesdevueltos.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>CHEQUES DEVUELTOS</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--COBRANZA COMISIONES-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>COBRANZA COMISIONES</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr style="width:100%;">
+                                    <td style="width:24%;">
+                                        <!--COBRANZA COMISIONES-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaComisiones')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cobranzacomisiones.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center> <h4>COBRANZA COMISIONES</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--CobranzaPagoBienes-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaPagoBienes')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cobranzabienes.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>COBRANZA PAGOS DE BIENES</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;">
+                                        <!--CobranzaPagoBienes-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-danger" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getCxC('CobranzaDonaciones')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/cobranzadonaciones.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>COBRANZA DONACIONES</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width:24%;"></td>
+                                </tr>
+                            </table>
+                        </center>
+                    </div>
+
+                    <div style="width:100%;">
+                        <center>
+                            <div class=" card bg-info text-white shadow" style="height:50px;">
+                                <div class="card-body">
+                                    Movimientos en Anticipo
+                                </div>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <!--AnticiposIngresados-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposIngresados')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/anticiposingresados.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>ANTISIPOS INGRESADOS</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!--AnticiposIngresados-->
+                                        <div class="card mb-4 py-3 shadow border-bottom-info" style="height:150px; width:100%;cursor:pointer; display:inline-block" onclick="getMovAnt('AnticiposAplicados')">
+                                            <div class="card-body" style="height:100%; width:100%;">
+
+                                                <div style="display:inline-block; width:30%; float:left;">
+                                                    <img src="@Url.Content("~/Images/anticipadosaplicados.jpg")" style="width: 100px" />
+                                                </div>
+                                                <div style="display:inline-block; width:69%;">
+                                                    <center><h4>ANTISIPOS APLICADOS</h4></center>
+                                                    <!--<p>Muestra una radigrafia de los pedidos no atendidos de tipo Estacionario </p>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </center>
+                    </div>
+                </div>
+                <div id="divRepPed" style="display:none; overflow:scroll; height:500px;">
+                    <table style="width:100%">
+
+                        <tr style="width:100%">
+                            <td style="width:50%">
+                                <div class="card shadow" style=" width:100%; margin:20px;">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">Pendientes Generales</h6>
+
+                                    </div>
+                                    <div style="" class="card-body">
+
+                                        <center><div id="PendGral"></div></center>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width:50%">
+                                <div class="card shadow" style=" width:100%; margin:20px;">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">Cancelados Generales</h6>
+                                    </div>
+                                    <div style="" class="card-body">
+                                        <center><div id="CanGral"></div></center>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr style="width:100%">
+                            <td style="width:50%;">
+                                <div class="card shadow" style=" width:100%; margin:20px;">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">Pendientes por ruta</h6>
+                                    </div>
+                                    <div style="" class="card-body">
+                                        <center> <div id="PenRut" style=" height: 600px; overflow: scroll;"></div></center>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width:50%;">
+                                <div class="card shadow" style=" width:100%; margin:20px;">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary">Cancelados por ruta</h6>
+                                    </div>
+                                    <div style="" class="card-body">
+                                        <center> <div id="CanRut" style=" height: 600px; overflow: scroll;"></div></center>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="divPedVsMes" style="display:none; overflow:scroll; height:500px;">
+                    <center>
+                        <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="consultarNotas()">Cargar/Refrescar</button>
+                        <h3>PLANTAS</h3>
+                        <select id="slcPlaVsMes" class="form-control" style="width:100%; margin-top:10px;" onchange="drawData()"></select>
+                        <h3>NOTAS POR USO</h3>
+                        <div id="tblUsoNota"></div>
+                        <h3>NOTAS POR RUTA</h3>
+                        <div id="tblRutaNota"></div>
+                        <h3>NOTAS POR DIA</h3>
+                        <div id="grfkilosdia"></div>
+                    </center>
+                </div>
+                <div id="cobranza" style="display:none;">
+
+                    <div id="grfCob" style="width:100%; ">
+
+                        <div class="row">
+                            <div class=" col-2">
+                                <div class="alert alert-primary " role="alert">
+                                    <center> Dias rotacion cartera</center>
+                                </div>
                                 <div style="width:100%;" class="card-body">
 
                                     <center>
-                                        <h1 class=" m-0 font-weight-bold text-primary">Dias rotacion cartera</h1>
-                                        <h1 id="lbldiarot" class=" m-0 font-weight-bold text-danger"> </h1>
-                                        <h1 class=" m-0 font-weight-bold text-primary">Dias promedio cartera</h1>
-                                        <h1 id="lbldiaprom" class=" m-0 font-weight-bold text-danger"> </h1>
+                                        <h4 class=" m-0 font-weight-bold text-primary">Dias rotacion cartera</h4>
+                                        <h5 id="lbldiarot" class=" m-0 font-weight-bold text-danger"> </h5>
+                                        <h4 class=" m-0 font-weight-bold text-primary">Dias promedio cartera</h4>
+                                        <h5 id="lbldiaprom" class=" m-0 font-weight-bold text-danger"> </h5>
 
                                     </center>
 
                                 </div>
 
+
                             </div>
+                            <div class=" col-6">
 
-                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                    <h6 class=" m-0 font-weight-bold text-primary">Balance cartera / flujo caja</h6>
 
+                                <div class="alert alert-primary " role="alert">
+                                    <center> Balance cartera / flujo caja</center>
                                 </div>
 
-                                <div style="width:100%;" class="card-body">
+                                <div style="width:100%;">
 
                                     <div id="flujCar" style="height:300px; ">
                                     </div>
 
                                 </div>
 
+
                             </div>
-
-                            <div class="card shadow" style="width:33%; display:inline-block;float:left;height:400px; ">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                    <h6 class=" m-0 font-weight-bold text-primary">Cartera general</h6>
-
+                            <div class=" col-4">
+                                <div class="alert alert-primary " role="alert">
+                                    <center> Cartera general</center>
                                 </div>
+                                @*<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                                        <h6 class=" m-0 font-weight-bold text-primary"></h6>
+                                        <div style="float:right;">
+                                            <div class="fi fi-size-sm fi-round-md fi-pdf" onclick="javascript: window.imprimirDIV('GrfCarGral', '')" style="display:inline-block;">
+                                                <div class="fi-content">PDF</div>
+                                            </div>
 
-                                <div style="width:100%;" class="card-body">
+                                        </div>
+                                    </div>*@
+
+                                <div style="width:100%;">
                                     <div id="GrfCarGral" style="width:100%; height:300px; "></div>
 
                                 </div>
 
                             </div>
-
-
-
-                        </div>
-                        <div id="grfCob" style="width:100%; overflow: auto; ">
-
-                            <div id="GrfCarUsoDiv" class="card shadow" style="width:50%; display:inline-block;">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                    <h6 class=" m-0 font-weight-bold text-primary">Cartera por uso</h6>
-                                    <div style="float:right; ">
-                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
-                                            <input type="checkbox" class="custom-control-input" id="chbxMas60" value="MAS60" onchange="switchUsoChange(this)">
-                                            <label class="custom-control-label" for="chbxMas60">+ 60 Dias</label>
-                                        </div>
-                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
-                                            <input type="checkbox" class="custom-control-input" id="chbxVen" value="VENCIDA" onchange="switchUsoChange(this)">
-                                            <label class="custom-control-label" for="chbxVen">Vencida</label>
-                                        </div>
-                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
-                                            <input type="checkbox" class="custom-control-input" id="chbxSven" value="SINVENCER" onchange="switchUsoChange(this)">
-                                            <label class="custom-control-label" for="chbxSven">Sin vencer</label>
-                                        </div>
-                                        <div class="custom-control custom-switch" style="float:right; margin:10px;">
-                                            <input type="checkbox" class="custom-control-input" id="chbxTot" value="TOTAL" checked="checked" onchange="switchUsoChange(this)">
-                                            <label class="custom-control-label" for="chbxTot">Total</label>
-                                        </div>
-
-
-
-                                    </div>
-                                </div>
-
-                                <div style="width:100%;" class="card-body">
-                                    <div id="GrfCarUso" style="width:100%;  height:300px;"></div>
-
-                                </div>
-
-                            </div>
-                            <div id="GrfCarMovDiv" class="card shadow" style="width:50%; display:inline-block; ">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                    <h6 class=" m-0 font-weight-bold text-primary">Deuda sin movimiento</h6>
-
-                                </div>
-
-                                <div style="width:100%;" class="card-body">
-                                    <div id="GrfCarMov" style="width:100%;  height:300px;"></div>
-
-                                </div>
-
-                            </div>
-
-
-
-                        </div>
-                        <br />
-
-                        <div id="tblCob" style="width:100%; overflow: auto;">
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                                <h6 class=" m-0 font-weight-bold text-primary">Clientes con incremento de credito</h6>
-
-                                <a class="btn btn-success btn-icon-split" onclick="IncCredtoExcel()">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-clipboard-check"></i>
-                                    </span>
-                                    <span class="text" style="color:white;">Reporte Excel</span>
-                                </a>
-                            </div>
-
-                            <div style="width:100%;" class="card-body">
-                                <div id="tblIncrCred" style="height: 500px; "></div>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <!-- End of Content Wrapper -->
-            </div>
-            <!-- End of Page Wrapper -->
-            <!-- Scroll to Top Button-->
-            <a class="scroll-to-top rounded" href="#page-top">
-                <i class="fas fa-angle-up"></i>
-            </a>
-            <!-- Logout Modal-->
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                            <a class="btn btn-primary" href="login.html">Logout</a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <dialog id="dlgCXC" style="height:800px; overflow:scroll">
-                <center>
-                    <h1 id="lab_res"></h1>
-                    <button id="ver_detalle" class="btn btn-primary" onclick="showDetalle()">VER DETALLE</button>
-                    <button style="display: none;" type="button" id="CxCExcel" class="btn btn-success" onclick="CxCToExcel()">EXCEL..</button>
-                    <button style="display: none;" type="button" id="movAntExcel" class="btn btn-success" onclick=" movAntToExcel()">EXCEL..</button>
                     <br />
-                    <div id="tblCXC" style="height:750px; overflow:scroll; display:none;"></div>
-                </center>
-            </dialog>
 
-            <dialog id="dlgUsoSinMov" style="height:800px; overflow:scroll">
-                <div class="card shadow" style="width:100%; overflow: auto;">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                        <h6 id="lblUsoSinMov" class=" m-0 font-weight-bold text-primary"></h6>
-                        <div style="float:right">
-                            <a class="btn btn-success btn-icon-split" onclick="DeudaUsoSinMovExcel()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </span>
-                                <span class="text" style="color:white;">Reporte Excel</span>
-                            </a>
-                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-times-circle"></i>
-                                </span>
-                                <span class="text" style="color:white;">Cerrar</span>
-                            </a>
+
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="alert alert-primary " role="alert">
+
+                                <div class="row">
+                                    <div class="col-3"> Cartera por uso</div>
+                                    <div class="col-9">
+                                        <div class="input-group" style="float:right;">
+
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="chbxMas60" value="MAS60" onchange="switchUsoChange(this)">
+                                                <label class="custom-control-label" for="chbxMas60">+ 60 Dias</label>
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="chbxVen" value="VENCIDA" onchange="switchUsoChange(this)">
+                                                <label class="custom-control-label" for="chbxVen">Vencida</label>
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="chbxSven" value="SINVENCER" onchange="switchUsoChange(this)">
+                                                <label class="custom-control-label" for="chbxSven">Sin vencer</label>
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="chbxTot" value="TOTAL" checked="checked" onchange="switchUsoChange(this)">
+                                                <label class="custom-control-label" for="chbxTot">Total</label>
+                                            </div>
+                                            @*<div>
+                                                    <div class="fi fi-size-xs fi-round-sm fi-pdf" onclick="javascript: window.imprimirDIV('GrfCarUso', '')" style="display:inline-block;">
+                                                        <div class="fi-content">PDF</div>
+                                                    </div>
+
+                                                </div>*@
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+                            <div style="width:100%;" class="">
+                                <div id="GrfCarUso" style="width:100%;  height:300px;"></div>
+
+                            </div>
+
+
                         </div>
+                        <div class="col-6">
+                            <div class="alert alert-primary " role="alert">
+                                <div class="row">
+                                    <div class="col-6"> Deuda sin movimiento</div>
+                                    @*<div class="col-6">
+                                            <div class="input-group" style="float:right;">
+                                                <div class="fi fi-size-sm fi-round-md fi-pdf" onclick="javascript: window.imprimirDIV('GrfCarMovDiv', '')" style="float: right;">
+                                                    <div class="fi-content">PDF</div>
+                                                </div>
 
-                    </div>
-                    <div style="width:100%;" class="card-body">
-                        <div id="divUsoSinMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+                                            </div>
+                                        </div>*@
 
+                                </div>
+                            </div>
+                            <div style="width:100%;" class="card-body">
+                                <div id="GrfCarMov" style="width:100%;  height:300px;"></div>
+                            </div>
+                        </div>
                     </div>
+
+
+                    @*<div id="grfCob" style="width:100%;">
+
+
+
+
+
+
+                        </div>*@
+                    <br />
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-primary " role="alert">
+                                <div class="row">
+                                    <div class="col-6"> Clientes con incremento de credito</div>
+                                    <div class="col-6">
+                                        <div style="float:right; margin:10px;">
+                                            <div class="fi fi-size-sm fi-round-md fi-xlsx" onclick="IncCredtoExcel()" style="display:inline-block;">
+                                                <div class="fi-content">XLSX</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width:100%;" class="card-body">
+                            <div id="tblIncrCred" style="height: 500px; "></div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
 
 
                 </div>
-                <!--
-        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cerrarDialog()"> Cerrar </button>
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </section>
+
+    </main><!-- End #main -->
+    <!-- ======= Footer ======= -->
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Seguro de Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Te saldras de todo modulo</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger" type="button" onclick="exitAnalizer()">Salir</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    @*<!-- Vendor JS Files -->
+        <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/chart.js/chart.umd.js"></script>
+        <script src="assets/vendor/echarts/echarts.min.js"></script>
+        <script src="assets/vendor/quill/quill.min.js"></script>
+        <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+        <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+        <script src="assets/vendor/php-email-form/validate.js"></script>
+
+        <!-- Template Main JS File -->
+        <script src="assets/js/main.js"></script>*@
+    <script src="~/Scripts/Proyect/Principal.js"></script>
+    <script src="~/Scripts/Proyect/Generales.js"></script>
+    <script src="~/Scripts/Proyect/Index.js"></script>
+    <!-- Google Map -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <dialog id="dlgCXC" style="height:800px; overflow:scroll">
+        <center>
+            <h1 id="lab_res"></h1>
+            <button id="ver_detalle" class="btn btn-primary" onclick="showDetalle()">VER DETALLE</button>
+
+            <button style="display: none;" type="button" id="CxCExcel" class="btn btn-success" onclick="CxCToExcel()">EXCEL..</button>
+            <button style="display: none;" type="button" id="movAntExcel" class="btn btn-success" onclick=" movAntToExcel()">EXCEL..</button>
+            <br />
+            <div id="tblCXC" style="height:750px; overflow:scroll; display:none;"></div>
+        </center>
+    </dialog>
+
+    <dialog id="dlgUsoSinMov" style="height:800px; overflow:scroll">
+        <div class="card shadow" style="width:100%; overflow: auto;">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 id="lblUsoSinMov" class=" m-0 font-weight-bold text-primary"></h6>
+                <div style="float:right">
+                    @*<a class="btn btn-success btn-icon-split" onclick="DeudaUsoSinMovExcel()">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-clipboard-check"></i>
+                            </span>
+                            <span class="text" style="color:white;">Reporte Excel</span>
+                        </a>*@
+                    <a class="btn btn-danger btn-icon-split" onclick="cierraDialog()" style="float:right;">
+                        <span class=" icon text-white-50">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                        <span class="text" style="color:white;">Cerrar</span>
+                    </a>
+                    <div style="float:right; margin-right:10px;">
+                        <div class="fi fi-size-sm fi-round-md fi-xlsx" onclick="DeudaUsoSinMovExcel()" style="display:inline-block;">
+                            <div class="fi-content">XLSX</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div style="width:100%;" class="card-body">
+                <div id="divUsoSinMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+
+            </div>
+
+
+        </div>
+        <!--
+        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cierraDialog()"> Cerrar </button>
         <button class="btn btn-success" style="float:right; margin:10px;" onclick="DeudaUsoSinMovExcel()"> Excel </button>
 
         <center>
@@ -701,39 +780,47 @@
             <br />
             <div id="divUsoSinMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
         </center>-->
-            </dialog>
-            <dialog id="dlgUsoMov" style="height:800px; overflow:scroll">
-                <div class="card shadow" style="width:100%; overflow: auto;">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                        <h6 id="lblUsoMov" class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+    </dialog>
+    <dialog id="dlgUsoMov" style="height:800px; overflow:scroll">
+        <div class="card shadow" style="width:100%; overflow: auto;">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 id="lblUsoMov" class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
 
 
-                        <div style="float:right">
-                            <a class="btn btn-success btn-icon-split" onclick="DeudaUsoMovExcel()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </span>
-                                <span class="text" style="color:white;">Reporte Excel</span>
-                            </a>
-                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-times-circle"></i>
-                                </span>
-                                <span class="text" style="color:white;">Cerrar</span>
-                            </a>
+                <div style="float:right;">
+                    <a class="btn btn-danger btn-icon-split" onclick="cierraDialog()" style="float:right; ">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                        <span class="text" style="color:white;">Cerrar</span>
+                    </a>
+                    <div style="float:right; margin-right:10px;">
+                        <div class="fi fi-size-sm fi-round-md fi-xlsx" onclick="DeudaUsoMovExcel()" style="display:inline-block;">
+                            <div class="fi-content">XLSX</div>
                         </div>
 
                     </div>
-                    <div style="width:100%;" class="card-body">
-                        <div id="divUsoMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
 
-                    </div>
-
+                    @*<a class="btn btn-success btn-icon-split" onclick="DeudaUsoMovExcel()">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-clipboard-check"></i>
+                            </span>
+                            <span class="text" style="color:white;">Reporte Excel</span>
+                        </a>*@
 
                 </div>
 
-                <!--
-        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cerrarDialog()"> Cerrar </button>
+            </div>
+            <div style="width:100%;" class="card-body">
+                <div id="divUsoMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
+
+            </div>
+
+
+        </div>
+
+        <!--
+        <button class="btn btn-danger" style="float:right; margin:10px;" onclick="cierraDialog()"> Cerrar </button>
         <button class="btn btn-success" style="float:right; margin:10px;" onclick="DeudaUsoMovExcel()"> Excel </button>
 
         <center>
@@ -741,70 +828,74 @@
             <br />
             <div id="divUsoMovDet" style="height:750px; overflow:scroll; display:inline;"></div>
         </center>-->
-            </dialog>
+    </dialog>
 
-            <dialog id="mas60Dias" style="height:800px; overflow:scroll">
-                <div id="tblCob" class="card shadow" style="width:100%; overflow: auto;">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                        <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+    <dialog id="mas60Dias" style="height:800px; overflow:scroll">
+        <div id="tblCob" class="card shadow" style="width:100%; overflow: auto;">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
 
 
-                        <div style="float:right">
-                            <a class="btn btn-success btn-icon-split" onclick="mas60DiasExcel()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </span>
-                                <span class="text" style="color:white;">Reporte Excel</span>
-                            </a>
-                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-times-circle"></i>
-                                </span>
-                                <span class="text" style="color:white;">Cerrar</span>
-                            </a>
+                <div style="float:right">
+                    @*<a class="btn btn-success btn-icon-split"  onclick="mas60DiasExcel()">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-clipboard-check"></i>
+                            </span>
+                            <span class="text" style="color:white;">Reporte Excel</span>
+                        </a>*@
+                    <a class="btn btn-danger btn-icon-split" onclick="cierraDialog()" style="float:right; margin-right:10px;">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                        <span class="text" style="color:white;">Cerrar</span>
+                    </a>
+                    <div style="float:right; margin-right:10px;">
+                        <div class="fi fi-size-sm fi-round-md fi-xlsx" onclick="mas60DiasExcel()" style="display:inline-block;">
+                            <div class="fi-content">XLSX</div>
                         </div>
 
                     </div>
-                    <div style="width:100%;" class="card-body">
-                        <div id="divMas60dias" style="height:750px; overflow:scroll; display:inline;"></div>
-
-                    </div>
-
-
                 </div>
 
+            </div>
+            <div style="width:100%;" class="card-body">
+                <div id="divMas60dias" style="height:750px; overflow:scroll; display:inline;"></div>
 
-            </dialog>
-
-            <dialog id="dlgPedPenXRut" style=" overflow:scroll">
-                <div class="card shadow" style="width:100%; overflow: auto;">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
-                        <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+            </div>
 
 
-                        <div style="float:right">
-
-                            <a class="btn btn-danger btn-icon-split" onclick="cerrarDialog()">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-times-circle"></i>
-                                </span>
-                                <span class="text" style="color:white;">Cerrar</span>
-                            </a>
-                        </div>
-
-                    </div>
-                    <div style="width:100%;" class="card-body">
-                        <div id="divPedPenXRut" style="height:750px; overflow:scroll; display:inline;"></div>
-
-                    </div>
+        </div>
 
 
+    </dialog>
+
+    <dialog id="dlgPedPenXRut" style=" overflow:scroll">
+        <div class="card shadow" style="width:100%; overflow: auto;">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="width:100%;">
+                <h6 class=" m-0 font-weight-bold text-primary">Mas de 60 dias</h6>
+
+
+                <div style="float:right">
+
+                    <a class="btn btn-danger btn-icon-split" onclick="cierraDialog()">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                        <span class="text" style="color:white;">Cerrar</span>
+                    </a>
                 </div>
 
-            </dialog>
+            </div>
+            <div style="width:100%;" class="card-body">
+                <div id="divPedPenXRut" style="height:750px; overflow:scroll; display:inline;"></div>
+
+            </div>
+
+
+        </div>
+
+    </dialog>
 </body>
-
-</html>
 
 <link href="~/Styles/Template/simple-sidebar.css" rel="stylesheet">
 <link href="~/Styles/Template/sb-admin-2.min.css" rel="stylesheet">
@@ -842,9 +933,9 @@
     var today = now.getFullYear() + "-" + (month) + "-" + (day);
     var descuentoDir = 0;
     $(document).ready(function () {
-        document.getElementById('header_layout').style.display = "none";
+        //document.getElementById('header_layout').style.display = "none";
         // se colocan fechas por default
-        
+
         $("#ff").val(today);
         $("#fi").val(today);
         $("#fm").val(now.getFullYear() + "-" + (month));
@@ -878,8 +969,8 @@
         document.getElementById('divPedVsMes').style.display = 'none';
         document.getElementById('div_calendario_mes').style.display = 'none';
         document.getElementById('cobranza').style.display = 'none';
-        document.getElementById('Reporteador').style.display = 'none';
-        document.getElementById('dropdown-menu').style.display = 'none';
+        //document.getElementById('Reporteador').style.display = 'none';
+        //document.getElementById('dropdown-menu').style.display = 'none';
 
         switch (ref.id) {
             case "Lecturas":
@@ -905,8 +996,8 @@
             case "Cobranza":
                 document.getElementById('div_calendario_mes').style.display = 'inline';
                 document.getElementById('cobranza').style.display = 'inline';
-                document.getElementById('Reporteador').style.display = 'inline';
-                document.getElementById('dropdown-menu').style.display = 'inline';
+                //document.getElementById('Reporteador').style.display = 'inline';
+                // document.getElementById('dropdown-menu').style.display = 'inline';
                 getCartera();
                 break;
         }
@@ -994,22 +1085,22 @@
 
             if (parseFloat(lecturas[i].cap_lts) > 20000) {
                 document.getElementById('divLecAlm').innerHTML +=
-          '<div style="width:100%;background:#ffffff; margin:5px;"> ' +
-           '<div style="width:100%;">  ' +
-            '<h5 style="margin:10px; float:left;"> Clave: ' + lecturas[i].descr_alm.toUpperCase() + '</h5>  ' +
-            '<p style="margin:10px; float:left;">Almacen: ' + lecturas[i].sec_almd.toUpperCase() + '</p>  ' +
-            '<p style="margin:10px; float:left;">Lts: ' + lecturas[i].inv_fis_lts + '</p>  ' +
-            '<p style="margin:10px; float:left;">Cap Lts: ' + lecturas[i].cap_lts + '</p>  ' +
-            '<p style="margin:10px; float:left;">Tipo: ' + tipo + '</p>  ' +
-            '<p style="margin:10px; float:left;">Uso: ' + uso + '</p>  ' +
+                    '<div style="width:100%;background:#ffffff; margin:5px;"> ' +
+                    '<div style="width:100%;">  ' +
+                    '<h5 style="margin:10px; float:left;"> Clave: ' + lecturas[i].descr_alm.toUpperCase() + '</h5>  ' +
+                    '<p style="margin:10px; float:left;">Almacen: ' + lecturas[i].sec_almd.toUpperCase() + '</p>  ' +
+                    '<p style="margin:10px; float:left;">Lts: ' + lecturas[i].inv_fis_lts + '</p>  ' +
+                    '<p style="margin:10px; float:left;">Cap Lts: ' + lecturas[i].cap_lts + '</p>  ' +
+                    '<p style="margin:10px; float:left;">Tipo: ' + tipo + '</p>  ' +
+                    '<p style="margin:10px; float:left;">Uso: ' + uso + '</p>  ' +
 
-           '<div> ' +
+                    '<div> ' +
 
-           '<div class="progress" style="width:100%; height:35px;background:#ffffff;">   ' +
-            '   <progress id="progress' + i + '" max="100" value="' + Math.round(parseFloat(lecturas[i].porc_inv_fis)) + '" style="width:90%; height:30px; margin:5px; background-color:#06416D;"></progress> ' +
-             '  <h2>' + lecturas[i].porc_inv_fis + '%</h2> ' +
-           ' </div> ' +
-           ' </div> <br/>';
+                    '<div class="progress" style="width:100%; height:35px;background:#ffffff;">   ' +
+                    '   <progress id="progress' + i + '" max="100" value="' + Math.round(parseFloat(lecturas[i].porc_inv_fis)) + '" style="width:90%; height:30px; margin:5px; background-color:#06416D;"></progress> ' +
+                    '  <h2>' + lecturas[i].porc_inv_fis + '%</h2> ' +
+                    ' </div> ' +
+                    ' </div> <br/>';
             }
 
 
@@ -1025,13 +1116,13 @@
 
         var getRequestAnimationFrame = function () {  /* <------- Declaro getRequestAnimationFrame intentando obtener la máxima compatibilidad con todos los navegadores */
             return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (callback) {
-                window.setTimeout(enroute, 1 / 60 * 1000);
-            };
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(enroute, 1 / 60 * 1000);
+                };
 
         };
 
@@ -1156,28 +1247,28 @@
 
 
             tablausonvta.addRow([
-                                Cuenta[i].razsoc_cte,
-                                Cuenta[i].cte_mcxc,
-                                tpm_mcxc,
-                                Cuenta[i].tip_mcxc,
-                                Cuenta[i].doc_mcxc,
-                                Cuenta[i].ffis_mcxc,
-                                 Cuenta[i].ser_mcxc,
-                                 Cuenta[i].cia_mcxc,
-                                 Cuenta[i].pla_mcxc,
-                                 Cuenta[i].ffac_mcxc,
-                                 Cuenta[i].sfac_mcxc,
-                                 Cuenta[i].num_mcxc,
-                                 Cuenta[i].sta_mcxc,
-                                 Cuenta[i].tpa_mcxc,
-                                 Cuenta[i].uso_mcxc,
-                                 Cuenta[i].imp_mcxc,
-                                 Cuenta[i].fec_mcxc,
-                                 Cuenta[i].fer_mcxc,
-                                 Cuenta[i].fven_mcxc,
-                                 Cuenta[i].desc_mcxc,
-                                 Cuenta[i].usr_mcxc,
-                                 Cuenta[i].fliq_mcxc
+                Cuenta[i].razsoc_cte,
+                Cuenta[i].cte_mcxc,
+                tpm_mcxc,
+                Cuenta[i].tip_mcxc,
+                Cuenta[i].doc_mcxc,
+                Cuenta[i].ffis_mcxc,
+                Cuenta[i].ser_mcxc,
+                Cuenta[i].cia_mcxc,
+                Cuenta[i].pla_mcxc,
+                Cuenta[i].ffac_mcxc,
+                Cuenta[i].sfac_mcxc,
+                Cuenta[i].num_mcxc,
+                Cuenta[i].sta_mcxc,
+                Cuenta[i].tpa_mcxc,
+                Cuenta[i].uso_mcxc,
+                Cuenta[i].imp_mcxc,
+                Cuenta[i].fec_mcxc,
+                Cuenta[i].fer_mcxc,
+                Cuenta[i].fven_mcxc,
+                Cuenta[i].desc_mcxc,
+                Cuenta[i].usr_mcxc,
+                Cuenta[i].fliq_mcxc
             ]);
 
             sumImp += parseFloat(Cuenta[i].imp_mcxc);
@@ -1319,28 +1410,28 @@
 
 
             tablausonvta.addRow([
-                                Cuenta[i].razsoc_cte,
-                                Cuenta[i].cte_mant,
-                                Cuenta[i].tpm_mant,
-                                Cuenta[i].tip_mant,
-                                Cuenta[i].doc_mant,
-                                Cuenta[i].ffis_mant,
-                                Cuenta[i].ser_mant,
-                                Cuenta[i].cia_mant,
-                                Cuenta[i].pla_mant,
-                                Cuenta[i].ffac_mant,
-                                Cuenta[i].sfac_mant,
-                                Cuenta[i].num_mant,
-                                Cuenta[i].sta_mant,
-                                Cuenta[i].tpa_mant,
-                                Cuenta[i].uso_mant,
-                                Cuenta[i].imp_mant,
-                                Cuenta[i].fec_mant,
-                                Cuenta[i].fer_mant,
-                                Cuenta[i].fven_mant,
-                                Cuenta[i].desc_mant,
-                                Cuenta[i].usr_mant,
-                                Cuenta[i].fliq_mant
+                Cuenta[i].razsoc_cte,
+                Cuenta[i].cte_mant,
+                Cuenta[i].tpm_mant,
+                Cuenta[i].tip_mant,
+                Cuenta[i].doc_mant,
+                Cuenta[i].ffis_mant,
+                Cuenta[i].ser_mant,
+                Cuenta[i].cia_mant,
+                Cuenta[i].pla_mant,
+                Cuenta[i].ffac_mant,
+                Cuenta[i].sfac_mant,
+                Cuenta[i].num_mant,
+                Cuenta[i].sta_mant,
+                Cuenta[i].tpa_mant,
+                Cuenta[i].uso_mant,
+                Cuenta[i].imp_mant,
+                Cuenta[i].fec_mant,
+                Cuenta[i].fer_mant,
+                Cuenta[i].fven_mant,
+                Cuenta[i].desc_mant,
+                Cuenta[i].usr_mant,
+                Cuenta[i].fliq_mant
             ]);
             sumImp += parseFloat(Cuenta[i].imp_mant);
         }
@@ -1387,11 +1478,11 @@
         //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
 
         var ws_data = [['FECHAS',
-                           'DE :' + $("#ff").val(),
-                         'A :' + $("#fi").val()]];
+            'DE :' + $("#ff").val(),
+            'A :' + $("#fi").val()]];
         ws_data.push(['RAZON',
-                        'CLIENTE',
-                        'IMPORTE']);
+            'CLIENTE',
+            'IMPORTE']);
 
         for (var i = 0; i < Cuentas.length; i++) {
             if (Cuentas[i].razsoc_cte == null) {
@@ -1402,8 +1493,8 @@
 
         for (var i = 0; i < Cuentas.length; ++i) {
             ws_data.push([Cuentas[i].razsoc_cte.replace(',', ' '),
-                          Cuentas[i].cte_mcxc,
-                          Cuentas[i].imp_mcxc.replace(',', ' ')]
+            Cuentas[i].cte_mcxc,
+            Cuentas[i].imp_mcxc.replace(',', ' ')]
             );
         }
 
@@ -1436,11 +1527,11 @@
         //pointsInPoligon.push({ Ruta: results[i].ruta, Cliente: results[i].cte, Litros: results[i].Lts, Direccion: results[i].direccion, TPDO: results[i].tpdo });
 
         var ws_data = [['RAZON',
-                        'CLIENTE',
-                        'IMPORTE']];
+            'CLIENTE',
+            'IMPORTE']];
         ws_data.push(['FECHAS',
-                            'DE :' + $("#ff").val(),
-                          'A :' + $("#fi").val()]);
+            'DE :' + $("#ff").val(),
+            'A :' + $("#fi").val()]);
 
         for (var i = 0; i < MovAnt.length; i++) {
             if (MovAnt[i].razsoc_cte == null) {
@@ -1451,8 +1542,8 @@
 
         for (var i = 0; i < Cuentas.length; ++i) {
             ws_data.push([MovAnt[i].razsoc_cte.replace(',', ' '),
-                          MovAnt[i].cte_mant,
-                          MovAnt[i].imp_mant.replace(',', ' ')]
+            MovAnt[i].cte_mant,
+            MovAnt[i].imp_mant.replace(',', ' ')]
             );
         }
 
@@ -1491,17 +1582,17 @@
 
         for (var i = 0; i < cartera_.carteraCtesConMovimiento.length; ++i) {
             ws_data.push([cartera_.carteraCtesConMovimiento[i].Nomcte_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Numcte_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Rfc_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].GetUSO + '',
-                                cartera_.carteraCtesConMovimiento[i].Svencer_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Vencido_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Dmesant_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Pmesant_cmcmov + '',
-                                cartera_.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
-                                cartera_.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
-                                cartera_.carteraCtesConMovimiento[i].Diapro_cmcmov,
-                                cartera_.carteraCtesConMovimiento[i].Dcred_cmcmov]);
+            cartera_.carteraCtesConMovimiento[i].Numcte_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].Rfc_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].GetUSO + '',
+            cartera_.carteraCtesConMovimiento[i].Svencer_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].Vencido_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].Dmesant_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].Pmesant_cmcmov + '',
+            cartera_.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
+            cartera_.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
+            cartera_.carteraCtesConMovimiento[i].Diapro_cmcmov,
+            cartera_.carteraCtesConMovimiento[i].Dcred_cmcmov]);
         }
 
         var wb = XLSX.utils.book_new();
@@ -1543,14 +1634,14 @@
                 sinVencer += cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov;
                 vencido += cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov;
                 ws_data.push([cartera_.carteraCtesSinMovimiento[i].Nomcte_cmcsmov + '',
-                                    cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov + '',
-                                    cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov + '',
-                                    cartera_.carteraCtesSinMovimiento[i].GetUSO + '',
-                                     cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov + '',
-                                      cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov + '',
-                                    cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov + '',
+                cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov + '',
+                cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov + '',
+                cartera_.carteraCtesSinMovimiento[i].GetUSO + '',
+                cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov + '',
+                cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov + '',
+                cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov + '',
 
-                                    cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
+                cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
             }
         }
         ws_data.push(['TOTAL', '', '', '', '', '', sinVencer + '', vencido + '', (sinVencer + vencido) + '']);
@@ -1596,30 +1687,30 @@
                 vencido += cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte;
 
                 ws_data.push([cartera_.carteraMesCte[i].Nomcte_cmcte,
-                                cartera_.carteraMesCte[i].Numcte_cmcte,
-                                cartera_.carteraMesCte[i].Rfc_cmcte,
-                                cartera_.carteraMesCte[i].GetUSO,
-                                cartera_.carteraMesCte[i].Diapro_cmcte,
-                                cartera_.carteraMesCte[i].Diacre_cmcte,
-                                cartera_.carteraMesCte[i].Ssvencer_cmcte,
-                                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
-                                cartera_.carteraMesCte[i].Stotal_cmcte + '', (cartera_.carteraMesCte[i].S060_090_cmcte +
-                                cartera_.carteraMesCte[i].S090_120_cmcte +
-                                cartera_.carteraMesCte[i].S120_150_cmcte +
-                                cartera_.carteraMesCte[i].S150_180_cmcte +
-                                cartera_.carteraMesCte[i].S180_210_cmcte +
-                                cartera_.carteraMesCte[i].S210_240_cmcte +
-                                cartera_.carteraMesCte[i].S240_270_cmcte +
-                                cartera_.carteraMesCte[i].Smas_270_cmcte)]);
+                cartera_.carteraMesCte[i].Numcte_cmcte,
+                cartera_.carteraMesCte[i].Rfc_cmcte,
+                cartera_.carteraMesCte[i].GetUSO,
+                cartera_.carteraMesCte[i].Diapro_cmcte,
+                cartera_.carteraMesCte[i].Diacre_cmcte,
+                cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                cartera_.carteraMesCte[i].Stotal_cmcte + '', (cartera_.carteraMesCte[i].S060_090_cmcte +
+                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                    cartera_.carteraMesCte[i].Smas_270_cmcte)]);
 
                 mas60DiasTot += (cartera_.carteraMesCte[i].S060_090_cmcte +
-                                cartera_.carteraMesCte[i].S090_120_cmcte +
-                                cartera_.carteraMesCte[i].S120_150_cmcte +
-                                cartera_.carteraMesCte[i].S150_180_cmcte +
-                                cartera_.carteraMesCte[i].S180_210_cmcte +
-                                cartera_.carteraMesCte[i].S210_240_cmcte +
-                                cartera_.carteraMesCte[i].S240_270_cmcte +
-                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                    cartera_.carteraMesCte[i].Smas_270_cmcte);
             }
 
         }
@@ -1661,29 +1752,29 @@
         for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
 
             sumaMas60 = cartera_.carteraMesCte[i].S060_090_cmcte +
-                      cartera_.carteraMesCte[i].S090_120_cmcte +
-                      cartera_.carteraMesCte[i].S120_150_cmcte +
-                      cartera_.carteraMesCte[i].S150_180_cmcte +
-                      cartera_.carteraMesCte[i].S180_210_cmcte +
-                      cartera_.carteraMesCte[i].S210_240_cmcte +
-                      cartera_.carteraMesCte[i].S240_270_cmcte +
-                      cartera_.carteraMesCte[i].Smas_270_cmcte;
+                cartera_.carteraMesCte[i].S090_120_cmcte +
+                cartera_.carteraMesCte[i].S120_150_cmcte +
+                cartera_.carteraMesCte[i].S150_180_cmcte +
+                cartera_.carteraMesCte[i].S180_210_cmcte +
+                cartera_.carteraMesCte[i].S210_240_cmcte +
+                cartera_.carteraMesCte[i].S240_270_cmcte +
+                cartera_.carteraMesCte[i].Smas_270_cmcte;
 
             if (sumaMas60 > 0) {
 
                 ws_data.push([cartera_.carteraMesCte[i].Numcte_cmcte,
-                                     cartera_.carteraMesCte[i].Nomcte_cmcte,
-                                     cartera_.carteraMesCte[i].Rfc_cmcte,
-                                     cartera_.carteraMesCte[i].GetUSO,
-                                     cartera_.carteraMesCte[i].S060_090_cmcte,
-                                     cartera_.carteraMesCte[i].S090_120_cmcte,
-                                     cartera_.carteraMesCte[i].S120_150_cmcte,
-                                     cartera_.carteraMesCte[i].S150_180_cmcte,
-                                     cartera_.carteraMesCte[i].S180_210_cmcte,
-                                     cartera_.carteraMesCte[i].S210_240_cmcte,
-                                     cartera_.carteraMesCte[i].S240_270_cmcte,
-                                     cartera_.carteraMesCte[i].Smas_270_cmcte,
-                                     sumaMas60]);
+                cartera_.carteraMesCte[i].Nomcte_cmcte,
+                cartera_.carteraMesCte[i].Rfc_cmcte,
+                cartera_.carteraMesCte[i].GetUSO,
+                cartera_.carteraMesCte[i].S060_090_cmcte,
+                cartera_.carteraMesCte[i].S090_120_cmcte,
+                cartera_.carteraMesCte[i].S120_150_cmcte,
+                cartera_.carteraMesCte[i].S150_180_cmcte,
+                cartera_.carteraMesCte[i].S180_210_cmcte,
+                cartera_.carteraMesCte[i].S210_240_cmcte,
+                cartera_.carteraMesCte[i].S240_270_cmcte,
+                cartera_.carteraMesCte[i].Smas_270_cmcte,
+                    sumaMas60]);
             }
             totalMas60 += sumaMas60;
             sumaMas60 = 0;
@@ -1815,18 +1906,18 @@
 
             if (arrPenGral[i].Cantidad > 0) {
                 tablausonvta.addRow([
-                                                    arrPenGral[i].TipoServ,
-                                                    arrPenGral[i].TipoPed,
-                                                   arrPenGral[i].Cantidad
+                    arrPenGral[i].TipoServ,
+                    arrPenGral[i].TipoPed,
+                    arrPenGral[i].Cantidad
 
                 ]);
             }
 
         }
         tablausonvta.addRow([
-                                                        "Total",
-                                                        "",
-                                                       sum
+            "Total",
+            "",
+            sum
 
         ]);
         var formatter = new google.visualization.ColorFormat();
@@ -1891,9 +1982,9 @@
 
             if (arrCanGral[i].Cantidad > 0) {
                 tablausonvta.addRow([
-                                                    arrCanGral[i].TipoServ,
-                                                    arrCanGral[i].TipoPed,
-                                                   arrCanGral[i].Cantidad
+                    arrCanGral[i].TipoServ,
+                    arrCanGral[i].TipoPed,
+                    arrCanGral[i].Cantidad
 
                 ]);
             }
@@ -1902,9 +1993,9 @@
 
         }
         tablausonvta.addRow([
-                                                       "Total",
-                                                       "",
-                                                      sum
+            "Total",
+            "",
+            sum
 
         ]);
 
@@ -1931,14 +2022,14 @@
         for (var i = 0; i < data.length; i++) {
 
             tablausonvta.addRow([
-                                data[i].Ruta_rep,
-                                data[i].Cantidad
+                data[i].Ruta_rep,
+                data[i].Cantidad
             ]);
             sum += parseInt(data[i].Cantidad);
         }
         tablausonvta.addRow([
-                                                     "Total",
-                                                    sum
+            "Total",
+            sum
 
         ]);
 
@@ -2006,10 +2097,10 @@
         for (var i = 0; i < data.length; i++) {
 
             tablaPenXRut.addRow([
-                                data[i].num_ped + '',
-                                data[i].fhr_ped,
-                                data[i].fecsur_ped,
-                                data[i].observ_ped,
+                data[i].num_ped + '',
+                data[i].fhr_ped,
+                data[i].fecsur_ped,
+                data[i].observ_ped,
             ]);
 
 
@@ -2028,10 +2119,10 @@
 
         });
 
-
-        var msg = document.getElementById('dlgPedPenXRut');
-        msg.showModal();
-        dialogos.push(msg)
+        muestraDialog('dlgPedPenXRut');
+        //var msg = document.getElementById('dlgPedPenXRut');
+        //msg.showModal();
+        //dialogos.push(msg)
     }
 
     function showCanRut(data) {
@@ -2048,16 +2139,16 @@
         for (var i = 0; i < data.length; i++) {
 
             tablausonvta.addRow([
-                                data[i].Ruta_rep,
-                                data[i].Fecha_rep,
-                                data[i].Cantidad
+                data[i].Ruta_rep,
+                data[i].Fecha_rep,
+                data[i].Cantidad
             ]);
             sum += parseInt(data[i].Cantidad);
 
         }
         tablausonvta.addRow([
-                                                    "Total", "",
-                                                   sum
+            "Total", "",
+            sum
 
         ]);
 
@@ -2398,13 +2489,13 @@
                     colorvsks = "#FA1919";
                 }
                 tablausonvta.addRow([
-                                                       usos[i].desc,
-                                                        new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notas).toFixed(2)) + '',
-                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilos).toFixed(2)) + '',
-                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notasAnt).toFixed(2)) + '',
-                                                       new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilosAnt).toFixed(2)) + '',
-                                                      '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].notas - usos[i].notasAnt)).toFixed(2)) + '<label>',
-                                                      '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].kilos - usos[i].kilosAnt)).toFixed(2)) + '<label>'
+                    usos[i].desc,
+                    new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notas).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilos).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].notasAnt).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(usos[i].kilosAnt).toFixed(2)) + '',
+                    '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].notas - usos[i].notasAnt)).toFixed(2)) + '<label>',
+                    '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format(parseFloat((usos[i].kilos - usos[i].kilosAnt)).toFixed(2)) + '<label>'
                 ]);
             }
         }
@@ -2558,13 +2649,13 @@
                     colorvsks = "#FA1919";
                 }
                 tablausonvta.addRow([
-                               rutas[i].ruta + '',
-                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notas).toFixed(2)) + '',
-                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilos).toFixed(2)) + '',
-                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notasAnt).toFixed(2)) + '',
-                               new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilosAnt).toFixed(2)) + '',
-                               '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].notas - rutas[i].notasAnt).toFixed(2)) + '<label>',
-                               '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].kilos - rutas[i].kilosAnt).toFixed(2)) + '<label>'
+                    rutas[i].ruta + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notas).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilos).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].notasAnt).toFixed(2)) + '',
+                    new Intl.NumberFormat('es-MX').format(parseFloat(rutas[i].kilosAnt).toFixed(2)) + '',
+                    '<label style="color:' + colorvsnotas + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].notas - rutas[i].notasAnt).toFixed(2)) + '<label>',
+                    '<label style="color:' + colorvsks + '">' + new Intl.NumberFormat('es-MX').format((rutas[i].kilos - rutas[i].kilosAnt).toFixed(2)) + '<label>'
                 ]);
             }
 
@@ -2667,12 +2758,12 @@
         for (var l = 0; l < arr_dias.length; l++) {
 
             data.addRow([arr_dias[l].dia,
-                          arr_dias[l].kilos,
-                          null,
-                          arr_dias[l].kilos + '',
-                          arr_dias[l].kilosAnt,
-                          null,
-                          arr_dias[l].kilosAnt + '',
+            arr_dias[l].kilos,
+                null,
+            arr_dias[l].kilos + '',
+            arr_dias[l].kilosAnt,
+                null,
+            arr_dias[l].kilosAnt + '',
             ]);
 
 
@@ -2715,24 +2806,30 @@
         }
 
 
-        document.getElementById('imgCargando').style.display = 'inline';
+        //document.getElementById('imgCargando').style.display = 'inline';
         $.ajax({
             type: "POST",
             url: "/Home/Cartera/",
             data: { paramSrv: serv, fechaI: $("#fm").val() + "-01" },
             datatype: "json",
+            beforeSend: function (objeto) {
+                $('.spinner').css('display', 'block');
+            },
+            complete: function () {
+                $('.spinner').css('display', 'none');
+            },
             success: function (data) {
 
                 cartera_ = data[0];
                 notasCredito = data[1];
                 descuentoDir = data[2];
                 drawCartera(cartera_);
-                document.getElementById('imgCargando').style.display = 'none';
+                // document.getElementById('imgCargando').style.display = 'none';
             },
             error: function (request, status, error) {
 
                 alert(request.responseText);
-                document.getElementById('imgCargando').style.display = 'none';
+                //document.getElementById('imgCargando').style.display = 'none';
             }
         });
 
@@ -2740,15 +2837,15 @@
     // grafica la cobranza en graficas de barras y depastl asi como  en tablas
     function drawCartera(cartera) {
         //
-        document.getElementById('GrfCarMovDiv').style.display = "inline-block";
-        document.getElementById('GrfCarUsoDiv').style.display = "inline-block";
-        document.getElementById('tblCob').style.display = "inline";
+        //document.getElementById('GrfCarMovDiv').style.display = "inline-block";
+        //document.getElementById('GrfCarUsoDiv').style.display = "inline-block";
+        //document.getElementById('tblCob').style.display = "inline";
         var mesSeleccionado = $("#fm").val().toString().split('-')[1];
         var mesPermitidoTodo = (now.getMonth() + 1) + '';
         if (parseInt(mesSeleccionado) != parseInt(mesPermitidoTodo)) {
-            document.getElementById('GrfCarMovDiv').style.display = "none";
-            document.getElementById('GrfCarUsoDiv').style.display = "none";
-            document.getElementById('tblCob').style.display = "none";
+            //document.getElementById('GrfCarMovDiv').style.display = "none";
+            //document.getElementById('GrfCarUsoDiv').style.display = "none";
+            //document.getElementById('tblCob').style.display = "none";
         }
 
 
@@ -2757,9 +2854,9 @@
         /**************** grafica de pastel ***************/
         if (cartera.carteraMes.Ssvencer_cmes != null && cartera.carteraMes.SaldoVencido != null) {
             var data = google.visualization.arrayToDataTable([
-           ['Task', 'Hours per Day'],
-           ['corriente ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.Ssvencer_cmes.toFixed(2)), cartera.carteraMes.Ssvencer_cmes],
-           ['vencido ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.SaldoVencido.toFixed(2)), cartera.carteraMes.SaldoVencido]]);
+                ['Task', 'Hours per Day'],
+                ['corriente ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.Ssvencer_cmes.toFixed(2)), cartera.carteraMes.Ssvencer_cmes],
+                ['vencido ' + new Intl.NumberFormat('es-MX').format(cartera.carteraMes.SaldoVencido.toFixed(2)), cartera.carteraMes.SaldoVencido]]);
             options = {
                 pieSliceTextStyle: { fontSize: 20 },
                 legend: {
@@ -2786,9 +2883,9 @@
             };
         } else {
             var data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['corriente sin info', 0],
-          ['vencido sin info', 0]]);
+                ['Task', 'Hours per Day'],
+                ['corriente sin info', 0],
+                ['vencido sin info', 0]]);
             options = {
                 pieSliceTextStyle: { fontSize: 20 },
                 legend: {
@@ -2843,14 +2940,15 @@
 
         var options = {
             title: '',
-            chartArea: { width: '70%', height: '70%' },
+            //chartArea: { width: '100%', height: '70%' },
             hAxis: {
                 title: 'Pesos',
                 minValue: 0
             },
             vAxis: {
                 title: 'Uso'
-            }
+            },
+            backgroundColor: { fill: 'transparent' }
         };
 
         var chart2 = new google.visualization.BarChart(document.getElementById('GrfCarMov'));
@@ -2903,19 +3001,19 @@
             tablacartera.addColumn("string", "+60 DIAS");
 
             var mas60dias = cartera.carteraMes.S060_090_cmes +
-                            cartera.carteraMes.S090_120_cmes +
-                            cartera.carteraMes.S120_150_cmes +
-                            cartera.carteraMes.S150_180_cmes +
-                            cartera.carteraMes.S180_210_cmes +
-                            cartera.carteraMes.S210_240_cmes +
-                            cartera.carteraMes.S240_270_cmes +
-                            cartera.carteraMes.Smas_270_cmes;
+                cartera.carteraMes.S090_120_cmes +
+                cartera.carteraMes.S120_150_cmes +
+                cartera.carteraMes.S150_180_cmes +
+                cartera.carteraMes.S180_210_cmes +
+                cartera.carteraMes.S210_240_cmes +
+                cartera.carteraMes.S240_270_cmes +
+                cartera.carteraMes.Smas_270_cmes;
             var mas60diasDeu = 0;
             if (cartera.carteraDeudoresDiversos != null)
                 mas60diasDeu = cartera.carteraDeudoresDiversos.D60_rep +
-                cartera.carteraDeudoresDiversos.D90_rep +
-                cartera.carteraDeudoresDiversos.D180_rep +
-                cartera.carteraDeudoresDiversos.D364_rep;
+                    cartera.carteraDeudoresDiversos.D90_rep +
+                    cartera.carteraDeudoresDiversos.D180_rep +
+                    cartera.carteraDeudoresDiversos.D364_rep;
 
 
             // AGREGANDO IDICADORES FINANCIEROS  Y +60 DIAS
@@ -2970,19 +3068,19 @@
             if (cartera.carteraMes.Stotal_cmes != null)
                 if (parseInt(mesSeleccionado) != parseInt(mesPermitidoTodo)) {
                     tablacartera.addRow(['<label style=" background:#90BCF5;  width:100%;">CARTERA CTES</label>',
-                                 '<label style="  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
-                                 '']);
+                        '<label style="  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
+                        '']);
                     mas60dias = 0;
                 } else {
                     tablacartera.addRow(['<label style="  background:#90BCF5;  width:100%;">CARTERA CTES</label>',
-                                 '<label style=" background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
-                                 '<button class="btn btn-primary"  onclick="showCtesMas60Dias()" style=" width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60dias.toFixed(2)) + '</button>']);
+                        '<label style=" background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(carteraCtes.toFixed(2)) + '</label>',
+                        '<button class="btn btn-primary"  onclick="showCtesMas60Dias()" style=" width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60dias.toFixed(2)) + '</button>']);
                 }
             if (cartera.carteraDeudoresDiversos != null)
                 if (cartera.carteraDeudoresDiversos.Sal_rep != null)
                     tablacartera.addRow(['<label  style="  background:#90BCF5; width:100%;">DEUDORES DIVERSOS</label>',
-                                        '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(deudoresDiv.toFixed(2)) + '</label>',
-                                        '<label style=" background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60diasDeu.toFixed(2)) + '</label>']);
+                        '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(deudoresDiv.toFixed(2)) + '</label>',
+                        '<label style=" background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(mas60diasDeu.toFixed(2)) + '</label>']);
 
             var negPoscartTot = '000000';
             if ((carteraCtes + deudoresDiv) < 0) {
@@ -2994,34 +3092,34 @@
             }
             // Totla de carteta y deudores diversos
             tablacartera.addRow(['<label  style="color:#000000; background:#90BCF5; width:100%;">CARTERA TOTAL</label>',
-                                       '<label style="color:#' + negPoscartTot + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((carteraCtes + deudoresDiv).toFixed(2)) + '</label>',
-                                       '<label style="color:#' + negPosMas60 + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((mas60dias + mas60diasDeu).toFixed(2)) + '</label>']);
+                '<label style="color:#' + negPoscartTot + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((carteraCtes + deudoresDiv).toFixed(2)) + '</label>',
+                '<label style="color:#' + negPosMas60 + '; background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((mas60dias + mas60diasDeu).toFixed(2)) + '</label>']);
 
             if (cartera.carteraMes.CobranzaAcumuladoMes != null)
                 tablacartera.addRow(['<label style=" background:#FEAEA5; width:100%;">COBRANZA ACUMULADA</label>',
-                                  '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(cobranza.toFixed(2)) + '</label>',
-                                  '']);
+                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(cobranza.toFixed(2)) + '</label>',
+                    '']);
             if (cartera.carteraMes.CréditoAcumuladoMes != null)
                 tablacartera.addRow(['<label  style=" background:#FEAEA5; background:#FEAEA5;  width:100%;">CREDITO ACUMULADO</label>',
-                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(credito.toFixed(2)) + '</label>',
-                                    '']);
+                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(credito.toFixed(2)) + '</label>',
+                    '']);
             var cobMenosCred = '000000';
             if ((cobranza - credito) < 0) {
                 cobMenosCred = 'EC1D05';
             }
             // Total de cobranza y credito
             tablacartera.addRow(['<label  style="color:#000000; background:#FEAEA5;; width:100%;">COBRANZA - CREDITO</label>',
-                                       '<label style="color:#' + cobMenosCred + '; background:#FEAEA5;; width:100%;">' + new Intl.NumberFormat('es-MX').format((cobranza - credito).toFixed(2)) + '</label>',
-                                       '']);
+                '<label style="color:#' + cobMenosCred + '; background:#FEAEA5;; width:100%;">' + new Intl.NumberFormat('es-MX').format((cobranza - credito).toFixed(2)) + '</label>',
+                '']);
 
             if (cartera.carteraMes.DepositoBancario != null)
                 tablacartera.addRow(['<label  style=" background:#90BCF5; width:100%;">DEP BANCARIOS</label>',
-                                    '<label style="  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(depBanc.toFixed(2)) + '</label>',
-                                    '']);
+                    '<label style="  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format(depBanc.toFixed(2)) + '</label>',
+                    '']);
             if (cartera.carteraMes.VentasAcumuladoMes != null)
                 tablacartera.addRow(['<label style="  background:#90BCF5;  width:100%;">VENTA ACUMULADA</label>',
-                                 '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(vtaTot.toFixed(2)) + '</label>',
-                                 '']);
+                    '<label style="  background:#90BCF5;  width:100%;">' + new Intl.NumberFormat('es-MX').format(vtaTot.toFixed(2)) + '</label>',
+                    '']);
 
             var depMenosVta = '000000';
             if ((depBanc - vtaTot) < 0) {
@@ -3029,17 +3127,17 @@
             }
             // Depositos - venta total
             tablacartera.addRow(['<label  style="color:#000000; background:#90BCF5; width:100%;">DEP BAN - VENTA</label>',
-                                      '<label style="color:#' + depMenosVta + ';  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((depBanc - vtaTot).toFixed(2)) + '</label>',
-                                      '']);
+                '<label style="color:#' + depMenosVta + ';  background:#90BCF5; width:100%;">' + new Intl.NumberFormat('es-MX').format((depBanc - vtaTot).toFixed(2)) + '</label>',
+                '']);
 
             if (notasCredito != null)
                 tablacartera.addRow(['<label  style=" background:#FEAEA5;  width:100%;">NOTAS DE CREDITO</label>',
-                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(notasCred.toFixed(2)) + '</label>',
-                                    '']);
+                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(notasCred.toFixed(2)) + '</label>',
+                    '']);
             if (notasCredito != null)
                 tablacartera.addRow(['<label  style=" background:#FEAEA5;  width:100%;">DESCUENTO DIRECTO</label>',
-                                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(descuentoDir.toFixed(2)) + '</label>',
-                                    '']);
+                    '<label style=" background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format(descuentoDir.toFixed(2)) + '</label>',
+                    '']);
 
             var descTotal = '000000';
             if ((notasCred + descuentoDir) < 0) {
@@ -3047,8 +3145,8 @@
             }
             // notas de credito + descuento directo
             tablacartera.addRow(['<label  style="color:#000000; background:#FEAEA5;; width:100%;">DESCUENTO TOTAL</label>',
-                                      '<label style="color:#' + descTotal + '; background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format((notasCred + descuentoDir).toFixed(2)) + '</label>',
-                                      '']);
+                '<label style="color:#' + descTotal + '; background:#FEAEA5; width:100%;">' + new Intl.NumberFormat('es-MX').format((notasCred + descuentoDir).toFixed(2)) + '</label>',
+                '']);
 
 
 
@@ -3059,7 +3157,21 @@
             document.getElementById('lbldiarot').innerHTML = cartera.carteraMes.Rotcar_cmes + "";
             document.getElementById('lbldiaprom').innerHTML = cartera.carteraMes.Diapro_cmes + "";
             var contenedor6 = new google.visualization.Table(flujCar);
-            contenedor6.draw(tablacartera, { allowHtml: true, showRowNumber: true });
+            contenedor6.draw(tablacartera, {
+                allowHtml: true, showRowNumber: false, chartArea: {
+                    // leave room for y-axis labels
+                    width: '100%',
+                    backgroundColor: 'transparent'
+                },
+                legend: {
+                    position: 'top'
+                },
+                width: '100%',
+                backgroundColor: { fill: 'transparent' }
+                //sort: 'disable',
+                //sortAscending: false,
+                //ordenarColumna: 0
+            });
 
 
 
@@ -3092,17 +3204,17 @@
 
         for (var i = 0; i < cartera.carteraCtesConMovimiento.length; i++) {
             tablausonvta.addRow([cartera.carteraCtesConMovimiento[i].Nomcte_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Numcte_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Rfc_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].GetUSO,
-                                cartera.carteraCtesConMovimiento[i].Svencer_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Vencido_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Dmesant_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Pmesant_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Diapro_cmcmov,
-                                cartera.carteraCtesConMovimiento[i].Dcred_cmcmov]);
+            cartera.carteraCtesConMovimiento[i].Numcte_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Rfc_cmcmov,
+            cartera.carteraCtesConMovimiento[i].GetUSO,
+            cartera.carteraCtesConMovimiento[i].Svencer_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Vencido_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Dmesant_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Pmesant_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Dvmesant_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Pvmesant_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Diapro_cmcmov,
+            cartera.carteraCtesConMovimiento[i].Dcred_cmcmov]);
         }
 
         var contenedor5 = new google.visualization.Table(tblIncrCred);
@@ -3136,13 +3248,13 @@
                 vencido += cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov;
 
                 tablausonvta.addRow([cartera_.carteraCtesSinMovimiento[i].Nomcte_cmcsmov,
-                                cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov,
-                                cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov,
-                                cartera_.carteraCtesSinMovimiento[i].GetUSO,
-                                cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov,
-                                 cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov,
-                                cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov,
-                                cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
+                cartera_.carteraCtesSinMovimiento[i].Numcte_cmcsmov,
+                cartera_.carteraCtesSinMovimiento[i].Rfc_cmcsmov,
+                cartera_.carteraCtesSinMovimiento[i].GetUSO,
+                cartera_.carteraCtesSinMovimiento[i].Diapro_cmcsmov,
+                cartera_.carteraCtesSinMovimiento[i].Dcred_cmcsmov,
+                cartera_.carteraCtesSinMovimiento[i].Svencer_cmcsmov,
+                cartera_.carteraCtesSinMovimiento[i].Vencido_cmcsmov, '']);
             }
 
         }
@@ -3153,10 +3265,10 @@
         var contenedor5 = new google.visualization.Table(divUsoSinMovDet);
         contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
 
-
-        var msg = document.getElementById('dlgUsoSinMov');
-        msg.showModal();
-        dialogos.push(msg);
+        muestraDialog('dlgUsoSinMov');
+        //var msg = document.getElementById('dlgUsoSinMov');
+        //msg.showModal();
+        //dialogos.push(msg);
     }
     //muestra en una tabla el detalle de la cartera  por uso
     function detCrtUsoMov(uso) {
@@ -3183,32 +3295,32 @@
                 vencido += cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte;
 
                 tablausonvta.addRow([cartera_.carteraMesCte[i].Nomcte_cmcte,
-                                cartera_.carteraMesCte[i].Numcte_cmcte,
-                                cartera_.carteraMesCte[i].Rfc_cmcte,
-                                cartera_.carteraMesCte[i].GetUSO,
-                                cartera_.carteraMesCte[i].Diapro_cmcte + '',
-                                cartera_.carteraMesCte[i].Diacre_cmcte + '',
+                cartera_.carteraMesCte[i].Numcte_cmcte,
+                cartera_.carteraMesCte[i].Rfc_cmcte,
+                cartera_.carteraMesCte[i].GetUSO,
+                cartera_.carteraMesCte[i].Diapro_cmcte + '',
+                cartera_.carteraMesCte[i].Diacre_cmcte + '',
 
-                                cartera_.carteraMesCte[i].Ssvencer_cmcte,
-                                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
-                                cartera_.carteraMesCte[i].Stotal_cmcte + '',
-                                (cartera_.carteraMesCte[i].S060_090_cmcte +
-                                cartera_.carteraMesCte[i].S090_120_cmcte +
-                                cartera_.carteraMesCte[i].S120_150_cmcte +
-                                cartera_.carteraMesCte[i].S150_180_cmcte +
-                                cartera_.carteraMesCte[i].S180_210_cmcte +
-                                cartera_.carteraMesCte[i].S210_240_cmcte +
-                                cartera_.carteraMesCte[i].S240_270_cmcte +
-                                cartera_.carteraMesCte[i].Smas_270_cmcte)]);
+                cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                cartera_.carteraMesCte[i].Stotal_cmcte - cartera_.carteraMesCte[i].Ssvencer_cmcte,
+                cartera_.carteraMesCte[i].Stotal_cmcte + '',
+                (cartera_.carteraMesCte[i].S060_090_cmcte +
+                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                    cartera_.carteraMesCte[i].Smas_270_cmcte)]);
 
                 totMas60Dias += (cartera_.carteraMesCte[i].S060_090_cmcte +
-                                cartera_.carteraMesCte[i].S090_120_cmcte +
-                                cartera_.carteraMesCte[i].S120_150_cmcte +
-                                cartera_.carteraMesCte[i].S150_180_cmcte +
-                                cartera_.carteraMesCte[i].S180_210_cmcte +
-                                cartera_.carteraMesCte[i].S210_240_cmcte +
-                                cartera_.carteraMesCte[i].S240_270_cmcte +
-                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                    cartera_.carteraMesCte[i].Smas_270_cmcte);
             }
 
         }
@@ -3219,10 +3331,10 @@
         var contenedor5 = new google.visualization.Table(divUsoMovDet);
         contenedor5.draw(tablausonvta, { allowHtml: true, showRowNumber: true });
 
-
-        var msg = document.getElementById('dlgUsoMov');
-        msg.showModal();
-        dialogos.push(msg);
+        muestraDialog('dlgUsoMov');
+        //var msg = document.getElementById('dlgUsoMov');
+        //msg.showModal();
+        //dialogos.push(msg);
     }
 
     function grfCarteraUso(tipo) {
@@ -3254,14 +3366,14 @@
 
 
                                 arrUsoMas60Dias[j].total += (
-                                cartera_.carteraMesCte[i].S060_090_cmcte +
-                                cartera_.carteraMesCte[i].S090_120_cmcte +
-                                cartera_.carteraMesCte[i].S120_150_cmcte +
-                                cartera_.carteraMesCte[i].S150_180_cmcte +
-                                cartera_.carteraMesCte[i].S180_210_cmcte +
-                                cartera_.carteraMesCte[i].S210_240_cmcte +
-                                cartera_.carteraMesCte[i].S240_270_cmcte +
-                                cartera_.carteraMesCte[i].Smas_270_cmcte);
+                                    cartera_.carteraMesCte[i].S060_090_cmcte +
+                                    cartera_.carteraMesCte[i].S090_120_cmcte +
+                                    cartera_.carteraMesCte[i].S120_150_cmcte +
+                                    cartera_.carteraMesCte[i].S150_180_cmcte +
+                                    cartera_.carteraMesCte[i].S180_210_cmcte +
+                                    cartera_.carteraMesCte[i].S210_240_cmcte +
+                                    cartera_.carteraMesCte[i].S240_270_cmcte +
+                                    cartera_.carteraMesCte[i].Smas_270_cmcte);
                                 usoEcontrado = true;
                                 break;
                             }
@@ -3274,14 +3386,14 @@
 
 
                                     arrUsoMas60Dias[j].total += (
-                                    cartera_.carteraMesCte[i].S060_090_cmcte +
-                                    cartera_.carteraMesCte[i].S090_120_cmcte +
-                                    cartera_.carteraMesCte[i].S120_150_cmcte +
-                                    cartera_.carteraMesCte[i].S150_180_cmcte +
-                                    cartera_.carteraMesCte[i].S180_210_cmcte +
-                                    cartera_.carteraMesCte[i].S210_240_cmcte +
-                                    cartera_.carteraMesCte[i].S240_270_cmcte +
-                                    cartera_.carteraMesCte[i].Smas_270_cmcte);
+                                        cartera_.carteraMesCte[i].S060_090_cmcte +
+                                        cartera_.carteraMesCte[i].S090_120_cmcte +
+                                        cartera_.carteraMesCte[i].S120_150_cmcte +
+                                        cartera_.carteraMesCte[i].S150_180_cmcte +
+                                        cartera_.carteraMesCte[i].S180_210_cmcte +
+                                        cartera_.carteraMesCte[i].S210_240_cmcte +
+                                        cartera_.carteraMesCte[i].S240_270_cmcte +
+                                        cartera_.carteraMesCte[i].Smas_270_cmcte);
                                     cartera_.carteraMesCte[i].usoEcontrado = true;
                                     break;
                                 }
@@ -3311,14 +3423,15 @@
 
         var options = {
             title: '',
-            chartArea: { width: '70%', height: '70%' },
+            //chartArea: { width: '100%', height: '70%' },
             hAxis: {
                 title: 'Pesos',
                 minValue: 0
             },
             vAxis: {
                 title: 'Uso'
-            }
+            },
+            backgroundColor: { fill: 'transparent' }
         };
 
         var chart1 = new google.visualization.BarChart(document.getElementById('GrfCarUso'));
@@ -3432,29 +3545,29 @@
         for (var i = 0; i < cartera_.carteraMesCte.length; i++) {
 
             sumaMas60 = cartera_.carteraMesCte[i].S060_090_cmcte +
-                      cartera_.carteraMesCte[i].S090_120_cmcte +
-                      cartera_.carteraMesCte[i].S120_150_cmcte +
-                      cartera_.carteraMesCte[i].S150_180_cmcte +
-                      cartera_.carteraMesCte[i].S180_210_cmcte +
-                      cartera_.carteraMesCte[i].S210_240_cmcte +
-                      cartera_.carteraMesCte[i].S240_270_cmcte +
-                      cartera_.carteraMesCte[i].Smas_270_cmcte;
+                cartera_.carteraMesCte[i].S090_120_cmcte +
+                cartera_.carteraMesCte[i].S120_150_cmcte +
+                cartera_.carteraMesCte[i].S150_180_cmcte +
+                cartera_.carteraMesCte[i].S180_210_cmcte +
+                cartera_.carteraMesCte[i].S210_240_cmcte +
+                cartera_.carteraMesCte[i].S240_270_cmcte +
+                cartera_.carteraMesCte[i].Smas_270_cmcte;
 
             if (sumaMas60 > 0) {
 
                 tablausonvta.addRow([cartera_.carteraMesCte[i].Numcte_cmcte,
-                                     cartera_.carteraMesCte[i].Nomcte_cmcte,
-                                     cartera_.carteraMesCte[i].Rfc_cmcte,
-                                     cartera_.carteraMesCte[i].GetUSO,
-                                     cartera_.carteraMesCte[i].S060_090_cmcte,
-                                     cartera_.carteraMesCte[i].S090_120_cmcte,
-                                     cartera_.carteraMesCte[i].S120_150_cmcte,
-                                     cartera_.carteraMesCte[i].S150_180_cmcte,
-                                     cartera_.carteraMesCte[i].S180_210_cmcte,
-                                     cartera_.carteraMesCte[i].S210_240_cmcte,
-                                     cartera_.carteraMesCte[i].S240_270_cmcte,
-                                     cartera_.carteraMesCte[i].Smas_270_cmcte,
-                                     sumaMas60]);
+                cartera_.carteraMesCte[i].Nomcte_cmcte,
+                cartera_.carteraMesCte[i].Rfc_cmcte,
+                cartera_.carteraMesCte[i].GetUSO,
+                cartera_.carteraMesCte[i].S060_090_cmcte,
+                cartera_.carteraMesCte[i].S090_120_cmcte,
+                cartera_.carteraMesCte[i].S120_150_cmcte,
+                cartera_.carteraMesCte[i].S150_180_cmcte,
+                cartera_.carteraMesCte[i].S180_210_cmcte,
+                cartera_.carteraMesCte[i].S210_240_cmcte,
+                cartera_.carteraMesCte[i].S240_270_cmcte,
+                cartera_.carteraMesCte[i].Smas_270_cmcte,
+                    sumaMas60]);
             }
             totalMas60 += sumaMas60;
             sumaMas60 = 0;
@@ -3468,13 +3581,13 @@
 
 
 
-
-        var msg = document.getElementById('mas60Dias');
-        msg.showModal();
-        dialogos.push(msg);
+        muestraDialog('mas60Dias');
+        //var msg = document.getElementById('mas60Dias');
+        //msg.showModal();
+        //dialogos.push(msg);
     }
     /////////////////////////////////////////////////////METODOS DE USO GENERAL/////////////////////////////////////////
-    function cerrarDialog() {
+    function cierraDialog() {
         for (var i = 0; i < dialogos.length; i++) {
             dialogos[i].close();
         }
@@ -3490,7 +3603,7 @@
 
         if (document.getElementById('serv').innerHTML == 'Admin') {
 
-            window.open("http://172.16.1.155:9600/?user=fuente&pass=espuma1");
+            window.open("http://172.16.1.155:9600");
         }
         else {
             var planta = "";
@@ -3501,7 +3614,7 @@
                 }
             }
             if (planta != "") {
-                window.open("http://172.16.1.155:9600/?user=" + document.getElementById('usr').innerHTML + "&pass=" + document.getElementById('pwd').innerHTML + "&pla=" + planta);
+                window.open("http://172.16.1.155:9600");
             }
         }
 
@@ -3513,11 +3626,7 @@
     }
 </script>
 <style>
-    #grfCob {
-        overflow-x: scroll;
-        overflow-y: hidden;
-        white-space: nowrap;
-    }
+
 
     #tblCob {
         overflow-x: scroll;
@@ -3567,3 +3676,4 @@
         border-radius: 20px;
     }
 </style>
+

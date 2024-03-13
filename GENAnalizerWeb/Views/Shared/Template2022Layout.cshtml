@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    
+    <link href="~/Images/TI SISTEMAS nieto.png" rel="icon">
+    <link href="~/Images/TI SISTEMAS nieto.png" rel="apple-touch-icon">
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Scripts/drawMaps.js"></script>
+    <script src="~/Scripts/Common/mensajesSweetAlert.js"></script>
+    <script src="~/Scripts/Common/playerYoutube.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="~/Styles/FileIcons.css" rel="stylesheet" />
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
+
+
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/Styles/NiceAdmin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="~/Styles/NiceAdmin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/Styles/NiceAdmin/assets/css/style.css" rel="stylesheet">
+
+
+    <link href="~/Styles/SpinnerLoad.css" rel="stylesheet" />
+
+    <link href="~/Styles/Cards/Cards.css" rel="stylesheet" />
+
+    <link href="~/Styles/SpinnerLoad.css" rel="stylesheet" />
+</head>
+
+<div style="height:95vh; ">
+
+    @RenderBody()
+</div>
+<div class="spinner" style="display:none">
+    <div class="center-div">
+        <div class="inner-div">
+            <div class="loader">
+
+                <img id="loader" class="loader" src="~/Images/Logo-App.png" style="width:100%" />
+            </div>
+        </div>
+    </div>
+</div>
+<footer id="" class="" style="height:5vh;">
+    @*<div class="copyright">
+            &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+        </div>*@
+    <div class="credits">
+
+
+
+        <center>
+            Designed by TI Sistemas Nieto
+            <br /><img src="~/Images/TI SISTEMAS nieto.png" style="width:20px;" />
+        </center>
+    </div>
+</footer>
+@Scripts.Render("~/bundles/jquery")
+@RenderSection("scripts", required: false)
+
+
+
+
+
+<!-- Vendor JS Files -->
+<script src="~/Styles/NiceAdmin/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/echarts/echarts.min.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/quill/quill.min.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="~/Styles/NiceAdmin/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="~/Styles/NiceAdmin/assets/js/main.js"></script>
+
+<link href="~/Styles/Cards/Cards.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+
+<script src="~/Scripts/Resource/sweetalert2@10.js"></script>
+<script src="~/Scripts/Resource/bootstrap-select.js"></script>
+<script src="~/Scripts/Common/common.js"></script>
+<script src="~/Scripts/Common/Generales.js"></script>
+<script src="~/Scripts/Common/MsgBroadcastPestañas.js"></script>
+@*<script src="~/Scripts/Common/jquery.filedrop.js"></script>*@
+<script src="~/Scripts/filedrop.js"></script>
+
+<script lang="javascript" src="~/Scripts/xlsx.full.min.js"></script>
+<script lang="javascript" src="~/Scripts/FileSaver.min.js"></script>
+<!--Mapa-->
+<!--graficos de google-->
+<!-- Nice Admin -->
+<!--<script src="~/Styles/FlexStartBoostrap/assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/chart.js/chart.umd.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/echarts/echarts.min.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/quill/quill.min.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/vendor/php-email-form/validate.js"></script>
+<script src="~/Styles/FlexStartBoostrap/assets/js/main.js"></script>-->
+
+
+
+
+</html>
+
+<script>
+    $('head').append('<link rel="stylesheet" type="text/css" href="../Styles/background.css">');
+    /*
+    if (localStorage.getItem("empresa") != null && localStorage.getItem("empresa") != '') {
+        if (localStorage.getItem("empresa") == 'PLUS') {
+            $("#image_profile").attr("src", "/Images/TEMAS/PLUS/logo_plus.png");
+            $("#id_logo").attr("src", "/Images/TEMAS/PLUS/logo_plus.png");
+            document.getElementById('accordionSidebar').style.background = "#4D5DA8"
+            $('head').append('<link rel="stylesheet" type="text/css" href="../Styles/backgroundPlus.css">');
+        } else {
+            $("#id_logo").attr("src", "/Images/TEMAS/GEN/logo.png");
+            $('head').append('<link rel="stylesheet" type="text/css" href="../Styles/background.css">');
+
+        }
+    }*/
+</script>
+
+<style>
+    .float-left {
+        right: 0;
+    }
+</style>
+
+<style>
+    #body {
+        width: 100%;
+        min-height: 100vh;
+        background: #ffffff;
+    }
+
+    dialog {
+        color: #000;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50px);
+        box-sizing: border-box;
+        position: absolute;
+        border: none;
+        border-radius: 5px;
+    }
+
+
+    body {
+        background-image: url('../../Styles/FlexStartBoostrap/assets/img/hero-bg.png');
+    }
+</style>
+
+<script>
+    var arr_plantas =
+
+        [
+            'Aguascalientes|29|GEN AGUASCALIENTES',
+            'Arandas|19|GEN ARANDAS',
+            'Celaya|01|GEN CELAYA',
+            'Celaya|93|PLG CELAYA',
+            'Culiacan|24|GEN CULIACAN',
+            'Culiacan|58|GEN CULIACAN',
+            'Culiacan|59|GEN CULIACAN',
+            'Dolores|07|GEN DOLORES',
+            'Dolores|89|PLG  DOLORES',
+            'Dolores|90|PLG  SAN FELIPE ',
+            'Guamuchi|26|GEN GUAMUCHIL ',
+            'Irapuato|04|HGS IRAPUATO ',
+            'Irapuato|05|GEN VALLE DE SANTIAGO',
+            'Irapuato|81|GEN PENJAMO ',
+            'Irapuato|82|GEN SILAO-GTO  ',
+            'Leon|20|GEN LEON, GUANAJUATO',
+            'Leon|95|GEN LAGOS DE MORENO ',
+            'LaPiedad|16|GEN',
+            'LaPiedad|55|GEN',
+            'Mazatlan|25|GEN MAZATLAN ',
+            'Mazatlan|46|GEN ESCUINAPA ',
+            'Mochis|27|GEN LOS MOCHIS',
+            'Mochis|48|GEN LOS MOCHIS ',
+            'Mochis|49|GEN GUASAVE ',
+            'Queretar|02|GEN QUERERETARO  ',
+            'Queretar|32|PLG QUERETARO  ',
+            'Queretar|33|GEN GALERAS ',
+            'SanJoseI|13|GEN SAN JOSE ITURBIDE ',
+            'SanJoseI|79|PLG  SAN LUIS DE LA PAZ ',
+            'SanJuan|06|GEN SAN JUAN DEL RIO ',
+            'SanJuan|88|PLG  CAZADERO',
+            'SanLuis|23|GEN SAN LUIS POTOSI ',
+            'SanLuis|76|GEN RIO VERDE ',
+            'SnMiguel|03|GEN SAN MIGUEL',
+            'Mazatlan|03|GAS NE MAZATLAN ',
+            'Tula|28|GEN ATITALAQUIA',
+            'Veracruz|10|GEN VERACRUZ ',
+            'Veracruz|34|GEN LA MANCHA ',
+            'Veracruz|50|GEN CORDOBA',
+            'Veracruz|53|GEN ALVARADO ',
+            'Veracruz|54|GEN COSAMALOAPAN',
+            'Xalapa|08|XALAPA',
+            'Xalapa|36|MARTINEZ',
+            'Xalapa|34|XALAPA',
+            'Xalapa|35|XALAPA',
+            'Acambaro|12|GEN ACAMBARO',
+            'Acambaro|84|GEN ZITACUARO',
+            'Acambaro|87|PLG ZINAPECUARO',
+            'LazaroCardenas|14|GEN',
+            'LazaroCardenas|45|GEN',
+            'Moroleon|18|GEN',
+            'Moroleon|91|PLG URIANGATO',
+            'Moroleon|37|PLG PURUANDIRO',
+            'Moroleon|38|GEN',
+            'Moroleon|39|GEN',
+            'Salvatierra|17|GEN SALVATIERRA',
+            'Morelia|43|GEN EXPRESS ALFAGAS, S.A. DE C.V.',
+            'Morelia|09|GEN EXPRESS MORELIA, S.A. DE C.V.',
+            'Morelia|40|GEN EXPRESS PATZCUARO, S.A. DE C.V.',
+            'Morelia|41|GEN EXPRESS TACAMBARO, S.A DE C.V',
+            'Morelia|42|GEN EXPRESS ZACAPU, S.A DE C.V.',
+            'Morelia|85|PLG ESTACION DE CARBURACION ',
+            'Morelia|86|PLG MORELIA',
+            'Morelia|44|GEN QUINCEO, S.A. DE C.V.',
+            'Uruapan|15|GAS EXPRESS NIETO,URUAPAN',
+            'Uruapan|56|GAS EXPRESSNIETO APATZINGAN',
+            'Uruapan|62|GAS EXPRESS NIETO EST. NUEVA ITALIA',
+            'Uruapan|64|PLANTA TECAL',
+            'Uruapan|60|GAS EXPRESS NIETO (EST.CARB.TANCITARO)',
+            'Uruapan|77|GAS EXPRESS NIETO (EST.CARB.COTIJA)',
+            'Uruapan|96|GAS EXPRESS NIETO (EST.SAHUAYO)',
+            'Uruapan|63|GAS EXPRESS NIETO EST. CARB. PERIBAN'
+        ];
+
+
+    var servers =
+        [
+            'Acambaro',
+            'Aguascalientes',
+            'Arandas',
+            'Celaya',
+            'Culiacan',
+            'Dolores',
+            'Guadalaj',
+            'Guamuchi',
+            'Irapuato',
+            'LaPiedad',
+            'LazaroCardenas',
+            'Leon',
+            'Mazatlan',
+            'Mochis',
+            'Monterrey',
+            'Morelia',
+            'Moroleon',
+            'Queretar',
+            'Salvatierra',
+            'SanJoseI',
+            'SanJuan',
+            'SanLuis',
+            'SnMiguel',
+            'Tepatitlan',
+            'Tula',
+            'Uruapan',
+            'Veracruz',
+            'Xalapa',
+            'Admin'
+        ];
+
+
+    var arrPlaRep = [
+        { planta: "01", servidor: 'Celaya' },
+        { planta: "02", servidor: 'Queretar' },
+        { planta: "03", servidor: 'SnMiguel' },
+        { planta: "04", servidor: 'Irapuato' },
+        { planta: "06", servidor: 'SanJuan' },
+        { planta: "07", servidor: 'Dolores' },
+        { planta: "08", servidor: 'Xalapa' },
+        { planta: "09", servidor: 'Morelia' },
+        { planta: "10", servidor: 'Veracruz' },
+        { planta: "12", servidor: 'Acambaro' },
+        { planta: "13", servidor: 'SanJoseI' },
+        { planta: "14", servidor: 'LazaroCardenas' },
+        { planta: "15", servidor: 'Uruapan' },
+        { planta: "16", servidor: 'LaPiedad' },
+        { planta: "17", servidor: 'Salvatierra' },
+        { planta: "18", servidor: 'Moroleon' },
+        { planta: "19", servidor: 'Arandas' },
+        { planta: "20", servidor: 'Leon' },
+        { planta: "21", servidor: 'Monterrey' },
+        { planta: "23", servidor: 'SanLuis' },
+        { planta: "24", servidor: 'Culiacan' },
+        { planta: "25", servidor: 'Mazatlan' },
+        { planta: "26", servidor: 'Guamuchi' },
+        { planta: "27", servidor: 'Mochis' },
+        { planta: "28", servidor: 'Tula' },
+        { planta: "29", servidor: 'Aguascalientes' },
+        { planta: "65", servidor: 'Tepatitlan' },
+        { planta: "66", servidor: 'Guadalaj' }
+    ];
+</script>

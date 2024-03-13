@@ -1,0 +1,149 @@
+﻿<style >
+.center-div {
+    /*width: 300px;
+    height: 300px;*/
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  /*  margin-left: -150px;
+    margin-top: -150px*/;
+}
+
+.spinner {
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: Black;
+    /*filter: alpha(opacity=60);*/
+    opacity: 0.6;
+    -moz-opacity: 0.8;
+}
+
+.loader {
+    margin: auto;
+    /*border: 16px solid #f3f3f3;*/
+    border-radius: 50%;
+    /*border-top: 16px solid #15a0ec;
+    border-bottom: 16px solid #15a0ec;*/
+   /* width: 120px;
+    height: 120px;*/
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    /*   -webkit-animation: gradient 15s ease infinite;
+    animation: gradient 15s ease infinite;*/
+    /* background-image: url() background: linear-gradient(182deg, #1fe8b4, #f30562);
+    background-image: url('../Images/Logo-App.png');
+
+    background-size: 400% 400%;
+    -webkit-animation: AnimationName 1s ease infinite;
+    -moz-animation: AnimationName 1s ease infinite;
+    animation: AnimationName 1s ease infinite;
+}*/
+}
+.inner-div {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+   /* background-color: white;
+    border-radius: 15px;*/
+  /*  margin: auto;*/
+   /* padding: 2%;*/
+    width: 200px;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+@-webkit-keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+
+
+@-webkit-keyframes AnimationName {
+    0% {
+        background-position: 49% 0%
+    }
+
+    50% {
+        background-position: 52% 100%
+    }
+
+    100% {
+        background-position: 49% 0%
+    }
+}
+
+@-moz-keyframes AnimationName {
+    0% {
+        background-position: 49% 0%
+    }
+
+    50% {
+        background-position: 52% 100%
+    }
+
+    100% {
+        background-position: 49% 0%
+    }
+}
+
+@keyframes AnimationName {
+    0% {
+        background-position: 49% 0%
+    }
+
+    50% {
+        background-position: 52% 100%
+    }
+
+    100% {
+        background-position: 49% 0%
+    }
+}
+
+
+</style >

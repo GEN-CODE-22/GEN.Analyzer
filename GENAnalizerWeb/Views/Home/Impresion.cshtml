@@ -1,531 +1,524 @@
 ﻿@{
     ViewBag.Title = "Impresion";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/Template2022Layout.cshtml";
 }
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Dashboard</title>
-    <!-- Custom fonts for this template-->
-    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
-</head>
 
 
 
+<body>
 
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
 
-<!-- Nueva imagen -->
-
-<body id="page-top">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center bg-white justify-content-center">
-                <center><img id="id_logo" src="~/Images/logo.png" style="width:100px; margin-top:10px;" /></center>
-                <!--<div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>-->
+        <div class="d-flex align-items-center justify-content-between">
+            <a class="logo d-flex align-items-center">
+                <img id="id_logo">
+                <span id="EmpName" class="d-none d-lg-block">Gas Express Nieto</span>
             </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div><!-- End Logo -->
+        @*<div class="search-bar">
+                <form class="search-form d-flex align-items-center" method="POST" action="#">
+                    <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                </form>
+            </div>*@<!-- End Search Bar -->
 
-            <li class="nav-item active">
-                <a class="nav-link">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Analyzer</span>
-                </a>
-            </li>
 
-            <li id="seccPers" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-concierge-bell"></i>
-                    <span>Personal</span>
-                </a>
 
-            </li>
 
-            <li id="seccGerente" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Gerente</span>
-                </a>
 
-            </li>
+        <nav class="header-nav ms-auto" style="font:xx-small">
+            <ul class="d-flex align-items-center">
 
-            <li id="seccCrdCob" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-tools"></i>
-                    <span>Credito y cobranza</span>
-                </a>
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2"> Cia: @ViewBag.Cia</span>
+                </li>
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2">Pla: @ViewBag.Pla</span>
+                </li><!-- End Messages Nav -->
+                <li class="nav-item ">
+                    <span class="d-none d-md-block  ps-2">Srv: @ViewBag.Srv</span>
+                </li><!-- End Messages Nav -->
 
-            </li>
+                <li class="nav-item dropdown pe-3">
 
-            <li id="seccAdmin" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
-                <hr class="sidebar-divider">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-tools"></i>
-                    <span>Administrador</span>
-                </a>
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
 
-            </li>
+                        <span class="d-none d-md-block dropdown-toggle ps-2"> @ViewBag.Usr</span>
+                    </a><!-- End Profile Iamge Icon -->
+                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                    <label id="serv" style="display:none;">@ViewBag.Srv</label>
+                    <label id="usr" style="display:none;">@ViewBag.Usr</label>
+                    <label id="rol" style="display:none;">@ViewBag.Rol</label>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-        </ul>
-        <!-- End of Sidebar -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-            <!-- Main Content -->
-            <div id="content">
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"></form>
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
-                                <label id="serv" style="display:none;">@ViewBag.Srv</label>
-                                <label id="usr" style="display:none;">@ViewBag.Usr</label>
-                                <label id="rol" style="display:none;">@ViewBag.Rol</label>
-                                @*<span class="mr-2 d-none d-lg-inline text-gray-600 small">Cia:</span>*@
-                                @*<span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Cia</span>*@
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Srv:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Srv</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Pla:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@ViewBag.Pla</span>
-                               
-                                <i class="far fa-user" style="margin-left:15px"></i>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuario:</span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" style="margin-right:10px"> @ViewBag.Usr</span>
-                                <img class="img-profile rounded-circle" src="~/Images/personal.png">
+                        <li>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" onclick="exitAnalizer()">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Salir
                             </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                @*<a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>*@
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
-                                </a>
-                            </div>
                         </li>
-                    </ul>
+                        @*<li>
+                                <button class="btn btn-danger" style="display:inline-block;" onclick="getGeocercasMC()">
+                                    <span class="fas fa-map-marker-alt" role="status" aria-hidden="true"></span>
+                                    Refrescar Mis geocrecas
+                                </button>
+                            </li>*@
+
+                    </ul><!-- End Profile Dropdown Items -->
+                </li><!-- End Profile Nav -->
+
+                <li class="nav-item ">
+                    <img id="image_profile" style="width:25px;" class="rounded-circle">
+                </li>
+            </ul>
+        </nav>
+
+    </header><!-- End Header -->
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link ">
+                    <i class="bi bi-grid"></i>
+                    <span>Analizer</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
+            <li id="seccPers" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Personal</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+            </li>
+            <li id="seccGerente" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#estaciones-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Gerentes</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+            </li>
+            <li id="seccCrdCob" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#Cartera-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Credito y cobranza</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+            </li>
+            <li id="seccAdmin" onclick="selectSecmento(this)" style="display:none;" class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#Pedidos-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Administrador</span><i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+            </li>
+
+
+
+
+        </ul>
+
+    </aside><!-- End Sidebar-->
+
+    <main id="main" class="main">
+
+        @*<div class="pagetitle">
+                <h1>Dashboard</h1>
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
                 </nav>
-                <!-- End of Topbar -->
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+            </div>*@<!-- End Page Title -->
+
+        <section class="section dashboard">
 
 
-                    <div id="divPersonal" style="width:100%; height:100%; display:none;" class="shadow card">
-                        <div class="row">
-                            @*<div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowPedidos()">
-                                <div class="card border-bottom-danger" style="width: 18rem;">
-                                    <img class="card-img-top" src="~/Images/LOGO_PEDIDOS_ANALIZER.png" alt="Card image cap" style="height:200px;">
-                                    <div class="card-body">
-                                        <h5 class="card-title h5 mb-0 font-weight-bold text-primary">ACTIVIDAD PEDIDOS</h5>
-                                        <p class="card-text">Muestra de forma geografica la distrubucion de notas de venta, y generacion de reportes varios</p>
 
-                                    </div>
+
+
+            <div id="divPersonal" style="width:100%; height:100%; display:none;" class="shadow card">
+                <div class="row ">
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowPedidos()" style="cursor:pointer; ">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+                                    <img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;" />
+                                    @*<img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;">*@
                                 </div>
-                            </div>*@
-                                <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowPedidos()">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD PEDIDOS</div>
-                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra de forma geografica la distrubucion de notas de venta, y generacion de reportes varios</div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Actividad Pedidos</h5>
+                                </div>
+
                             </div>
-                            <div class="col-auto">
-                                <img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;" />
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowEstaciones()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+
+                                    <img src="~/Images/Estacion.png" style="width:100px" />
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Estaciones</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowTiempos()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+                                    <img src="~/Images/tiempo.png" style="width:80px" />
+
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Tiempos</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowGestionApp()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+
+                                    <img src="~/Images/LOGO_APP_ANALIZER.png" style="width:70px;" />
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Actividad app</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowClientes()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+                                    <img src="~/Images/FindClient.png" style="width:100px;" />
+                                </div>
+                                <div class="mb-4">
+
+                                    <h5 class="card-title mb-0">CLIENTES</h5>
+                                </div>
 
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-                                <div class="col-xl-3 col-md-6 mb-4">
-                                    <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowEstaciones()">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD ESTACIONES</div>
-                                                    <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra informacion sobre la actividad de las estaciones de carburación.</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <img src="~/Images/Estacion.png" style="width:80px;" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-md-6 mb-4">
-                                    <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowTiempos()">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-primary">TIEMPOS</div>
-                                                    <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Genera reportes de tiempos de atención, recepción de pedidos, cancelaciones etc.</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <img src="~/Images/tiempo.png" style="width:80px;" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-md-6 mb-4" style="display:inline;">
-                                    <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowGestionApp()">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD APP</div>
-                                                    <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muetstra la distribucion de descargas de la APP del cliente asi como su actividad.</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <img src="~/Images/LOGO_APP_ANALIZER.png" style="width:80px;" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:inline;">
-                                <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowClientes()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">CLIENTES</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra de forma geografica las descargas de los clientes</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/FindClient.png" style="width:80px;" />
-                                            </div>
-                                        </div>
+
+                <div class="row">
+
+                    <div class="col-xl-3 col-md-6 mb-4" style="display:none;">
+                        <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowPagosQR()">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-primary">PAGOS QR</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Relacion de pagos con QR</div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:none;">
-                                <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowPagosQR()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">PAGOS QR</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Relacion de pagos con QR</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/app_qr.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4 GEN" style="display:none;">
-                                <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowMedidores()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">Medidores</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Resumen de consumo y lectura de medidores</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/MedidorRojoSimbologia.png" style="width:80px;" />
-                                            </div>
-                                        </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/app_qr.png" style="width:80px;">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div id="divGerente" style="width:100%; height:100%;display:none;" class="shadow card">
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowPedidos()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD PEDIDOS</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra de forma geografica la distrubucion de notas de venta, y generacion de reportes varios</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;" />
-
-                                            </div>
-                                        </div>
+                    <div class="col-xl-3 col-md-6 mb-4 GEN" style="display:none;">
+                        <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowMedidores()">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-primary">Medidores</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Resumen de consumo y lectura de medidores</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/MedidorRojoSimbologia.png" style="width:80px;">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6 mb-4">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowEstaciones()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD ESTACIONES </div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra informacion sobre la actividad de las estaciones de carburación.</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/Estacion.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowTiempos()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">TIEMPOS</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Genera reportes de tiempos de atención, recepción de pedidos, cancelaciones etc.</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/tiempo.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:inline;">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowGestionApp()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">ACTIVIDAD APP</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muetstra la distribucion de descargas de la APP del cliente asi como su actividad.</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/LOGO_APP_ANALIZER.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:inline;">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowClientes()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">CLIENTES</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra de forma geografica las descargas de los clientes</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/FindClient.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:inline;">
-                                <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowGerentes()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">GERENTES</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Muestra información de interes para la gerencia.</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/personal.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                                <div class="col-xl-3 col-md-6 mb-4" style="display:none;">
-                                    <div class="card border-left-primary shadow h-100 py-2" onclick="openNewWindowPagosQR()">
-                                        <div class="card-body">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-primary">PAGOS QR</div>
-                                                    <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Relacion de pagos con QR</div>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <img src="~/Images/app_qr.png" style="width:80px;" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4 GEN" style="display:none;">
-                                <div class="card border-left-danger shadow h-100 py-2" onclick="openNewWindowMedidores()">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-primary">Medidores</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Resumen de consumo y lectura de medidores</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/app_qr.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-
-
-                    <div id="divCrdCob" style="width:100%; height:100%;display:none;" class="shadow card">
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowCC()">
-                                <div class="card border-left-info shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-info">CREDITO Y COBRANZA</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">Informacion de seguimiento de cobranza.</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/bill.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div id="divAdmin" style="width:100%; height:100%;display:none;" class="shadow card">
-                        <div class="row">
-                            <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowLogeos()">
-                                <div class=" card border-left-secundary shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-secundary">USUARIOS</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">ALTA, BAJA, MODIFICACION Y GESTION DE USUARIOS</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/control_logeo.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:none">
-                                <div class="card border-left-info shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/dashboardLogo.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:none">
-                                <div class="card border-left-info shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/dashboardLogo.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-6 mb-4" style="display:none">
-                                <div class="card border-left-info shadow h-100 py-2">
-                                    <div class="card-body">
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col mr-2">
-                                                <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
-                                                <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
-                                            </div>
-                                            <div class="col-auto">
-                                                <img src="~/Images/dashboardLogo.png" style="width:80px;" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End of Main Content -->
-                    
-                </div>
-                <!-- End of Content Wrapper -->
-            </div>
-            <!-- End of Page Wrapper -->
-            <!-- Scroll to Top Button-->
-            <a class="scroll-to-top rounded" href="#page-top">
-                <i class="fas fa-angle-up"></i>
-            </a>
-            <!-- Logout Modal-->
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro de Salir?</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">Te saldras de todo modulo</div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                            <button class="btn btn-danger" type="button" onclick="exitAnalizer()">Salir</button>
-                            
-                           
                         </div>
                     </div>
                 </div>
             </div>
 
+            <div id="divGerente" style="width:100%; height:100%;display:none;" class="shadow card">
+                <div class="row ">
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowPedidos()" style="cursor:pointer; ">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+                                    <img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;" />
+                                    @*<img src="~/Images/LOGO_PEDIDOS_ANALIZER.png" style="width:80px;">*@
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Actividad Pedidos</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowEstaciones()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+
+                                    <img src="~/Images/Estacion.png" style="width:100px" />
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Estaciones</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowTiempos()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large">
+                                    <img src="~/Images/tiempo.png" style="width:80px" />
+
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Tiempos</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowGestionApp()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+
+                                    <img src="~/Images/LOGO_APP_ANALIZER.png" style="width:70px;" />
+                                </div>
+                                <div class="mb-4">
+                                    <h5 class="card-title mb-0">Actividad app</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowClientes()" style="cursor:pointer">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+                                    <img src="~/Images/FindClient.png" style="width:100px;" />
+                                </div>
+                                <div class="mb-4">
+
+                                    <h5 class="card-title mb-0">CLIENTES</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowGerentes()" style="cursor:pointer" title="MUESTRA INFORMACIÓN DE INTERES PARA LA GERENCIA.">
+                        <div class="Gen-Card card l-bg-red-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+                                    <img src="~/Images/personal.png" style="width:80px;" />
+
+                                </div>
+                                <div class="mb-4">
+
+                                    <h5 class="card-title mb-0">Gerentes</h5>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div id="divCrdCob" style="width:100%; height:100%;display:none;" class="shadow card">
+                <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowCC()" style="cursor:pointer" title="MUESTRA INFORMACIÓN DE INTERES PARA LA GERENCIA.">
+                    <div class="Gen-Card card l-bg-red-dark">
+                        <div class="card-statistic-3 p-4">
+                            <div class="card-icon card-icon-large" style="margin-bottom:15px;">
+                                <img src="~/Images/bill.png" style="width:60px;" />
+
+                            </div>
+                            <div class="mb-4">
+
+                                <h5 class="card-title mb-0">CREDITO Y COBRANZA</h5>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="divAdmin" style="width:100%; height:100%;display:none;" class="shadow card">
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4" onclick="openNewWindowLogeos()">
+                        <div class=" card border-left-secundary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-secundary">USUARIOS</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">ALTA, BAJA, MODIFICACION Y GESTION DE USUARIOS</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/control_logeo.png" style="width:80px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" style="display:none">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/dashboardLogo.png" style="width:80px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" style="display:none">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/dashboardLogo.png" style="width:80px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-4" style="display:none">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-info">MODULO</div>
+                                        <div class="text-xs font-weight-bold text-Secondary text-uppercase mb-4">DESCRIPCION...</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <img src="/Images/dashboardLogo.png" style="width:80px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Main Content -->
+
+
+
+
+
+
+
+
+        </section>
+
+    </main><!-- End #main -->
+    <!-- ======= Footer ======= -->
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">¿Seguro de Salir?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Te saldras de todo modulo</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger" type="button" onclick="exitAnalizer()">Salir</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    @*<!-- Vendor JS Files -->
+        <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/chart.js/chart.umd.js"></script>
+        <script src="assets/vendor/echarts/echarts.min.js"></script>
+        <script src="assets/vendor/quill/quill.min.js"></script>
+        <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+        <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+        <script src="assets/vendor/php-email-form/validate.js"></script>
+
+        <!-- Template Main JS File -->
+        <script src="assets/js/main.js"></script>*@
+    <script src="~/Scripts/Proyect/Principal.js"></script>
+    <script src="~/Scripts/Proyect/Generales.js"></script>
+    <script src="~/Scripts/Proyect/Index.js"></script>
+    <!-- Google Map -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?&key=AIzaSyCf_hsFGX6cXVpT886VRlmTIjwgI98k788&callback=initMap&libraries=geometry,drawing,visualization&sensor=false&dummy=.js"></script>
+
+
+    <!-- End Footer -->
+    <!-- Dialogos-->
+    <!--<div class="modal fade show" id="tblCierreModal" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="~/Images/TI SISTEMAS nieto.png" style="width:25px; margin-right:15px;" />
+                    <h5 class="modal-title" style=" margin-right: 15px;">Tabla de Cierre Diario</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <div id="" class="modal-body card-body  shadow" style="overflow:scroll; height:100vh; width:99%;margin-top:10px">
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert" style="margin:10px;">
+                                <label id="idnGetTblCierre">Consultado Tabla de cierre  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span></label>
+                                <label id="lblGetTblCierre">Tabla de cierre diario (Venta en Toneladas)</label>
+                            </div>
+
+                            <div id="tblCierreDiario"></div>
+
+                        </div>
+
+                    </center>
+                </div>
+                <div class="modal-footer">-->
+    @*<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>*@
+    <!--</div>
+            </div>
+        </div>
+    </div>-->
+    @*<input type="hidden" value="@ViewBag.tipUser" id="hiddenTipo" />
+        <input type="hidden" value="@ViewBag.NomUser" id="hiddenUser" />
+        <input type="hidden" value="@ViewBag.Srv" id="hiddenSrv" />
+        <input type="hidden" value="@ViewBag.Pla" id="hiddenPla" />
+        <input type="hidden" value="@ViewBag.Cia" id="hiddenCia" />*@
 </body>
-
-
-
-
-
-
-
-</html>
 
 
 
@@ -537,22 +530,21 @@
     var geocercasP = [];
     var geocercasC = [];
 
-   
+
     var planta = null;
     var compañia = null;
-    
-  
+
+
 
     $("#scrollH").scrollLeft(300);
     $(document).ready(function () {
         servidor = document.getElementById('serv').innerText;
         planta = $("#hiddenPla").val();
         compañia = $("#hiddenCia").val();
-        if (localStorage.getItem("servidor")==null ||localStorage.getItem("servidor")!=servidor ) 
-        {
+        if (localStorage.getItem("servidor") == null || localStorage.getItem("servidor") != servidor) {
             localStorage.setItem("servidor", servidor);
             //getGeocercas();
-    
+
         }
 
         if ((localStorage.getItem("geocercasP") == null || localStorage.getItem("geocercasC") == null) || (localStorage.getItem("cia") != compañia || localStorage.getItem("pla") != planta)) {
@@ -561,37 +553,37 @@
             //localStorage.setItem("cia", compañia);
             //localStorage.setItem("pla", planta);
             getGeocercas();
-            
+
         }
 
         mostrarSegmentos();
-      
-        
+
+
 
 
     });
-  
+
     function selectSecmento(id) {
-       
+
         document.getElementById('divPersonal').style.display = "none";
         document.getElementById('divGerente').style.display = "none";
         document.getElementById('divCrdCob').style.display = "none";
         document.getElementById('divAdmin').style.display = "none";
         switch (id.id) {
             case "seccPers":
-              //  document.getElementById('accordionSidebar').style.background = "#e74a3b"
+                //  document.getElementById('accordionSidebar').style.background = "#e74a3b"
                 document.getElementById('divPersonal').style.display = "inline";
                 break;
             case "seccGerente":
-              //  document.getElementById('accordionSidebar').style.background = "#4e73df"
+                //  document.getElementById('accordionSidebar').style.background = "#4e73df"
                 document.getElementById('divGerente').style.display = "inline";
                 break;
             case "seccCrdCob":
-              //  document.getElementById('accordionSidebar').style.background = "#36b9cc"
+                //  document.getElementById('accordionSidebar').style.background = "#36b9cc"
                 document.getElementById('divCrdCob').style.display = "inline";
                 break;
             case "seccAdmin":
-              //  document.getElementById('accordionSidebar').style.background = "#000000"
+                //  document.getElementById('accordionSidebar').style.background = "#000000"
                 document.getElementById('divAdmin').style.display = "inline";
                 break;
 
@@ -607,21 +599,21 @@
 
 
         switch (rol) {
-            case"Personal":
+            case "Personal":
                 //document.getElementById('accordionSidebar').style.background = "#e74a3b"
                 document.getElementById('seccPers').style.display = "inline";
                 break;
             case "Gerente":
                 if (servidor != "Admin") {
-                   // document.getElementById('accordionSidebar').style.background = "#4e73df"
+                    // document.getElementById('accordionSidebar').style.background = "#4e73df"
                     document.getElementById('seccGerente').style.display = "inline";
 
                 }
                 else {
-                   // document.getElementById('accordionSidebar').style.background = "#000000"
-                    
+                    // document.getElementById('accordionSidebar').style.background = "#000000"
+
                 }
-               
+
 
                 break;
             case "CredCob":
@@ -638,45 +630,48 @@
                 break;
 
         }
-        if (localStorage.getItem("empresa") == 'PLUS')
-        {
+        if (localStorage.getItem("empresa") == 'PLUS') {
             var x = document.getElementsByClassName("GEN");
             var i;
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = 'none';
             }
         }
-           
-   
+
+
     }
 
-    function getGeocercas()
-    {
+    function getGeocercas() {
         $.ajax({
             type: "POST",
             url: "/Home/getGeocercas/",
-            data: { paramSrv: document.getElementById('serv').innerHTML, paramCia: localStorage.getItem('cia') , paramPla: localStorage.getItem('pla') },
+            data: { paramSrv: document.getElementById('serv').innerHTML, paramCia: localStorage.getItem('cia'), paramPla: localStorage.getItem('pla') },
             datatype: "json",
+            beforeSend: function (objeto) {
+                $('.spinner').css('display', 'block');
+            },
+            complete: function () {
+                $('.spinner').css('display', 'none');
+            },
             success: function (data) {
 
                 if (data.length > 0) {
 
-                    for (var i = 0; i < data.length; i++) 
-                    {
-                        if(data[i].nom_geo.substring(0, 1) == 'M')
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].nom_geo.substring(0, 1) == 'M')
                             geocercasP.push(data[i]);
-                        if(data[i].nom_geo.substring(0,1)=='C')
+                        if (data[i].nom_geo.substring(0, 1) == 'C')
                             geocercasC.push(data[i]);
                     }
                     localStorage.setItem('geocercaP', JSON.stringify(geocercasP));
                     sessionStorage.setItem("geocercaC", JSON.stringify(geocercasC));
                     //localStorage.setItem('geocercaC', JSON.stringify(geocercasC));
-                    
-                   
+
+
                     alert("geocercas cargadas");
                 }
                 else {
-                    
+
                     alert("No existe información de geocercas en el servidor ingresado");
                 }
             },
@@ -714,8 +709,7 @@
     function openNewWindowNegocios() {
         window.open("/Home/Negocios");
     }
-    function openNewWindowPagosQR()
-    {
+    function openNewWindowPagosQR() {
         window.open("/Home/PagosQR");
     }
     function openNewWindowMedidores() {
